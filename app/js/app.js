@@ -7,8 +7,6 @@
 if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript requires jQuery'); }
 
 
-
-
 // 全局
 
 var url = 'http://xiaoshutong.thinktorch.cn/frontend/web'; // API
