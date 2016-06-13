@@ -1023,7 +1023,9 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
       //errorJump($state);
 
       getZHCourseData = function(sortid, cp) { // 获取课程
+        
           cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
+
           $scope.ZHsname = sessionStorage.ZHsname;
           $http
             .post(''+url+'/course/gettcourse', {
