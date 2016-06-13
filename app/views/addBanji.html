@@ -1,0 +1,117 @@
+<h3>
+    <a ui-sref="app.courseDetails">返回上一页</a>
+</h3>
+<div class="clearfix" ng-controller="addBanjiController">
+    <h4 class="page-header courseTitle">
+        班级列表  >  添加班级
+    </h4>
+    <div class="addCourse-div">
+        <tabset>
+            <tab heading="添加班级">
+                <form role="form" ng-submit="addSubmit()" class="form-validate" novalidate="" enctype="multipart/form-data"> 
+                    <div class="row plate">
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">班级名称</div>
+                            <div class="col-xs-2"><input type="text" class="form-control" ng-model="addBanji.class_name" required=""></div>
+                            <div class="col-xs-8"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">招收人数</div>
+                            <div class="col-xs-2"><input type="number" class="form-control" ng-model="addBanji.class_quantity" required=""></div>
+                            <div class="col-xs-8"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">授课老师</div>
+                            <div class="col-xs-6">
+                                <div class="selectTeacher">
+                                    <!--<div class="input-group">
+                                        <input placeholder="" class="input-sm form-control" type="text">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-sm btn-default">搜索</button>
+                                        </span>
+                                    </div>-->
+                                    <span style="color: #bbb">请选择授课教师：</span>
+                                    <div class="teacherList">
+                                        <ul>
+                                            <li ng-repeat="x in teacher" ng-click="sTeacher($index)" name={{x.userid}}>
+                                                <img ng-src="{{x.header}}" alt="Image" class="img-responsive img-circle" >
+                                                <span ng-bind="x.tname"></span>
+                                                <span ng-bind="x.phone"></span>
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4"></div>
+                        </div>
+                        
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">班级课表</div>
+                            <div class="col-xs-10">
+                                <iframe ng-src="{{'app/views/BGOCalender.html?'+randomDate}}" allowtransparency="true" name="iframepage" id="iframepage" style="background-color=transparent" frameborder="0" width="100%" onLoad="iFrameHeight()" scrolling="no"></iframe>                    
+                                <script type="text/javascript" language="javascript">
+                                    function iFrameHeight() {
+                                        
+                                        var ifm = document.getElementById("iframepage");
+                                        var subWeb = document.frames ? document.frames["iframepage"].document : ifm.contentDocument;
+                                        if(ifm != null && subWeb != null) {
+                                            ifm.height = subWeb.body.scrollHeight;
+                                        }
+                                        
+                                    }
+                                </script> 
+                            </div>
+                        </div>
+                        
+                        <div class="clearfix row-div stuList">
+                            <div class="col-xs-2 customTitle">学生列表</div>
+                            <div class="col-xs-8">
+                                <div class="table-responsive addCombo">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:80px;">学生</th>
+                                                <th style="width:30px;">性别</th>
+                                                <th style="width:50px;">出生日期</th>
+                                                <th style="width:80px;">年级</th>
+                                                <th style="width:80px;">剩余学习卡</th>
+                                                <th style="width:80px;">剩余课时</th>
+                                                <th style="width:50px;">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="x in addBanji.student">
+                                                <td>
+                                                    <img ng-src="{{x.header}}" alt="Image" class="img-responsive img-circle">
+                                                    {{x.tname}}
+                                                </td>
+                                                <td ng-bind="x.sex"></td>
+                                                <td ng-bind="x.birthday"></td>
+                                                <td ng-bind="x.grade"></td>
+                                                <td>
+                                                    <p ng-repeat="t in x.student_pack" ng-bind="t.package_name+'*'+t.package_quantity"></p>
+                                                </td>
+                                                <td>
+                                                    {{x.surplus+'天'}}
+                                                    <!--<a href="#">提醒</a>-->
+                                                </td>
+                                                <td>
+                                                    <a href="#" ng-click="goRechargeClass(x.studentid, x.student_pack)">充值</a>
+                                                    <a href="#" ng-click="removeStudents(x.studentid)">移除</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-xs-2"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-warning saveCourse">保存</button>
+                    </div>
+                </form>
+            </tab>
+        </tabset>
+    </div>
+</div>

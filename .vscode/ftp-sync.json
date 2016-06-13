@@ -1,0 +1,16 @@
+{
+    "remotePath": "/home/workplace/www/201604xiaoshutong/Fadmin",
+    "host": "211.149.218.116",
+    "username": "liaobin",
+    "password": "123456",
+    "port": 21,
+    "protocol": "ftp",
+    "uploadOnSave": true,
+    "passive": false,
+    "debug": false,
+    "privateKeyPath": null,
+    "ignore": [
+        "\\.vscode",
+        "\\.git"
+    ]
+}

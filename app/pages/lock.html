@@ -1,0 +1,35 @@
+<div class="abs-center wd-xl" ng-controller="lockScreenController">
+   <!-- START panel-->
+   <div class="p">
+      <img ng-src="{{user.picture}}" alt="Avatar" width="60" height="60" class="img-thumbnail img-circle center-block" />
+   </div>
+   <div class="panel widget b0">
+      <div class="panel-body">
+         <p class="text-center">
+             请解锁你的屏幕。已锁定：
+             <span name="lockClock"></span>
+         </p>
+         <form role="form" ng-submit="unLock()">
+            <div class="form-group has-feedback">
+               <input type="password" placeholder="Password" required="" ng-model="lockPassword" class="form-control" />
+               <span class="fa fa-lock form-control-feedback text-muted"></span>
+               <span class="text-danger">{{errorInfo}}</span>
+            </div>
+            <div class="clearfix">
+               <div class="pull-right">
+                  <button type="submit" class="btn btn-sm btn-primary">解锁</button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+   <!-- END panel-->
+   <div class="p-lg text-center">
+      <span>&copy;</span>
+      <span ng-bind="app.year"></span>
+      <span>-</span>
+      <span ng-bind="app.name"></span>
+      <br/>
+      <span ng-bind="app.description"></span>
+   </div>
+</div>

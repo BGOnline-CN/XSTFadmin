@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+
+        <textarea id="editor_id" name="content">
+            <p style="text-align:center;">
+                注：以下内容仅供参考（实际内容请自行添加）<br/>
+                <span style="color: #ddd">-------●</span> 培训内容 
+                <span style="color: #ddd">●-------</span>
+            </p>
+            <span>按教程章节和考点、重难点进行梳理，查漏补缺，巩固和复习书本知识。</span>
+            <br/><br/>
+            <img src="/uploads/temp/image/2016-04/89474666ab97ca2e224c1b7f7cef1d5c.jpg">
+            <br/><br/>
+            <p style="text-align:center;">
+                <span style="color: #ddd">-------●</span> 教学环境 
+                <span style="color: #ddd">●-------</span>
+            </p>
+            <span>按教程章节和考点、重难点进行梳理，查漏补缺，巩固和复习书本知识。</span>
+            <br/><br/>
+            <img src="/uploads/temp/image/2016-04/0c5e416e8ec84fe6aa59e0cca0762681.jpg">
+            <br/><br/>
+            <p style="text-align:center;">
+                <span style="color: #ddd">-------●</span> 报名须知
+                <span style="color: #ddd">●-------</span>
+            </p>
+            <span>按教程章节和考点、重难点进行梳理，查漏补缺，巩固和复习书本知识。</span>
+            <br/><br/>
+            <img src="/uploads/temp/image/2016-04/8359f83a70be68ec17057e948eca042b.jpg">
+            <br/><br/>
+        </textarea>                        
+    </body>
+    
+    <script charset="utf-8" src="../vendor/kindeditor/kindeditor-all-min.js"></script>
+    <script charset="utf-8" src="../vendor/kindeditor/lang/zh-CN.js"></script>
+    
+    <script>
+            KindEditor.ready(function(K) {
+
+                var option = [
+                    'justifycenter', 'justifyright', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                    'italic', 'underline', '|', 'image', 'hr'
+                ]
+                
+                
+                window.editor = K.create('#editor_id', {
+                    minWidth: 300,
+                    minHeight: 458,
+                    resizeType: 0,
+                    items: option,
+                    filterMode: false,
+                    uploadJson: 'http://xiaoshutong.thinktorch.cn/backend/web/index.php/gd/upload',
+                    fileManagerJson : 'http://xiaoshutong.thinktorch.cn/backend/web/index.php/gd/filemanager',
+                    allowFileManager : true,
+                    afterUpload : function(url) {
+                        
+                    },
+                    afterChange: function() {
+                        this.sync();
+                        html = document.getElementById('editor_id').value; 
+                    }
+                    
+                });
+               
+            });
+            
+            var ifrCon = window.parent.ifrCon;
+            if(ifrCon != undefined) {
+                document.getElementById('editor_id').value = ifrCon;
+            }
+            
+    </script>
+
+</html>

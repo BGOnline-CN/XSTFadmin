@@ -1,0 +1,285 @@
+<h3 ng-controller="courseClassController">
+    <a class="course" ui-sref="app.courseMngt" ng-click="showCourse(0)">全部课程</a>
+    <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" ui-sref="app.courseMngt" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
+    <input class="form-control ng-touched addCourseClassInput" type='text'>
+    <button class="btn btn-default addCourseBtn" type="button" ng-click="addCourseClass()"><i class="fa fa-plus addCourseFa"></i>添加</button>   
+</h3>
+<div class="clearfix" ng-controller="courseDetailsController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <h4 class="page-header courseTitle">
+        {{sname == 'undefined' || sname == undefined ? '全部课程' : sname}} > {{tcourse_name}}
+        <div class="operationCourse">
+            <div class="btn-group mb-sm">
+                <button type="button" class="btn dropdown-toggle btn-warning" ng-click="goEditCourse(2)">修改课程</button>
+            </div> 
+        </div>
+    </h4>
+    <div class="courseDetails-div">
+        <tabset>
+            <tab heading="课程详情">
+                <p class="cdd-title">
+                    课程信息
+                </p>
+                <div class="row plate">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-2">
+                        <p class="plate-title">课程名称：</p>
+                        <p class="plate-title">简介：</p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p class="plate-con" ng-bind="tcourse_name"></p>
+                        <p class="plate-con" ng-bind="summary"></p>
+                    </div>
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-3">
+                        <a href="#" class="changeImg">
+                            <img ng-src="{{tcourse_img}}">
+                            <!--<p>更换图片</p>-->
+                        </a>
+                    </div>
+                    <div class="col-xs-2"></div>
+                </div>
+                <p class="cdd-title">
+                    套餐类型
+                </p>
+                <div class="row plate">
+                    <div class="comboList cTitle clearfix">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-2">
+                            <p>套餐名称</p>
+                        </div>
+                        <div class="col-xs-3">
+                            <p>价格</p>
+                        </div>
+                        <div class="col-xs-5">
+                            <p>服务介绍</p>
+                        </div>
+                        <div class="col-xs-1"></div>
+                    </div>
+                    <div class="comboList clearfix" ng-repeat="p in packages">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-2">
+                            <p ng-bind="p.package_name"></p>
+                        </div>
+                        <div class="col-xs-3">
+                            <p ng-bind="p.package_price"></p>
+                        </div>
+                        <div class="col-xs-5">
+                            <p ng-bind="p.package_content"></p>
+                        </div>
+                        <div class="col-xs-1"></div>
+                    </div>
+                </div>
+                <p class="cdd-title">
+                    课程介绍
+                </p>
+                <div class="row plate">
+                    <div class="col-xs-12">
+                        <div class="couseDetailsDesc" ng-bind-html="content"></div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="班级管理">
+                <p class="cdd-title">
+                    班级列表
+                    <button class="btn btn-default addCourseBtn" type="button" ng-click="goAddBanji(0)"><i class="fa fa-plus addCourseFa"></i>添加</button>   
+                </p>
+                <div class="table-responsive addCombo">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width:10%;">班级</th>
+                                <th style="width:10%;">招收人数</th>
+                                <th style="width:10%;">当前学生</th>
+                                <th style="width:20%;">老师</th>
+                                <th style="width:15%;">开班日期</th>
+                                <th style="width:15%;">结班日期</th>
+                                <th style="width:10%;">状态</th>
+                                <th style="width:10%;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8" ng-class="CNullType">暂无班级</td>
+                            </tr>
+                            <tr ng-repeat="x in courseDetailsData.class">
+                                <td>{{x.class_name}}</td>
+                                <td>{{x.class_quantity}}</td>
+                                <td>{{x.student_num}}</td>
+                                <td><span ng-repeat="t in x.teacher" style="margin-right: 5px;">{{t}}</span></td>
+                                <td>{{x.class_table.split(",")[0]}}</td>
+                                <td>{{x.class_table.split(",")[x.class_table.split(",").length-1]}}</td>
+                                <td><div class="label label-success">进行中</div></td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-warning comboAction" ng-click="goAddBanji(1, x.classid)"><em class="fa fa-edit"></em></button>
+                                    <button type="button" class="btn btn-sm btn-danger comboAction" ng-click="removeBanji(x.classid)"><em class="fa fa-trash-o"></em></button>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="x in courseDetailsData.end_class">
+                                <td>{{x.class_name}}</td>
+                                <td>{{x.class_quantity}}</td>
+                                <td>{{x.student_num}}</td>
+                                <td><span ng-repeat="t in x.teacher" style="margin-right: 5px;">{{t}}</span></td>
+                                <td>{{x.class_table.split(",")[0]}}</td>
+                                <td>{{x.class_table.split(",")[x.class_table.split(",").length-1]}}</td>
+                                <td><div class="label label-danger">已结班</div></td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-warning comboAction" ng-click="goAddBanji(1, x.classid)"><em class="fa fa-edit"></em></button>
+                                    <button type="button" class="btn btn-sm btn-danger comboAction" ng-click="removeBanji(x.classid)"><em class="fa fa-trash-o"></em></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="cdd-title">
+                    待分班学生列表
+                </p>
+                <div class="table-responsive addCombo">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width:80px;">学生</th>
+                                <th style="width:50px;">性别</th>
+                                <th style="width:50px;">出生日期</th>
+                                <th style="width:80px;">年级</th>
+                                <th style="width:150px;">学习卡/支付</th>
+                                <th style="width:50px;">购买人</th>
+                                <th style="width:50px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="7" ng-class="WNullType">暂无数据</td>
+                            </tr>
+                            <tr ng-repeat="x in WaitAllotStudent">
+                                <td>
+                                    <img ng-src="{{x.header}}" alt="Image" class="img-responsive img-circle">
+                                    {{x.student_name}}
+                                </td>
+                                <td>{{showSex(x)}}</td>
+                                <td>{{x.student_birthday}}</td>
+                                <td>{{x.student_grade}}</td>
+                                <td>
+                                    <p ng-repeat="t in x.student_pack" ng-bind="t.package_name + '*' + t.package_quantity + '/' + '现金：' + '￥' + t.pay_price + '，' + '学习币：' + t.pay_xxb"></p>
+                                </td>
+                                <td>
+                                    {{x.user_name}}<br/>
+                                    {{x.user_phone}}
+                                </td>
+                                <td>
+                                    <div dropdown="dropdown" class="btn-group mb-sm">
+                                        <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-info">分班
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul role="menu" class="dropdown-menu">
+                                            <li ng-repeat="t in courseDetailsData.class"><a href="#" ng-click="placementStudent(t.classid, x.allotid)">{{t.class_name}}</a></li>
+                                        </ul>
+                                    </div> 
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <accordion class="byxsClass">
+                    <accordion-group>
+                        <accordion-heading>点击展开毕业学生列表</accordion-heading>
+                        <div class="table-responsive addCombo">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">学生</th>
+                                        <th style="width:50px;">性别</th>
+                                        <th style="width:50px;">出生日期</th>
+                                        <th style="width:80px;">年级</th>
+                                        <th style="width:150px;">消费时间/消费信息</th>
+                                        <th style="width:50px;">购买人</th>
+                                        <th style="width:50px;">备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="7" ng-class="GNullType">暂无数据</td>
+                                    </tr>
+                                    <tr ng-repeat="x in graduate">
+                                        <td>
+                                            <img ng-src="{{x.header}}" alt="Image" class="img-responsive img-circle">
+                                            {{x.tname}}
+                                        </td>
+                                        <td ng-bind="showSex(x)"></td>
+                                        <td ng-bind="x.birthday"></td>
+                                        <td ng-bind="x.grade"></td>
+                                        <td>
+                                            <p ng-repeat="i in x.p_log">{{i.msg}}</p>
+                                        </td>
+                                        <td>
+                                            {{x.user_name}}<br/>
+                                            {{x.user_phone}}
+                                        </td>
+                                        <td>
+                                            备注
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </accordion-group>
+                </accordion>
+            </tab>
+            <tab heading="购买记录" ng-controller="payLogController">
+                <p class="cdd-title buyListCtrl">
+                    <span>购买时间</span>
+                    <select class="bg-select" ng-change="showPayTime(time)" ng-model="time">
+                        <option ng-repeat="pt in payTime" ng-bind="pt.title" value="{{pt.time}}"></option>
+                    </select>
+                </p>
+                <div class="input-group buyListCtrlSarch">
+                    <input type="text" placeholder="" class="input-sm form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-sm btn-default">搜索</button>
+                    </span>
+                </div>
+                <div class="table-responsive addCombo">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width:15%;">订单号</th>
+                                <th style="width:15%;">购买人</th>
+                                <th style="width:15%;">电话</th>
+                                <th style="width:15%;">学生</th>
+                                <th style="width:25%;">支付方式</th>
+                                <th style="width:15%;">购买时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" ng-class="ONullType">暂无数据</td>
+                            </tr>
+                            <tr ng-repeat="o in courseOrderData">
+                                <td ng-bind="o.orderid"></td>
+                                <td ng-bind="o.usertname"></td>
+                                <td ng-bind="o.phone"></td>
+                                <td ng-bind="o.student_tname"></td>
+                                <td>{{"人民币￥"+o.price+"，学习币："+o.xxb}}</td>
+                                <td ng-bind="coursePayTime(o)"></td>
+                            </tr>
+                            <tr>
+                                <td class="page-td" colspan="6">
+                                    <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

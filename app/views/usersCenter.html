@@ -1,0 +1,127 @@
+<h3>用户列表</h3>
+<h4 class="page-header courseTitle">
+    为用户充值学习币及查看充值记录
+</h4>
+<div class="courseDetails-div usersCenterList" >
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <tabset>
+        <tab heading="充值学习币" data-ng-controller="usersCenterController">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <span class="panel-table-title">全部家长</span>
+                    <div class="input-group">
+                        <input type="text" placeholder="" class="input-sm form-control" ng-model="sUValue"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-sm btn-default" ng-click="searchUserData()">搜索</button>
+                        </span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="table-ext-1" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width:10%;">头像</th>
+                                <th style="width:15%;">姓名</th>
+                                <th style="width:15%;">手机号码</th>
+                                <th style="width:20%;">孩子</th>
+                                <th style="width:20%;">所在分校</th>
+                                <th style="width:15%;">学习币</th>
+                                <th style="width:5%;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td ng-class="UNullType" colspan="7">暂无用户</td>
+                            </tr>
+                            <tr ng-repeat="u in users">
+                                <td>
+                                    <div class="media">
+                                        <img ng-src="{{user.header}}" alt="Image" class="img-responsive img-circle" />
+                                    </div>
+                                </td>
+                                <td>{{ u.tname }}</td>
+                                <td>{{ u.phone }}</a></td>
+                                <td>
+                                    <span style="margin-right: 10px;" ng-repeat="us in u.student" ng-bind="us.tname"></span>
+                                </td>
+                                <td>{{ branch_name }}</td>
+                                <td>{{ u.xxb }}</td>
+                                <td><a href="#" ng-click="showRechargeWin(u.userid, u.tname, u.phone)">充值</a></td>
+                            </tr>
+                            <tr>
+                                <td class="page-td" colspan="7">
+                                    <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </tab>
+        <tab heading="充值记录" data-ng-controller="rechargeRecordController">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <span class="panel-table-title">充值时间</span>
+                    <select class="bg-select" ng-change="showRechargeTime(time)" ng-model="time">
+                        <option value="">全部</option>
+                        <option ng-repeat="rt in rechargeTData" ng-bind="rt.title" value="{{rt.time}}"></option>
+                    </select>
+                    <div class="input-group">
+                        <input type="text" placeholder="" class="input-sm form-control" ng-model="sRLValue"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-sm btn-default" ng-click="searchLog()">搜索</button>
+                        </span>
+                    </div>
+                </div>
+                <!-- START table-responsive-->
+                <div class="table-responsive">
+                    <table id="table-ext-1" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width:10%;">id</th>
+                                <th style="width:10%;">头像</th>
+                                <th style="width:20%;">家长</th>
+                                <th style="width:20%;">电话</th>
+                                <th style="width:15%;">充值时间</th>
+                                <th style="width:15%;">充值数量（个）</th>
+                                <th style="width:15%;">操作人</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td ng-class="RNullType" colspan="7">暂无记录</td>
+                            </tr>
+                            <tr ng-repeat="r in rechargeRecord">
+                                <td>{{ r.log_id }}</td>
+                                <td>
+                                    <div class="media">
+                                        <img ng-src="{{r.header}}" alt="Image" class="img-responsive img-circle" />
+                                    </div>
+                                </td>
+                                <td>{{ r.tname }}</td>
+                                <td>{{ r.phone }}</td>
+                                <td>{{ rechargeTime(r) }}</td>
+                                <td>{{ r.xxb }}</td>
+                                <td>{{ r.sys_tname }}</td>
+                            </tr>
+                            <tr>
+                                <td class="page-td" colspan="7">
+                                    <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </tab>
+    </tabset>    
+</div>

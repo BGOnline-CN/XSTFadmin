@@ -1,0 +1,83 @@
+<h3>教师列表</h3>
+<h4 class="page-header courseTitle">
+    查看教师详情或者修改教师请点击教师姓名进入
+</h4>
+<div class="panel panel-default" data-ng-controller="teacherMngtController">
+   <div class="panel-heading">
+       教师基本信息
+       <button class="btn btn-default addCourseBtn addTeacher" type="button" ng-click="JumpEditTeacher(0,0)">
+           <i class="fa fa-plus addCourseFa"></i>新增教师
+       </button>
+   </div>
+   <div class="panel-footer">
+      <div class="row">
+         <div class="col-lg-2">
+            <!--<div class="input-group">
+               <input type="text" placeholder="" class="input-sm form-control" />
+               <span class="input-group-btn">
+                  <button type="button" class="btn btn-sm btn-default">搜索</button>
+               </span>
+            </div>-->
+         </div>
+         <div class="col-lg-8"></div>
+         <div class="col-lg-2">
+            <!--<div class="input-group pull-right">
+               <select class="input-sm form-control">
+                  <option value="3">输出到表格</option>
+               </select>
+               <span class="input-group-btn">
+                  <button class="btn btn-sm btn-default">执行</button>
+               </span>
+            </div>-->
+         </div>
+      </div>
+   </div>
+   <!-- START table-responsive-->
+   <div class="table-responsive">
+      <table id="table-ext-1" class="table table-bordered table-hover">
+         <thead>
+            <tr>
+               <th style="width:8%;">头像</th>
+               <th style="width:6%;">性别</th>
+               <th style="width:12%;">姓名</th>
+               <th style="width:16%;">邮箱</th>
+               <th style="width:6%;">类型</th>
+               <th style="width:12%;">手机号码</th>
+               <th style="width:18%;">所在分校</th>
+               <th style="width:14%;">最近登录时间</th>
+               <th style="width:8%;">锁定账户</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+                <td ng-class="TNullType" colspan="9">暂无教师</td>
+            </tr>
+            <tr ng-repeat="user in teacher">
+               <td>
+                  <div class="media">
+                     <img ng-src="{{user.header}}" alt="Image" class="img-responsive img-circle" />
+                  </div>
+               </td>
+               <td>{{ showSex(user) }}</td>
+               <td><a href="#" ng-click="JumpEditTeacher(user.userid, 1)">{{ user.tname }}</a></td>
+               <td>{{ user.email }}</td>
+               <td>{{ showType(user) }}</td>
+               <td>{{ user.phone }}</td>
+               <td>{{ branch_name }}</td>
+               <td>{{ logintime(user) }}</td>
+               <td>
+                   <label class="switch">
+                       <input type="checkbox" ng-click="lockUser(user.ball_id)" ng-checked="showLock(user)" />
+                       <span></span>
+                   </label>
+               </td>
+            </tr>
+            <tr>
+                <td class="page-td" colspan="9">
+                    <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
+                </td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+</div>

@@ -1,0 +1,74 @@
+<h3>管理员信息</h3>
+<div class="panel panel-default" data-ng-controller="adminInfoController">
+    
+    <div class="row plate">
+        <form novalidate="" ng-submit="setBranchInfo()" class="form-validate form-horizontal adminInfoForm">
+            <div class="clearfix row-div">
+                <div class="col-xs-2 customTitle">管理员：</div>
+                <div class="col-xs-2"><input type="text" class="form-control" ng-model="admin.tname" required=""></div>
+                <div class="col-xs-8"></div>
+            </div>
+            <div class="clearfix row-div">
+                <div class="col-xs-2 customTitle">联系电话：</div>
+                <div class="col-xs-2"><input type="text" class="form-control" ng-model="admin.phone" required="" ng-minlength="11" ng-maxlength="11" ng-pattern="/^[0-9]+$/"></div>
+                <div class="col-xs-8"></div>
+            </div>
+            <div class="clearfix row-div">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-warning saveCourse setAdminSave">保存</button>
+                </div>
+                <div class="col-sm-8"></div>
+            </div>
+        </form>
+        <form name="setAdminInfoForm" novalidate="" ng-submit="setAdminInfo()" class="form-validate form-horizontal">
+            <div class="clearfix row-div">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-4">
+                    <accordion class="editAdminPassword">
+                        <accordion-group>
+                            <accordion-heading>点此修改登陆密码</accordion-heading>
+                            <div class="clearfix row-div">
+                                <div class="col-sm-3 customTitle">登陆账号：</div>
+                                <div class="col-sm-7 showUserName" ng-bind="admin.username"></div>
+                                <div class="col-sm-2"></div>
+                            </div>
+                            <div class="clearfix row-div">
+                                <div class="col-sm-3 customTitle">当前密码：</div>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" ng-model="admin.old_password"/>
+                                </div>
+                                <div class="col-sm-2"></div>
+                            </div>
+                            <div class="clearfix row-div">
+                                <div class="col-sm-3 customTitle">新密码：</div>
+                                <div class="col-sm-7">
+                                    <input id="id-source" type="password" ng-model="admin.password" class="form-control newPasswordInput" ng-minlength="6" ng-focus="vShow(1)" ng-blur="vShow(0)"/>
+                                </div>
+                                <div class="col-sm-2"></div>
+                            </div>
+                            <div class="clearfix row-div">
+                                <div class="col-sm-3 customTitle">确认密码：</div>
+                                <div class="col-sm-7">
+                                    <input type="password" required="" ng-model="match2" ui-validate="'$value==admin.password'" ui-validate-watch="'validator.admin.password'" class="form-control" />
+                                </div>
+                                <div class="col-sm-2"></div>
+                            </div>
+                            <div class="clearfix row-div">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-7">
+                                    <button type="submit" class="btn btn-warning saveCourse setAdminSave">保存</button>
+                                </div>
+                                <div class="col-sm-2"></div>
+                            </div>
+                        </accordion-group>
+                    </accordion>
+                </div>
+                <div class="col-sm-7">
+                    <p style="margin:172px 0 0 -100px;" class="vShow2">密码不少于6位，建议密码由6-10位的字母与数字组成！</p>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+</div>

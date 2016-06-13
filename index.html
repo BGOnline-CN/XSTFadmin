@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="angle">
+
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   <meta name="description" content="{{app.description}}">
+   <meta name="keywords" content="app, responsive, angular, bootstrap, dashboard, admin">
+   <title data-ng-bind="::pageTitle()">小书童分校管理系统</title>
+   <link rel="shortcut icon" href="app/img/favicon.ico">
+   <!-- Bootstrap styles-->
+   <link rel="stylesheet" href="app/css/bootstrap.css" data-ng-if="!app.layout.isRTL">
+   <link rel="stylesheet" href="app/css/bootstrap-rtl.css" data-ng-if="app.layout.isRTL">
+   <!-- Application styles-->
+   <link rel="stylesheet" href="app/css/app.css" data-ng-if="!app.layout.isRTL">
+   <link rel="stylesheet" href="app/css/app-rtl.css" data-ng-if="app.layout.isRTL">
+   <!-- Themes-->
+   <link rel="stylesheet" ng-href="{{app.layout.theme}}" data-ng-if="app.layout.theme">
+   <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+   <script src="vendor/md5/md5.js"></script>
+</head>
+
+<body data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed, 'layout-boxed' : app.layout.isBoxed, 'layout-fs': app.useFullLayout, 'hidden-footer': app.hiddenFooter, 'layout-h': app.layout.horizontal, 'aside-float': app.layout.isFloat}">
+   <div data-ui-view="" data-autoscroll="false" class="wrapper"></div>
+   <!--<div class="bg-shield">
+       <div class="warning-div">
+           <h3>警告：</h3>
+           <h4>系统检测您使用的是“<span class="browser-show"></span>”</h4>
+           <h4 style="text-align: left;">为保证系统安全稳定给您最优的体验，建议使用Firefox最新版点击图标既可下载！</h4>
+           <p>系统将在<span class="timer-show">10</span>秒后关闭</p>
+           <a href="http://download.firefox.com.cn/releases-sha2/stub/official/zh-CN/Firefox-latest.exe" class="firefox-ico" title="firefox最新版下载"></a>
+       </div>
+   </div>
+   <script> 
+        function getOs() {  
+            var userAgent = navigator.userAgent;
+            var isOpera = userAgent.indexOf("Opera") > -1; 
+            var isChrome = userAgent.indexOf("Chrome") > -1;
+            var isSafari = userAgent.indexOf("Safari") > -1;
+            var isFF = userAgent.indexOf("Firefox") > -1; 
+            var isSafari = userAgent.indexOf("Safari") > -1; 
+            if(!!window.ActiveXObject || "ActiveXObject" in window) {
+                return "IE浏览器";
+            }
+            if (isFF) {
+                document.getElementsByClassName('bg-shield')[0].style.display = "none";
+                return "Firefox浏览器";
+            }
+            if (isOpera) {
+                return "Opera浏览器";
+            }
+            if (isChrome) {
+                return "Chrome浏览器";
+            }
+            if (isSafari) {
+                return "Safari浏览器";
+            }
+        }  
+        document.getElementsByClassName('browser-show')[0].innerText = getOs();  
+    </script>-->
+   <script src="app/js/base.js"></script>
+   <script src="app/js/app.js"></script>
+</body>
+
+</html>

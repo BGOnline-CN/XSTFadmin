@@ -1,0 +1,22 @@
+{
+  "dashboard": {
+    "WELCOME": "Welcome to {{appName}}"
+  },
+  "topbar": {
+    "search": {
+      "PLACEHOLDER": "Type and hit enter.."
+    }
+  },
+  "sidebar": {
+    "WELCOME": "Welcome",
+    "heading": {
+      "HEADER": "ThinkTorch Admin"
+    },
+    "nav": {
+      "COURSEMNGT": "课程管理",
+      "TEACHERMNGT": "教师管理",
+      "USERSCENTER": "用户中心",
+      "SETUP": "系统配置"
+    }
+  }
+}

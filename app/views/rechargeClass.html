@@ -1,0 +1,79 @@
+<h3>
+    <a ui-sref="app.courseDetails">返回上一页</a>
+</h3>
+<div class="clearfix" ng-controller="rechargeClassController">
+    <h4 class="page-header courseTitle">
+        班级列表  >  充值课时
+    </h4>
+    <div class="addCourse-div">
+        <tabset>
+            <tab heading="充值课时">
+                <form role="form" ng-submit="addSubmit()" novalidate="" enctype="multipart/form-data"> 
+                    <div class="row plate">
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">学生信息</div>
+                            <div class="col-xs-8">
+                                <div class="table-responsive addCombo">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:80px;">学生</th>
+                                                <th style="width:80px;">剩余学习卡</th>
+                                                <th style="width:50px;">充值数量</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <img ng-src="{{header}}" alt="Image" class="img-responsive img-circle">
+                                                    {{tname}}
+                                                </td>
+                                                <td>
+                                                    <p ng-repeat="x in student_pack">
+                                                        <span ng-bind="x.package_name+'*'+x.package_quantity"></span>
+                                                        <label class="radio-inline c-radio">
+                                                            <input name="pRadio" title="{{x.package_quantity}}" type="radio" ng-checked="$index == 0" ng-click="selectpRadio(x.packageid, x.package_quantity)">
+                                                            <span class="fa fa-circle"></span>
+                                                        </label>
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <i class="fa fa-plus-square-o fa-2x" style="color: #DDE6E9;" ng-click="increaseQ()"></i>
+                                                    <input type="text" class="form-control quantityInput" disabled value="1" style="width: 50px;display: inline-block;padding: 0px 8px;vertical-align: bottom;">
+                                                    <i class="fa fa-minus-square-o fa-2x" style="color: #DDE6E9;" ng-click="reduceQ()"></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-xs-2"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">学生课表</div>
+                            <div class="col-xs-10">
+                                <iframe ng-src="{{'app/views/BGOCalender.html?'+randomDate}}" allowtransparency="true" name="iframepage" id="iframepage" style="background-color=transparent" frameborder="0" width="100%" onLoad="iFrameHeight()" scrolling="no"></iframe>                    
+                                <script type="text/javascript" language="javascript">
+                                    function iFrameHeight() {
+                                        
+                                        var ifm= document.getElementById("iframepage");
+                                        var subWeb = document.frames ? document.frames["iframepage"].document : ifm.contentDocument;
+                                        if(ifm != null && subWeb != null) {
+                                            ifm.height = subWeb.body.scrollHeight;
+                                        }
+                                            
+                                        // $('.preview').click(function() {
+                                        //     var iframeVal = document.getElementById('iframepage').contentWindow.html;
+                                        //     document.getElementsByClassName('phone-show')[0].innerHTML = iframeVal;
+                                        // })        
+                                    }
+                                </script> 
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning saveCourse">保存</button>
+                    </div>
+                </form>
+            </tab>
+        </tabset>
+    </div>
+</div>
