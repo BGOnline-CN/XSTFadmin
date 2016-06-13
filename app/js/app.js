@@ -8,7 +8,6 @@ if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript 
 
 
 // 全局
-
 var url = 'http://xiaoshutong.thinktorch.cn/frontend/web'; // API
 var rootUrl = 'http://xiaoshutong.thinktorch.cn';
 var noF5speed = 5; // 无刷新获取数据的速度 秒
