@@ -238,13 +238,14 @@
                 <p class="cdd-title buyListCtrl">
                     <span>购买时间</span>
                     <select class="bg-select" ng-change="showPayTime(time)" ng-model="time">
+                        <option value="">全部</option>
                         <option ng-repeat="pt in payTime" ng-bind="pt.title" value="{{pt.time}}"></option>
                     </select>
                 </p>
                 <div class="input-group buyListCtrlSarch">
-                    <input type="text" placeholder="" class="input-sm form-control" />
+                    <input type="text" placeholder="" class="input-sm form-control" ng-model="sRLValue"/>
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-sm btn-default">搜索</button>
+                        <button type="button" class="btn btn-sm btn-default" ng-click="searchLog()">搜索</button>
                     </span>
                 </div>
                 <div class="table-responsive addCombo">
