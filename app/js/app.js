@@ -2675,6 +2675,7 @@ App.controller('rechargeXXBController', ['$scope', '$http', 'ngDialog',
                       plain: true,
                       className: 'ngdialog-theme-default'
                     });
+                    ngDialog.close();
                 }else{ 
                     getUsersData();
                     getRecordData();
@@ -2686,18 +2687,20 @@ App.controller('rechargeXXBController', ['$scope', '$http', 'ngDialog',
                     ngDialog.close();
                 }
             }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+            });
+          }else {
               ngDialog.open({
-                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                template: "<p style='text-align:center;margin: 0;'>学习币输入有误！</p>",
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
-            });
-          }else {
-            ngDialog.open({
-              template: "<p style='text-align:center;margin: 0;'>学习币输入有误！</p>",
-              plain: true,
-              className: 'ngdialog-theme-default'
-            });
+              ngDialog.close();
           }
           
       }
