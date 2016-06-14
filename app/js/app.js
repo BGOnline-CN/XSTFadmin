@@ -6,6 +6,7 @@
 
 if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript requires jQuery'); }
 
+//测试一下
 
 // 全局
 
