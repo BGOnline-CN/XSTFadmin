@@ -239,7 +239,9 @@
                     <span>购买时间</span>
                     <select class="bg-select" ng-change="showPayTime(time)" ng-model="time">
                         <option value="">全部</option>
-                        <option ng-repeat="pt in payTime" ng-bind="pt.title" value="{{pt.time}}"></option>
+                        <option value="a">最近一周</option>
+                        <option value="b">最近一个月</option>
+                        <option value="c">最近三个月</option>
                     </select>
                 </p>
                 <div class="input-group buyListCtrlSarch">

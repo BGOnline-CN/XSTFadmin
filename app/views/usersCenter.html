@@ -73,7 +73,9 @@
                     <span class="panel-table-title">充值时间</span>
                     <select class="bg-select" ng-change="showRechargeTime(time)" ng-model="time">
                         <option value="">全部</option>
-                        <option ng-repeat="rt in rechargeTData" ng-bind="rt.title" value="{{rt.time}}"></option>
+                        <option value="a">最近一周</option>
+                        <option value="b">最近一个月</option>
+                        <option value="c">最近三个月</option>
                     </select>
                     <div class="input-group">
                         <input type="text" placeholder="" class="input-sm form-control" ng-model="sRLValue"/>
