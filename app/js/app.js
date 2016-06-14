@@ -1478,8 +1478,8 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
       })
 
       uploader.onSuccessItem = function(response) {
-        sessionStorage.setItem('uploadImgUrl', jQuery.parseJSON(response._xhr.response).url);
-        $scope.img = rootUrl + sessionStorage.uploadImgUrl;
+        sessionStorage.setItem('uploadCourseImgUrl', jQuery.parseJSON(response._xhr.response).url);
+        $scope.img = rootUrl + sessionStorage.uploadCourseImgUrl;
       };
       
       $scope.randomDate = (new Date()).getTime();
@@ -1595,7 +1595,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                               sortid: sessionStorage.sortid,
                               summary: $scope.addCourse.abstract,
                               content: content,
-                              course_img: sessionStorage.uploadImgUrl,
+                              course_img: sessionStorage.uploadCourseImgUrl,
                               package: JSON.stringify(comboArr)
                         })
                         .then(function(response) {
@@ -1707,7 +1707,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         sortid: sessionStorage.sortid,
                         summary: $scope.addCourse.abstract,
                         content: content,
-                        course_img: sessionStorage.uploadImgUrl ? sessionStorage.uploadImgUrl : sessionStorage.detailCourseImg,
+                        course_img: sessionStorage.uploadCourseImgUrl ? sessionStorage.uploadCourseImgUrl : sessionStorage.detailCourseImg,
                         package: JSON.stringify(comboArr)
                     })
                     .then(function(response) {
@@ -1868,8 +1868,8 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
       })
 
       uploader.onSuccessItem = function(response) {
-        sessionStorage.setItem('uploadImgUrl', jQuery.parseJSON(response._xhr.response).url);
-        $scope.img = rootUrl + sessionStorage.uploadImgUrl;
+        sessionStorage.setItem('uploadTeacherImgUrl', jQuery.parseJSON(response._xhr.response).url);
+        $scope.img = rootUrl + sessionStorage.uploadTeacherImgUrl;
       };
       
       $scope.teacher = {};
@@ -1886,7 +1886,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                     phone: $scope.teacher.phone,
                     password: $scope.teacher.password,
                     email: $scope.teacher.email,
-                    header: sessionStorage.uploadImgUrl,
+                    header: sessionStorage.uploadTeacherImgUrl,
                     locked: 0
                 })
                 .then(function(response) {
@@ -1927,7 +1927,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                       phone: $scope.teacher.phone,
                       password: $scope.teacher.password,
                       email: $scope.teacher.email,
-                      header: sessionStorage.uploadImgUrl ? sessionStorage.uploadImgUrl : sessionStorage.detailTeacherImg
+                      header: sessionStorage.uploadTeacherImgUrl ? sessionStorage.uploadTeacherImgUrl : sessionStorage.detailTeacherImg
                   })
                   .then(function(response) {
                       if ( response.data.code != 200 ) {
