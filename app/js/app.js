@@ -2677,6 +2677,7 @@ App.controller('rechargeXXBController', ['$scope', '$http', 'ngDialog',
                     });
                 }else{ 
                     getUsersData();
+                    getRecordData();
                     ngDialog.open({
                       template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                       plain: true,
