@@ -617,7 +617,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           
           sessionStorage.setItem('sname', sname);
           sessionStorage.setItem('sortid', sortid);
-
+          $('.class-name').html(sname);
           getCourseData(sortid);
           
           nowClassName(i+1)
