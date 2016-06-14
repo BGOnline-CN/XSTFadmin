@@ -617,7 +617,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           
           sessionStorage.setItem('sname', sname);
           sessionStorage.setItem('sortid', sortid);
-
+          $('.class-name').html(sname);
           getCourseData(sortid);
           
           nowClassName(i+1)
@@ -757,11 +757,11 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
       })
       
       $scope.rClassName = function() {
-          $('.class-name').html("<input class='form-control ng-touched rcName' type='text'>");
+          $('.class-name').html("<input class='form-control ng-touched rcName' type='text' value='"+sessionStorage.sname+"'>");
           $('.rcName').focus();
       }
       
-      $(document).on('change', '.rcName', function() { // 修改分类名称
+      $(document).on('blur', '.rcName', function() { // 修改分类名称
           var changeSname = $(this).val();
           $http
             .post(''+url+'/sort/edit', {
@@ -770,10 +770,11 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
             .then(function(response) {
                 if ( response.data.code != 200 ) {
                     ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                       plain: true,
                       className: 'ngdialog-theme-default'
                     });
+                    ngDialog.close();
                 }
                 else{ 
                     ngDialog.open({
@@ -784,6 +785,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                     $('.class-name').html(changeSname);
                     sessionStorage.setItem('sname', changeSname); 
                     getCourseClass();
+                    ngDialog.close();
                 }
             }, function(x) { 
                 ngDialog.open({
@@ -791,8 +793,8 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                   plain: true,
                   className: 'ngdialog-theme-default'
                 });
+                ngDialog.close();
             });
-            ngDialog.close();
       })
       
       
@@ -821,6 +823,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                           plain: true,
                           className: 'ngdialog-theme-default'
                         });
+                        ngDialog.close();
                     }
                     else{ 
                         getCourseData(sortid);
@@ -830,14 +833,16 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                           plain: true,
                           className: 'ngdialog-theme-default'
                         });
+                        ngDialog.close();
                     }
                 }, function(x) { 
-                  listLoading.css({'display':'none'});
-                  ngDialog.open({
-                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                    plain: true,
-                    className: 'ngdialog-theme-default'
-                  });
+                    listLoading.css({'display':'none'});
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
                 });
           }else {
               ngDialog.open({
@@ -845,6 +850,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
+              ngDialog.close();
           }
           
       }
@@ -866,22 +872,25 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                               className: 'ngdialog-theme-default'
                             });
                             $('.rdClassNameBtn').removeClass('open');
+                            ngDialog.close();
                         }
                         else{ 
-                            sessionStorage.setItem('sortid', undefined);
+                            sessionStorage.setItem('sortid', 0);
                             sessionStorage.setItem('sname', undefined);
                             getCourseData();
                             getCourseClass();
                             $('.rdClassNameBtn').removeClass('open');
+                            ngDialog.close();
                         }
                     }, function(x) { 
-                      listLoading.css({'display':'none'});
-                      ngDialog.open({
-                        template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                        plain: true,
-                        className: 'ngdialog-theme-default'
-                      });
-                      $('.rdClassNameBtn').removeClass('open');
+                        listLoading.css({'display':'none'});
+                        ngDialog.open({
+                          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                          plain: true,
+                          className: 'ngdialog-theme-default'
+                        });
+                        $('.rdClassNameBtn').removeClass('open');
+                        ngDialog.close();
                     });
               }
           }else {
@@ -890,6 +899,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
+              ngDialog.close();
           }
       }
       
@@ -910,17 +920,19 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                           plain: true,
                           className: 'ngdialog-theme-default'
                         });
+                        ngDialog.close();
                     }
                     else{ 
                         getCourseData(sessionStorage.sortid, $scope.currentPage - 1);
                     }
                 }, function(x) { 
-                  listLoading.css({'display':'none'});
-                  ngDialog.open({
-                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                    plain: true,
-                    className: 'ngdialog-theme-default'
-                  });
+                    listLoading.css({'display':'none'});
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
                 });
           }
       }
@@ -1270,7 +1282,7 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                     $scope.WaitAllotStudent = $scope.courseDetailsData.WaitAllotStudent;
                     $scope.graduate = $scope.courseDetailsData.graduate;
                     sessionStorage.setItem('sortid', $scope.courseDetailsData.sortid);
-                    $scope.courseDetailsData.class.length > 0 || $scope.courseDetailsData.end_class.length > 0 ? $scope.CNullType = 'isNullTypeHidden' : $scope.CNullType = 'isNullTypeShow';
+                    $scope.courseDetailsData.class.length > 0 ? $scope.CNullType = 'isNullTypeHidden' : $scope.CNullType = 'isNullTypeShow';
                     $scope.graduate.length > 0 ? $scope.GNullType = 'isNullTypeHidden' : $scope.GNullType = 'isNullTypeShow';
                     $scope.WaitAllotStudent.length > 0 ? $scope.WNullType = 'isNullTypeHidden' : $scope.WNullType = 'isNullTypeShow';
                 }
@@ -1437,6 +1449,9 @@ App.controller('payLogController', ['$scope', '$sce', '$rootScope', '$http', '$f
       };
       $scope.maxSize = 5; // 最多显示5页
       
+      $scope.searchLog = function() {
+          getCourseOrder($scope.sRLValue);
+      }
       //noRefreshGetData(getUserData, getDataSpeed);
       
       //timeoutLock($state);
@@ -1463,8 +1478,8 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
       })
 
       uploader.onSuccessItem = function(response) {
-        sessionStorage.setItem('uploadImgUrl', jQuery.parseJSON(response._xhr.response).url);
-        $scope.img = rootUrl + sessionStorage.uploadImgUrl;
+        sessionStorage.setItem('uploadCourseImgUrl', jQuery.parseJSON(response._xhr.response).url);
+        $scope.img = rootUrl + sessionStorage.uploadCourseImgUrl;
       };
       
       $scope.randomDate = (new Date()).getTime();
@@ -1580,7 +1595,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                               sortid: sessionStorage.sortid,
                               summary: $scope.addCourse.abstract,
                               content: content,
-                              course_img: sessionStorage.uploadImgUrl,
+                              course_img: sessionStorage.uploadCourseImgUrl,
                               package: JSON.stringify(comboArr)
                         })
                         .then(function(response) {
@@ -1692,7 +1707,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         sortid: sessionStorage.sortid,
                         summary: $scope.addCourse.abstract,
                         content: content,
-                        course_img: sessionStorage.uploadImgUrl ? sessionStorage.uploadImgUrl : sessionStorage.detailCourseImg,
+                        course_img: sessionStorage.uploadCourseImgUrl ? sessionStorage.uploadCourseImgUrl : sessionStorage.detailCourseImg,
                         package: JSON.stringify(comboArr)
                     })
                     .then(function(response) {
@@ -1853,8 +1868,8 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
       })
 
       uploader.onSuccessItem = function(response) {
-        sessionStorage.setItem('uploadImgUrl', jQuery.parseJSON(response._xhr.response).url);
-        $scope.img = rootUrl + sessionStorage.uploadImgUrl;
+        sessionStorage.setItem('uploadTeacherImgUrl', jQuery.parseJSON(response._xhr.response).url);
+        $scope.img = rootUrl + sessionStorage.uploadTeacherImgUrl;
       };
       
       $scope.teacher = {};
@@ -1871,7 +1886,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                     phone: $scope.teacher.phone,
                     password: $scope.teacher.password,
                     email: $scope.teacher.email,
-                    header: sessionStorage.uploadImgUrl,
+                    header: sessionStorage.uploadTeacherImgUrl,
                     locked: 0
                 })
                 .then(function(response) {
@@ -1912,7 +1927,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                       phone: $scope.teacher.phone,
                       password: $scope.teacher.password,
                       email: $scope.teacher.email,
-                      header: sessionStorage.uploadImgUrl ? sessionStorage.uploadImgUrl : sessionStorage.detailTeacherImg
+                      header: sessionStorage.uploadTeacherImgUrl ? sessionStorage.uploadTeacherImgUrl : sessionStorage.detailTeacherImg
                   })
                   .then(function(response) {
                       if ( response.data.code != 200 ) {
@@ -2330,6 +2345,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                                   plain: true,
                                   className: 'ngdialog-theme-default'
                                 });
+                                ngDialog.close();
                             }else {
                                 $state.go('app.rechargeClass');
                                 sessionStorage.setItem('studentid', studentid);
@@ -2356,8 +2372,8 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
  * version 1.0 2016-5-17
  =========================================================*/
  
-App.controller('rechargeClassController', ['$scope', '$http', '$filter', '$state',
-  function($scope, $http, $filter, $state) {
+App.controller('rechargeClassController', ['$scope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $http, $filter, $state, ngDialog) {
       
       //errorJump($state);
       //$scope.sname = sessionStorage.sname; // 分类名称
@@ -2463,9 +2479,7 @@ App.controller('rechargeClassController', ['$scope', '$http', '$filter', '$state
                       $scope.qMax = defaultSPackPackageid[0].package_quantity;
                       $('.quantityInput').val('1');
                       qCount = 1;
-                      
-                      $state.go('app.courseDetails');
-
+                      ngDialog.close();
                   }
               }, function(x) {
                   ngDialog.open({
@@ -2473,6 +2487,7 @@ App.controller('rechargeClassController', ['$scope', '$http', '$filter', '$state
                     plain: true,
                     className: 'ngdialog-theme-default'
                   });
+                  ngDialog.close();
               });
           }else if(!(defaultSPackPackageid.length > 0)) {
               alert('无可用学习卡！');
@@ -2503,7 +2518,7 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
           listLoading.css({'display':'block'});
           $http // 用户列表
             .post(''+url+'/user/index', {
-                token: sessionStorage.token, p: cp
+                token: sessionStorage.token, p: cp, search: s
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -2660,8 +2675,10 @@ App.controller('rechargeXXBController', ['$scope', '$http', 'ngDialog',
                       plain: true,
                       className: 'ngdialog-theme-default'
                     });
+                    ngDialog.close();
                 }else{ 
                     getUsersData();
+                    getRecordData();
                     ngDialog.open({
                       template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                       plain: true,
@@ -2670,18 +2687,20 @@ App.controller('rechargeXXBController', ['$scope', '$http', 'ngDialog',
                     ngDialog.close();
                 }
             }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+            });
+          }else {
               ngDialog.open({
-                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                template: "<p style='text-align:center;margin: 0;'>学习币输入有误！</p>",
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
-            });
-          }else {
-            ngDialog.open({
-              template: "<p style='text-align:center;margin: 0;'>学习币输入有误！</p>",
-              plain: true,
-              className: 'ngdialog-theme-default'
-            });
+              ngDialog.close();
           }
           
       }

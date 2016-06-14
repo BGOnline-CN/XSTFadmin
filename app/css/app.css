@@ -11483,6 +11483,7 @@ flatdoc .button .badge {
 }
 .bg-select {
   vertical-align: -webkit-baseline-middle;
+  vertical-align: -moz-middle-with-baseline;
   font-size: 14px;
   color: #555;
   border: 1px solid #ddd;

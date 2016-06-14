@@ -37,20 +37,20 @@
       <table id="table-ext-1" class="table table-bordered table-hover">
          <thead>
             <tr>
-               <th style="width:8%;">头像</th>
-               <th style="width:6%;">性别</th>
-               <th style="width:12%;">姓名</th>
-               <th style="width:16%;">邮箱</th>
-               <th style="width:6%;">类型</th>
-               <th style="width:12%;">手机号码</th>
-               <th style="width:18%;">所在分校</th>
-               <th style="width:14%;">最近登录时间</th>
-               <th style="width:8%;">锁定账户</th>
+               <th style="width:15%;">头像</th>
+               <!--<th style="width:6%;">性别</th>-->
+               <th style="width:15%;">姓名</th>
+               <th style="width:20%;">邮箱</th>
+               <!--<th style="width:6%;">类型</th>-->
+               <th style="width:15%;">手机号码</th>
+               <th style="width:20%;">所在分校</th>
+               <th style="width:15%;">最近登录时间</th>
+               <!--<th style="width:8%;">锁定账户</th>-->
             </tr>
          </thead>
          <tbody>
             <tr>
-                <td ng-class="TNullType" colspan="9">暂无教师</td>
+                <td ng-class="TNullType" colspan="6">暂无教师</td>
             </tr>
             <tr ng-repeat="user in teacher">
                <td>
@@ -58,19 +58,19 @@
                      <img ng-src="{{user.header}}" alt="Image" class="img-responsive img-circle" />
                   </div>
                </td>
-               <td>{{ showSex(user) }}</td>
+               <!--<td>{{ showSex(user) }}</td>-->
                <td><a href="#" ng-click="JumpEditTeacher(user.userid, 1)">{{ user.tname }}</a></td>
                <td>{{ user.email }}</td>
-               <td>{{ showType(user) }}</td>
+               <!--<td>{{ showType(user) }}</td>-->
                <td>{{ user.phone }}</td>
                <td>{{ branch_name }}</td>
                <td>{{ logintime(user) }}</td>
-               <td>
+               <!--<td>
                    <label class="switch">
                        <input type="checkbox" ng-click="lockUser(user.ball_id)" ng-checked="showLock(user)" />
                        <span></span>
                    </label>
-               </td>
+               </td>-->
             </tr>
             <tr>
                 <td class="page-td" colspan="9">
