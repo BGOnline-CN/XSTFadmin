@@ -581,7 +581,7 @@ var noRefreshGetData = (function(x, speed) { // x 取得数据的函数名 speed
 var errorJump = (function($state) {
     if (!(sessionStorage.suserid && sessionStorage.token)) { 
         $state.go('page.login'); 
-        clearInterval(intervalTimer);
+        // clearInterval(intervalTimer);
     }
 });
  
@@ -1029,7 +1029,7 @@ App.controller('ZHcourseClassController', ['$scope', '$rootScope', '$http', '$fi
 App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
   function($scope, $rootScope, $http, $filter, $state, ngDialog) {
       
-      //errorJump($state);
+      errorJump($state);
 
       getZHCourseData = function(sortid, cp) { // 获取课程
         
@@ -1133,8 +1133,9 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
 App.controller('ZHCourseDetailsController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
   function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
       
+      errorJump($state);
+
       var listLoading = $('.list-loading');
-      //errorJump($state);
       $scope.tcourse_name = sessionStorage.tcourse_name;
       $scope.ZHsname = sessionStorage.ZHsname;
       
@@ -1686,7 +1687,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
 App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state', 'ngDialog',
   function($scope, $http, $filter, $state, ngDialog) {
       
-      //errorJump($state);
+      errorJump($state);
        
       var getUserData = function(cp) {
         
@@ -1799,6 +1800,8 @@ App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state',
 App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
       
+      errorJump($state);
+
       var uploader = $scope.uploader = new FileUploader({
         url: ''+url+'/gd/upload'
       })
@@ -2024,7 +2027,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
 
 App.controller('atTheCityController', ['$scope', '$http', '$state', 'ngDialog',
   function($scope, $http, $state, ngDialog) {
-
+      
       var getPCAS = function(areaid) {
           $http
             .post(''+url+'/public/getarea', {
@@ -2098,7 +2101,7 @@ App.controller('atTheCityController', ['$scope', '$http', '$state', 'ngDialog',
 App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
       
-      //errorJump($state);
+      errorJump($state);
       //$scope.sname = sessionStorage.sname; // 分类名称
       $scope.addBanji = {};
       patternNum = 1;
@@ -2345,7 +2348,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
 App.controller('rechargeClassController', ['$scope', '$http', '$filter', '$state', 'ngDialog',
   function($scope, $http, $filter, $state, ngDialog) {
       
-      //errorJump($state);
+      errorJump($state);
       //$scope.sname = sessionStorage.sname; // 分类名称
       patternNum = 2;
       $scope.randomDate = (new Date()).getTime();
@@ -2473,7 +2476,7 @@ App.controller('rechargeClassController', ['$scope', '$http', '$filter', '$state
 App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state', 'ngDialog',
   function($scope, $http, $filter, $state, ngDialog) {
       
-      //errorJump($state);
+      errorJump($state);
       var listLoading = $('.list-loading');
       
       getUsersData = function(cp, s) {
@@ -2548,7 +2551,7 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
 App.controller('rechargeRecordController', ['$scope', '$http', '$filter', '$state', 'ngDialog',
   function($scope, $http, $filter, $state, ngDialog) {
       
-      //errorJump($state);
+      errorJump($state);
       var listLoading = $('.list-loading');  
       getRecordData = function(cp, s, t) {
          listLoading.css({'display':'block'});
@@ -2617,7 +2620,7 @@ App.controller('rechargeRecordController', ['$scope', '$http', '$filter', '$stat
 App.controller('rechargeXXBController', ['$scope', '$http', 'ngDialog',
   function($scope, $http, ngDialog) {
       
-      //errorJump($state);
+      errorJump($state);
       
       $scope.rechargeXXB = function(uid) {
           var xxbNum = $('.xxb-input').val();
@@ -2670,7 +2673,7 @@ App.controller('rechargeXXBController', ['$scope', '$http', 'ngDialog',
 App.controller('adminInfoController', ['$scope', '$http', 'ngDialog',
   function($scope, $http, ngDialog) {
       
-      //errorJump($state);
+      errorJump($state);
       
       $scope.vShow = function(v) {
           switch(v) {
