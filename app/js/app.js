@@ -963,7 +963,11 @@ App.controller('ZHcourseClassController', ['$scope', '$rootScope', '$http', '$fi
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    requestError(response, $state, ngDialog);
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
                 }
                 else{ 
                     $rootScope.courseClass = response.data.data;
@@ -1166,63 +1170,7 @@ App.controller('ZHCourseDetailsController', ['$scope', '$sce', '$rootScope', '$h
       };
       
       getZHCourseDetailsData();
-      //noRefreshGetData(getUserData, getDataSpeed);
-      
-    //   $scope.types = [
-    //       {value: 0, text: '普通会员'},
-    //       {value: 1, text: '球场管理员'}
-    //   ];
-      
-    //   $scope.sexs = [
-    //       {value: 0, text: '保密'},
-    //       {value: 'F', text: '男'},
-    //       {value: 'M', text: '女'}
-    //   ];
-  
-    //   $scope.locks = [
-    //       {value: 0, text: 'true'},
-    //       {value: 1, text: 'false'}
-    //   ];
-      
-    //   $scope.showType = function(user) {
-    //       if(user.ball_type) {
-    //           selected = $filter('filter')($scope.types, {value: user.ball_type});
-    //       }
-    //       return selected.length ? selected[0].text : 'Not set';
-    //   };
-      
-    //   $scope.showSex = function(user) {
-    //       if(user.ball_sex) {
-    //           selected = $filter('filter')($scope.sexs, {value: user.ball_sex});
-    //       }
-    //       return selected.length ? selected[0].text : 'Not set';
-    //   };
-      
-    //   $scope.showLock = function(user) {
-    //       if(user.ball_lock) {
-    //           selected = $filter('filter')($scope.locks, {value: user.ball_lock});
-    //       }
-    //       return selected.length ? selected[0].text : 'Not set';
-    //   };
-      
-    //   $scope.showLocalData = function(user) {
-    //       return localData = new Date(parseInt(user.ball_login_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
-    //   }
-      
-    //   $scope.lockUser = function(ballId) { // 锁定用户
-    //       $http.post(''+url+'/index.php/admin/store/closestore', {
-    //               ball_user_id: sessionStorage.ball_id, 
-    //               ball_token: sessionStorage.ball_token,
-    //               ball_store_id: ballId,
-    //               type: 'is_open'
-    //       }).then(function(response) {
-    //           if(response.data.code != 200) { alert("操作球场失败！") }
-    //           else { getUserData(); }
-    //       }, function(x) {
-    //           $scope.authMsg = '朋友，服务器挂掉了！';
-    //       }) 
-    //   }
-      
+      //noRefreshGetData(getUserData, getDataSpeed); 
       //timeoutLock($state);
 }]);
 
@@ -2607,7 +2555,11 @@ App.controller('rechargeRecordController', ['$scope', '$http', '$filter', '$stat
             .then(function(response) {
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
-                    requestError(response, $state, ngDialog);
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
                 }
                 else{ 
                     $scope.rechargeRecord = response.data.data.mod_data; 
