@@ -548,7 +548,7 @@ var requestError = (function(response, $state, ngDialog) {
         $state.go('page.login');
     }else {
         ngDialog.open({
-          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
           plain: true,
           className: 'ngdialog-theme-default'
         });
@@ -834,6 +834,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                     else{ 
                         getCourseData(sortid);
                         getCourseClass();
+                        $('.class-name').html(sname);
                         ngDialog.open({
                           template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                           plain: true,
@@ -878,6 +879,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                         else{ 
                             sessionStorage.setItem('sortid', 0);
                             sessionStorage.setItem('sname', undefined);
+                            $('.class-name').html('全部课程');
                             getCourseData();
                             getCourseClass();
                             $('.rdClassNameBtn').removeClass('open');
@@ -2617,8 +2619,8 @@ App.controller('rechargeRecordController', ['$scope', '$http', '$filter', '$stat
  * version 1.0 2016-6-2
  =========================================================*/
  
-App.controller('rechargeXXBController', ['$scope', '$http', 'ngDialog',
-  function($scope, $http, ngDialog) {
+App.controller('rechargeXXBController', ['$scope', '$http', '$state', 'ngDialog',
+  function($scope, $http, $state, ngDialog) {
       
       errorJump($state);
       
