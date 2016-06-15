@@ -2032,7 +2032,11 @@ App.controller('atTheCityController', ['$scope', '$http', '$state', 'ngDialog',
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    requestError(response, $state, ngDialog);
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
                 }
                 else{ 
                     $scope.PCAS = response.data.data;
