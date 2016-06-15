@@ -534,6 +534,31 @@ var signOut = (function() {
  　 window.close();
 });
 
+
+
+/**=========================================================
+ * 请求出错
+ * author: BGOnline
+ * version 1.0 2016-6-15
+ =========================================================*/
+ 
+var requestError = (function(response, $state, ngDialog) { 
+    if(response.data.code == 202) {
+        alert('账户在另一台电脑登陆，请确保账户安全！');
+        $state.go('page.login');
+    }else {
+        ngDialog.open({
+          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+          plain: true,
+          className: 'ngdialog-theme-default'
+        });
+        ngDialog.close();
+    }
+
+});
+
+
+
 /**=========================================================
  * 无刷新获取数据
  * author: BGOnline
@@ -650,12 +675,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
                 })
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
-                        ngDialog.close();
+                        requestError(response, $state, ngDialog);
                     }
                     else{ 
                         $('.addCourseClassInput').val("");
@@ -706,11 +726,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
             .then(function(response) {
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.course = response.data.data.mod_data; 
@@ -769,12 +785,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
-                    ngDialog.close();
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     ngDialog.open({
@@ -818,12 +829,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                 .then(function(response) {
                     listLoading.css({'display':'none'});
                     if ( response.data.code != 200 ) {
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
-                        ngDialog.close();
+                        requestError(response, $state, ngDialog);
                     }
                     else{ 
                         getCourseData(sortid);
@@ -866,13 +872,8 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                     .then(function(response) {
                         listLoading.css({'display':'none'});
                         if ( response.data.code != 200 ) {
-                            ngDialog.open({
-                              template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                              plain: true,
-                              className: 'ngdialog-theme-default'
-                            });
+                            requestError(response, $state, ngDialog);
                             $('.rdClassNameBtn').removeClass('open');
-                            ngDialog.close();
                         }
                         else{ 
                             sessionStorage.setItem('sortid', 0);
@@ -915,12 +916,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                 .then(function(response) {
                     listLoading.css({'display':'none'});
                     if ( response.data.code != 200 ) {
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
-                        ngDialog.close();
+                        requestError(response, $state, ngDialog);
                     }
                     else{ 
                         getCourseData(sessionStorage.sortid, $scope.currentPage - 1);
@@ -956,8 +952,8 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
  * version 1.0 2016-4-26
  =========================================================*/
  
-App.controller('ZHcourseClassController', ['$scope', '$rootScope', '$http', '$filter', '$state',
-  function($scope, $rootScope, $http, $filter, $state) {
+App.controller('ZHcourseClassController', ['$scope', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $rootScope, $http, $filter, $state, ngDialog) {
 
       getCourseClass = function(i) {
           
@@ -967,7 +963,7 @@ App.controller('ZHcourseClassController', ['$scope', '$rootScope', '$http', '$fi
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    alert(response.data.msg);
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $rootScope.courseClass = response.data.data;
@@ -1042,11 +1038,7 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.ZHCourse = response.data.data.mod_data; 
@@ -1104,11 +1096,7 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
                 })
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
+                        requestError(response, $state, ngDialog);
                     }
                     else{ 
                         ngDialog.open({
@@ -1155,11 +1143,7 @@ App.controller('ZHCourseDetailsController', ['$scope', '$sce', '$rootScope', '$h
             .then(function(response) {
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.courseDetailsData = response.data.data; 
@@ -1267,11 +1251,7 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
             .then(function(response) {
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.courseDetailsData = response.data.data; 
@@ -1316,13 +1296,23 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    alert(response.data.msg);
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
-                    alert(response.data.msg);
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
                     getCourseDetailsData();
                 }
-            }, function(x) { alert('啊噢~，服务器开小差了！'); });
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
       })
       
       
@@ -1333,13 +1323,23 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    alert(response.data.msg);
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
-                    alert(response.data.msg);
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
                     getCourseDetailsData();
                 }
-            }, function(x) { alert('啊噢~，服务器开小差了！'); });
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+             });
       }
       
       // $scope.classType = [
@@ -1410,11 +1410,7 @@ App.controller('payLogController', ['$scope', '$sce', '$rootScope', '$http', '$f
             .then(function(response) {
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.courseOrderData = response.data.data.mod_data; 
@@ -1601,12 +1597,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         .then(function(response) {
                             listLoading.css({'display':'none'});
                             if ( response.data.code != 200 ) {
-                                ngDialog.open({
-                                  template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                                  plain: true,
-                                  className: 'ngdialog-theme-default'
-                                });
-                                listLoading.css({'display':'none'});
+                                requestError(response, $state, ngDialog);
                             }
                             else{ 
                                 ngDialog.open({
@@ -1615,7 +1606,6 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                                   className: 'ngdialog-theme-default'
                                 });
                                 $state.go('app.courseMngt');
-                                listLoading.css({'display':'none'});
                                 getCourseClass();
                             }
                         }, function(x) { 
@@ -1644,11 +1634,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                 .then(function(response) {
                     listLoading.css({'display':'none'});
                     if ( response.data.code != 200 ) {
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
+                        requestError(response, $state, ngDialog);
                     }
                     else{ 
                         $scope.courseDetailsData = response.data.data;
@@ -1713,11 +1699,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                     .then(function(response) {
                         listLoading.css({'display':'none'});
                         if ( response.data.code != 200 ) {
-                            ngDialog.open({
-                              template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                              plain: true,
-                              className: 'ngdialog-theme-default'
-                            });
+                            requestError(response, $state, ngDialog);
                         }
                         else{ 
                             ngDialog.open({
@@ -1753,8 +1735,8 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
  * version 1.0 2016-4-26
  =========================================================*/
  
-App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state',
-  function($scope, $http, $filter, $state) {
+App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $http, $filter, $state, ngDialog) {
       
       //errorJump($state);
        
@@ -1766,7 +1748,7 @@ App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state',
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    alert(response.data.msg);
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.teacher = response.data.data.mod_data; 
@@ -1776,7 +1758,13 @@ App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state',
                     $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
                     $scope.teacher.length > 0 ? $scope.TNullType = 'isNullTypeHidden' : $scope.TNullType = 'isNullTypeShow';
                 }
-            }, function(x) { alert('啊噢~，服务器开小差了！'); });
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
       };
       
       getUserData();
@@ -1860,8 +1848,8 @@ App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state',
  * version 1.0 2016-4-26
  =========================================================*/
  
-App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state', 'FileUploader',
-  function($scope, $http, $filter, $state, FileUploader) {
+App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
+  function($scope, $http, $filter, $state, FileUploader, ngDialog) {
       
       var uploader = $scope.uploader = new FileUploader({
         url: ''+url+'/gd/upload'
@@ -1891,13 +1879,23 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                 })
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
-                        alert(response.data.msg);
+                        requestError(response, $state, ngDialog);
                     }
                     else{ 
-                        alert(response.data.msg);
+                        ngDialog.open({
+                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                          plain: true,
+                          className: 'ngdialog-theme-default'
+                        });
                         $state.go('app.teacherMngt');
                     }
-                }, function(x) { alert('啊噢~，服务器开小差了！'); });
+                }, function(x) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                });
             }
             break;
           case '1': // 修改教师
@@ -1910,14 +1908,20 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                 })
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
-                        alert(response.data.msg);
+                        requestError(response, $state, ngDialog);
                     }
                     else{ 
                         $scope.teacher = response.data.data; 
                         $scope.img = rootUrl + $scope.teacher.header;
                         sessionStorage.setItem('detailTeacherImg', $scope.teacher.header);
                     }
-                }, function(x) { alert('啊噢~，服务器开小差了！'); });
+                }, function(x) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                });
               $scope.saveTeacher = function() {
                   $http
                   .post(''+url+'/teacher/edit', {
@@ -1931,13 +1935,23 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                   })
                   .then(function(response) {
                       if ( response.data.code != 200 ) {
-                          alert(response.data.msg);
+                          requestError(response, $state, ngDialog);
                       }
                       else{ 
-                          alert(response.data.msg);
+                          ngDialog.open({
+                            template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                            plain: true,
+                            className: 'ngdialog-theme-default'
+                          });
                           $state.go('app.teacherMngt');
                       }
-                  }, function(x) { alert('啊噢~，服务器开小差了！'); });
+                  }, function(x) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                  });
               }
               
               $scope.delectTeacher = function() {
@@ -1948,13 +1962,23 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                   })
                   .then(function(response) {
                       if ( response.data.code != 200 ) {
-                          alert(response.data.msg);
+                          requestError(response, $state, ngDialog);
                       }
                       else{ 
-                          alert(response.data.msg);
+                          ngDialog.open({
+                            template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                            plain: true,
+                            className: 'ngdialog-theme-default'
+                          });
                           $state.go('app.teacherMngt');
                       }
-                  }, function(x) { alert('啊噢~，服务器开小差了！'); });
+                  }, function(x) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                  });
               }
               break;
       }
@@ -2059,7 +2083,9 @@ App.controller('atTheCityController', ['$scope', '$http', '$state', 'ngDialog',
                 provinceid: areaid
             })
             .then(function(response) {
-                if ( response.data.code != 200 ) {}
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
                 else{ 
                     $scope.PCAS = response.data.data;
                     getAtData(areaid);
@@ -2133,11 +2159,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
         })
         .then(function(response) {
             if ( response.data.code != 200 ) {
-                ngDialog.open({
-                  template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                  plain: true,
-                  className: 'ngdialog-theme-default'
-                });
+                requestError(response, $state, ngDialog);
             }
             else{ 
                 $scope.teacher = response.data.data.mod_data; 
@@ -2177,11 +2199,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                                   })
                                   .then(function(response) {
                                       if ( response.data.code != 200 ) {
-                                          ngDialog.open({
-                                            template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                                            plain: true,
-                                            className: 'ngdialog-theme-default'
-                                          });
+                                          requestError(response, $state, ngDialog);
                                       }
                                       else{ 
                                           // $scope.course = response.data.data.mod_data; 
@@ -2202,7 +2220,11 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                                       });
                                   });
                             }else {
-                                alert('请选择开班日期！');
+                                ngDialog.open({
+                                  template: "<p style='text-align:center;margin: 0;'>请选择开班日期！</p>",
+                                  plain: true,
+                                  className: 'ngdialog-theme-default'
+                                });
                             }
                             
                         };
@@ -2216,11 +2238,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                           })
                           .then(function(response) {
                               if ( response.data.code != 200 ) {
-                                  ngDialog.open({
-                                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                                    plain: true,
-                                    className: 'ngdialog-theme-default'
-                                  });
+                                  requestError(response, $state, ngDialog);
                               }
                               else{ 
                                   $scope.addBanji.class_name = response.data.data.class_name;
@@ -2288,11 +2306,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                               })
                               .then(function(response) {
                                   if ( response.data.code != 200 ) {
-                                      ngDialog.open({
-                                        template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                                        plain: true,
-                                        className: 'ngdialog-theme-default'
-                                      });
+                                      requestError(response, $state, ngDialog);
                                   }
                                   else{ 
                                       ngDialog.open({
@@ -2322,10 +2336,14 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                               })
                               .then(function(response) {
                                   if ( response.data.code != 200 ) {
-                                      alert(response.data.msg);
+                                      requestError(response, $state, ngDialog);
                                   }
                                   else{ 
-                                      alert(response.data.msg);
+                                      ngDialog.open({
+                                        template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                                        plain: true,
+                                        className: 'ngdialog-theme-default'
+                                      });
                                       getClassDetails();
                                   }
                               }, function(x) {
@@ -2386,11 +2404,7 @@ App.controller('rechargeClassController', ['$scope', '$http', '$filter', '$state
           })
           .then(function(response) {
               if ( response.data.code != 200 ) {
-                  ngDialog.open({
-                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                    plain: true,
-                    className: 'ngdialog-theme-default'
-                  });
+                  requestError(response, $state, ngDialog);
               }
               else{ 
                   $scope.tname = response.data.data.tname;
@@ -2462,11 +2476,7 @@ App.controller('rechargeClassController', ['$scope', '$http', '$filter', '$state
               })
               .then(function(response) {
                   if ( response.data.code != 200 ) {
-                      ngDialog.open({
-                        template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                        plain: true,
-                        className: 'ngdialog-theme-default'
-                      });
+                      requestError(response, $state, ngDialog);
                   }
                   else{ 
                       getStuDetail();
@@ -2523,11 +2533,7 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
             .then(function(response) {
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.users = response.data.data.mod_data; 
@@ -2601,11 +2607,7 @@ App.controller('rechargeRecordController', ['$scope', '$http', '$filter', '$stat
             .then(function(response) {
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.rechargeRecord = response.data.data.mod_data; 
@@ -2670,12 +2672,7 @@ App.controller('rechargeXXBController', ['$scope', '$http', 'ngDialog',
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
-                    ngDialog.close();
+                    requestError(response, $state, ngDialog);
                 }else{ 
                     getUsersData();
                     getRecordData();
@@ -2740,11 +2737,7 @@ App.controller('adminInfoController', ['$scope', '$http', 'ngDialog',
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "刷新试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.admin = response.data.data;
@@ -2770,11 +2763,7 @@ App.controller('adminInfoController', ['$scope', '$http', 'ngDialog',
           })
           .then(function(response) {
               if ( response.data.code != 200 ) {
-                  ngDialog.open({
-                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                    plain: true,
-                    className: 'ngdialog-theme-default'
-                  });
+                  requestError(response, $state, ngDialog);
               }else{
                   ngDialog.open({
                     template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
@@ -2805,11 +2794,7 @@ App.controller('adminInfoController', ['$scope', '$http', 'ngDialog',
                 })
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
+                        requestError(response, $state, ngDialog);
                     }
                     else{
                         ngDialog.open({
