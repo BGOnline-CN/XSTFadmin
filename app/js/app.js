@@ -2672,8 +2672,8 @@ App.controller('rechargeXXBController', ['$scope', '$http', '$state', 'ngDialog'
  * version 1.0 2016-6-3
  =========================================================*/
  
-App.controller('adminInfoController', ['$scope', '$http', 'ngDialog',
-  function($scope, $http, ngDialog) {
+App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
+  function($scope, $http, $state, ngDialog) {
       
       errorJump($state);
       
