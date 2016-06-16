@@ -22,42 +22,50 @@
 
 <body data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed, 'layout-boxed' : app.layout.isBoxed, 'layout-fs': app.useFullLayout, 'hidden-footer': app.hiddenFooter, 'layout-h': app.layout.horizontal, 'aside-float': app.layout.isFloat}">
    <div data-ui-view="" data-autoscroll="false" class="wrapper"></div>
-   <!--<div class="bg-shield">
+   <div class="bg-shield">
        <div class="warning-div">
-           <h3>警告：</h3>
-           <h4>系统检测您使用的是“<span class="browser-show"></span>”</h4>
-           <h4 style="text-align: left;">为保证系统安全稳定给您最优的体验，建议使用Firefox最新版点击图标既可下载！</h4>
-           <p>系统将在<span class="timer-show">10</span>秒后关闭</p>
-           <a href="http://download.firefox.com.cn/releases-sha2/stub/official/zh-CN/Firefox-latest.exe" class="firefox-ico" title="firefox最新版下载"></a>
+           <h4>警告：您的IE浏览器版本过低，请升级后访问！若强行访问，可能出现系统异常或不稳定的情况！<a href="http://windows.microsoft.com/zh-cn/internet-explorer/download-ie" target="_blank">IE浏览器绿色升级通道</a></h4>
+           <h5>为保证系统安全稳定给您最优的体验，建议使用以下浏览器，点击图标既可下载！</h5>
+           <p>
+                <a href="http://download.firefox.com.cn/releases-sha2/stub/official/zh-CN/Firefox-latest.exe" class="ico firefox-ico" title="Firefox最新版下载"></a>
+                <a href="http://sw.bos.baidu.com/sw-search-sp/software/29cd900ea7d/ChromeStandalone_50.0.2661.102_Setup.exe" class="ico chrome-ico" title="Chrome最新版下载"></a>
+                <a href="http://sw.bos.baidu.com/sw-search-sp/software/20aa2523c75/Opera_38.0.2220.31_Setup.exe" class="ico opera-ico" title="Opera最新版下载"></a>
+                <a href="http://dlsw.baidu.com/sw-search-sp/soft/d3/12966/Safari_5.34.57.2.1417745549.exe" class="ico safari-ico" title="Safari最新版下载"></a>
+                <a href="http://down.360safe.com/se/360se8.1.1.213.exe" class="ico sanliu0-ico" title="360浏览器最新版下载"></a>
+           </p>
+           <p><a href="javascript:closeWarning()">我要强行访问</a></p>
        </div>
    </div>
    <script> 
-        function getOs() {  
-            var userAgent = navigator.userAgent;
-            var isOpera = userAgent.indexOf("Opera") > -1; 
-            var isChrome = userAgent.indexOf("Chrome") > -1;
-            var isSafari = userAgent.indexOf("Safari") > -1;
-            var isFF = userAgent.indexOf("Firefox") > -1; 
-            var isSafari = userAgent.indexOf("Safari") > -1; 
+        var ie = (function(){
+            var v = 3,
+                div = document.createElement('div'),
+                all = div.getElementsByTagName('i');
+            while (
+                div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+                all[0]
+            );
+            return v > 4 ? v : false;
+        });
+
+        function closeWarning() {
+            document.getElementsByClassName('bg-shield')[0].style.display = "none";
+        }
+
+        function getOs() { 
             if(!!window.ActiveXObject || "ActiveXObject" in window) {
-                return "IE浏览器";
+                if(!ie()) {
+                    closeWarning();
+                }
+            }else {
+                closeWarning();
             }
-            if (isFF) {
-                document.getElementsByClassName('bg-shield')[0].style.display = "none";
-                return "Firefox浏览器";
-            }
-            if (isOpera) {
-                return "Opera浏览器";
-            }
-            if (isChrome) {
-                return "Chrome浏览器";
-            }
-            if (isSafari) {
-                return "Safari浏览器";
-            }
-        }  
-        document.getElementsByClassName('browser-show')[0].innerText = getOs();  
-    </script>-->
+            
+        }
+          
+        getOs();
+        
+    </script>
    <script src="app/js/base.js"></script>
    <script src="app/js/app.js"></script>
 </body>

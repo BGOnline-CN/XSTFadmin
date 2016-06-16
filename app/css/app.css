@@ -11506,32 +11506,52 @@ flatdoc .button .badge {
   background-color: rgba(0,0,0,0.8);/* IE9、标准浏览器、IE6和部分IE7内核的浏览器(如QQ浏览器)会读懂 */
 }
 .bg-shield > .warning-div {
-  width: 510px;
+  width: 520px;
   height: 300px;
-  margin: 10% auto;
+  margin: 15% auto;
 }
 .warning-div > p {
   text-align: center;
   color: #ccc;
 }
-.warning-div > h3 {
-  color: #fff;
-}
+/*.warning-div > h2 {
+  color: #F0AD4E;
+}*/
 .warning-div > h4 {
-  text-align: center;
+  color: #F0AD4E;
+  line-height: 35px;
+  /*text-indent: 2em;*/
+}
+.warning-div > h5 {
   color: #fff;
   line-height: 35px;
 }
 
-.warning-div > .firefox-ico {
-  display: block;
-  width: 100px;
-  height: 100px;
+.warning-div > p > .ico {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  background: url('../img/firefox.png') no-repeat;
-  background-size: 100% 100%;
-  margin: 30px auto;
+  background-size: 100% 100% !important;
+  margin: 30px 10px;
 }
+
+.warning-div > p > .firefox-ico {
+  background: url('../img/Firefox.png') no-repeat;
+}
+.warning-div > p > .chrome-ico {
+  background: url('../img/Chrome.png') no-repeat;
+}
+.warning-div > p > .opera-ico {
+  background: url('../img/Opera.png') no-repeat;
+}
+.warning-div > p > .safari-ico {
+  background: url('../img/Safari.png') no-repeat;
+}
+.warning-div > p > .sanliu0-ico {
+  background: url('../img/Sanliu0.png') no-repeat;
+}
+
 @media \0screen\,screen\9 {/* 只支持IE6、7、8 */
   .bg-shield{
     background-color:#000000;
