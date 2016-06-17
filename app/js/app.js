@@ -1351,7 +1351,7 @@ App.controller('payLogController', ['$scope', '$sce', '$rootScope', '$http', '$f
       var getCourseOrder = function(s, cp, t) {
           listLoading.css({'display':'block'});
           $http
-            .post(''+url+'/course/getordercourse', {
+            .post(''+url+'/list/course_order', {
                 token: sessionStorage.token, 
                 courseid: sessionStorage.tcourseid, 
                 search: s, 
