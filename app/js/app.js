@@ -1537,7 +1537,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                                       '<head>'+
                                           '<style>'+
                                               'img {'+
-                                                  'width:100%;'+
+                                                  'width:100% !important;'+
                                               '}'+
                                           '</style>'+
                                       '</head>'+
@@ -1637,7 +1637,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                                       '<head>'+
                                           '<style>'+
                                               'img {'+
-                                                  'width:100%;'+
+                                                  'width:100% !important;'+
                                               '}'+
                                           '</style>'+
                                       '</head>'+
