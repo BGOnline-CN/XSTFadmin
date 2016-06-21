@@ -1,0 +1,136 @@
+<h3 ng-controller="welcomeController">
+    {{welcome}}
+   <!--<small style="margin-top: 15px;">{{ 'dashboard.WELCOME' | translate:{ appName: app.name } }} !</small>-->
+   <small style="margin-top: 15px;">版本号：v16.6.17.0.1beta</small>
+</h3>
+<!-- START widgets box-->
+<div class="row" ng-controller="defaultController">
+   <div class="col-lg-3 col-sm-6">
+      <!-- START widget-->
+      <div class="panel widget bg-primary">
+         <div class="row row-table bg-count" ui-sref="app.teacherMngt">
+            <div class="col-xs-4 text-center bg-primary-dark pv-lg">
+               <em class="fa fa-graduation-cap fa-3x"></em>
+            </div>
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{countData.user_teacher_count}}
+                   <small style="font-size:12px;">人</small>
+               </div>
+               <div class="text-uppercase">教师数量</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-3 col-sm-6">
+      <!-- START widget-->
+      <div class="panel widget bg-purple">
+         <div class="row row-table bg-count" ui-sref="app.usersCenter">
+            <div class="col-xs-4 text-center bg-purple-dark pv-lg">
+               <em class="icon-users fa-3x"></em>
+            </div>
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{countData.user_parent_count}}
+                  <small style="font-size:12px;">人</small>
+               </div>
+               <div class="text-uppercase">家长数量</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-3 col-md-6 col-sm-12">
+      <!-- START widget-->
+      <div class="panel widget bg-green">
+         <div class="row row-table bg-count">
+            <div class="col-xs-4 text-center bg-green-dark pv-lg">
+               <em class="fa fa-child fa-4x"></em>
+            </div>
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{countData.student_count}}
+                   <small style="font-size:12px;">人</small>
+               </div>
+               <div class="text-uppercase">学生数量</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-3 col-md-6 col-sm-12">
+      <!-- START widget-->
+      <div class="panel widget bg-info">
+         <div class="row row-table bg-count" ui-sref="app.orderList">
+            <div class="col-xs-4 text-center bg-info-dark pv-lg">
+               <em class="icon-basket-loaded fa-3x"></em>
+            </div>
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{countData.course_order_count}}
+                   <small style="font-size:12px;">笔</small>
+               </div>
+               <div class="text-uppercase">订单数量</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!--<div class="col-lg-3 col-md-6 col-sm-12">
+      <div class="panel widget bg-inverse">
+         <div class="row row-table bg-count" ui-sref="app.userFeedback">
+            <div class="col-xs-4 text-center bg-inverse-dark pv-lg">
+               <em class="fa fa-comment-o fa-3x"></em>
+            </div>
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{countData.feedback_count}}
+                   <small style="font-size:12px;">次</small>
+               </div>
+               <div class="text-uppercase">用户反馈</div>
+            </div>
+         </div>
+      </div>
+   </div>-->
+   <!--<div class="col-lg-3 col-md-6 col-sm-12">
+      <div class="panel widget bg-primary">
+         <div class="row row-table bg-count" ui-sref="app.atTheMngt">
+            <div class="col-xs-4 text-center bg-primary-dark pv-lg">
+               <em class="fa fa-cubes fa-3x"></em>
+            </div>
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{countData.branch_count}}
+                   <small style="font-size:12px;">家</small>
+               </div>
+               <div class="text-uppercase">校区数量</div>
+            </div>
+         </div>
+      </div>
+   </div>-->
+   <div class="col-lg-3 col-md-6 col-sm-12">
+      <!-- START widget-->
+      <div class="panel widget bg-gray">
+         <div class="row row-table bg-count" ui-sref="app.courseMngt">
+            <div class="col-xs-4 text-center bg-gray-dark pv-lg">
+               <em class="fa fa-book fa-3x"></em>
+            </div>
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{countData.course_count}}
+                   <small style="font-size:12px;">科</small>
+               </div>
+               <div class="text-uppercase">课程数量</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!--<div class="col-lg-3 col-md-6 col-sm-12">
+      <div class="panel widget">
+         <div class="row row-table">
+            <div class="col-xs-4 text-center bg-green pv-lg">
+               <now format="MMMM" class="text-sm"></now>
+               <br/>
+               <now format="d" class="h2 mt0"></now>
+            </div>
+            <div class="col-xs-8 pv-lg">
+               <now format="EEEE" class="text-uppercase"></now>
+               <br/>
+               <now format="h:mm" class="h2 mt0"></now>
+               <now format="a" class="text-muted text-sm"></now>
+            </div>
+         </div>
+      </div>
+   </div>-->
+</div>
+<!-- END widgets box-->

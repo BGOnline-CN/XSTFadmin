@@ -5,6 +5,12 @@
     "translate": "sidebar.heading.HEADER"
   },
   {
+    "text": "欢迎中心",
+    "sref": "app.default",
+    "icon": "fa fa-home",
+    "translate": "sidebar.nav.DEFAULT"
+  },
+  {
     "text": "课程管理",
     "sref": "app.courseMngt",
     "icon": "fa fa-book",
@@ -21,6 +27,12 @@
     "sref": "app.usersCenter",
     "icon": "fa fa-users",
     "translate": "sidebar.nav.USERSCENTER"
+  },
+  {
+    "text": "订单列表",
+    "sref": "app.orderList",
+    "icon": "fa fa-list-alt",
+    "translate": "sidebar.nav.ORDERLIST"
   },
   {
     "text": "系统配置",

@@ -134,6 +134,19 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('teacherMngt.html')
     })
     
+    .state('app.default', {
+        url: '/default',
+        title: '首页',
+        templateUrl: helper.basepath('default.html'),
+        resolve: helper.resolveFor('flot-chart','flot-chart-plugins')
+    })
+
+    .state('app.orderList', {
+        url: '/orderList',
+        title: '订单列表',
+        templateUrl: helper.basepath('orderList.html')
+    })
+
     .state('app.editTeacher', {
         url: '/editTeacher',
         title: '维护教师信息',
@@ -488,7 +501,7 @@ App.controller('LoginFormController', ['$scope', '$http', '$state', function($sc
             
             if ( response.data.code != 200 ) { $scope.authMsg = response.data.msg; }
             else{
-                $state.go('app.courseMngt');
+                $state.go('app.default');
                 if(typeof(Storage) !== "undefined") {
                     sessionStorage.setItem("suserid", response.data.data.suserid); 
                     sessionStorage.setItem("token", response.data.data.token);
@@ -2782,6 +2795,203 @@ App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
       
 }]);
 
+
+
+/**=========================================================
+ * defaultController
+ * author: BGOnline
+ * version 1.0 2016-4-13
+ =========================================================*/
+ 
+App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+
+      var getCountData = function() {
+          $http
+            .post(''+url+'/site/index', {
+                token: sessionStorage.token
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.countData = response.data.data.count;
+                }
+            }, function(x) { 
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getCountData();
+
+      // noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
+}]);
+
+
+
+
+/**=========================================================
+ * orderListController
+ * author: BGOnline
+ * version 1.0 2016-6-17
+ =========================================================*/
+ 
+App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      $scope.orderBranchName = sessionStorage.orderBranchName;
+      $scope.crumbsBranchid = sessionStorage.orderBranchid;
+      var getOrderListData = function(cp, t, st) {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/list/course_order', {
+                token: sessionStorage.token, 
+                p: cp, 
+                search: sessionStorage.sOLValue != undefined && sessionStorage.sOLValue != 'undefined' ? sessionStorage.sOLValue : '', 
+                time: t, 
+                status: sessionStorage.orderState, 
+                branch_name: sessionStorage.orderBranchName
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.orderData = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                    $scope.orderData.length > 0 ? $scope.ONullType = 'isNullTypeHidden' : $scope.ONullType = 'isNullTypeShow';
+                    if($scope.orderBranchName) {
+                        $('.removeBranchid').css({'visibility':'visible'})
+                    }else {
+                        $('.removeBranchid').css({'visibility':'hidden'})
+                    }
+              }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getOrderListData();
+
+      $scope.pageChanged = function() {
+          getOrderListData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+
+      $scope.payTime = function(o) {
+          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+
+      $scope.sexs = [
+          {value: 0, text: '保密'},
+          {value: 1, text: '男'},
+          {value: 2, text: '女'}
+      ];
+      
+      $scope.showSex = function(x) {
+          if(x.sex) {
+              selected = $filter('filter')($scope.sexs, {value: x.sex});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+      $scope.types = [
+          {value: 0, class: 'label-default', text: '已取消'},
+          {value: 1, class: 'label-danger', text: '待支付'},
+          {value: 2, class: 'label-success', text: '已完成'}
+      ];
+      
+      $scope.orderStatusClass = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].class : 'Not set';
+      };
+      
+      $scope.orderStatusText = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+      $('.crumbs').click(function() {
+        	if($scope.crumbsBranchid) {
+              sessionStorage.setItem('atTheBranchid', $scope.crumbsBranchid);
+              $state.go('app.atTheDetails');
+          }else {
+              $state.go('app.atTheMngt');
+          }
+      })
+
+      $('.removeBranchid').click(function() {
+          sessionStorage.removeItem('atTheBranchid');
+          sessionStorage.removeItem('orderBranchName');
+          getOrderListData();
+          $scope.orderBranchName = sessionStorage.orderBranchName;
+          $scope.crumbsBranchid = sessionStorage.atTheBranchid;
+      })
+
+      $scope.searchResult = sessionStorage.sOLValue;
+      $scope.searchListData = function() {
+          sessionStorage.setItem('sOLValue', $scope.sOLValue);
+          $scope.searchResult = $scope.sOLValue;
+          getOrderListData();
+      }
+
+      $scope.selectValue = sessionStorage.orderText;
+      $scope.downSValue = function(value, text) {
+          sessionStorage.setItem('orderState', value);
+          sessionStorage.setItem('orderText', text);
+          getOrderListData();
+          $scope.selectValue = text;
+          $('.downList').css({'visibility':'hidden'});
+      }
+
+      $('.downListIco').click(function() {
+          if($('.downList').css('visibility') == 'visible') {
+              $('.downList').css({'visibility':'hidden'});
+          }else {
+              $('.downList').css({'visibility':'visible'});
+          }
+      })
+      
+      //noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
+}]);
+
+
+
+/**=========================================================
+ * welcomeController
+ * author: BGOnline
+ * version 1.0 2016-6-21
+ =========================================================*/
+App.controller('welcomeController', ['$scope', function ($scope) {
+
+    $scope.welcome = '欢迎来到'+sessionStorage.branch_name;
+
+}]);
 
 
 
