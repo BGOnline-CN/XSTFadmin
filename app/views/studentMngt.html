@@ -1,0 +1,61 @@
+<h3>
+    <a ui-sref="app.courseDetails">返回上一页</a>
+</h3>
+<div class="clearfix" ng-controller="studentMngtController">
+    <h4 class="page-header courseTitle">
+        班级列表  >  学生列表
+    </h4>
+    <div class="addCourse-div">
+        <tabset>
+            <tab heading="学生列表">
+                <form role="form" class="form-validate" novalidate="" enctype="multipart/form-data"> 
+                    <div class="row plate">
+                        <div class="clearfix row-div stuList">
+                            <div class="col-xs-2 customTitle">学生列表</div>
+                            <div class="col-xs-8">
+                                <div class="table-responsive addCombo">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:80px;">学生</th>
+                                                <th style="width:30px;">性别</th>
+                                                <th style="width:50px;">出生日期</th>
+                                                <th style="width:80px;">年级</th>
+                                                <th style="width:80px;">剩余学习卡</th>
+                                                <th style="width:80px;">剩余课时</th>
+                                                <th style="width:50px;">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="x in addBanji.student">
+                                                <td>
+                                                    <img ng-src="{{x.header}}" alt="Image" class="img-responsive img-circle">
+                                                    {{x.tname}}
+                                                </td>
+                                                <td ng-bind="x.sex"></td>
+                                                <td ng-bind="x.birthday"></td>
+                                                <td ng-bind="x.grade"></td>
+                                                <td>
+                                                    <p ng-repeat="t in x.student_pack" ng-bind="t.package_name+'*'+t.package_quantity"></p>
+                                                </td>
+                                                <td>
+                                                    {{x.surplus+'天'}}
+                                                    <!--<a href="#">提醒</a>-->
+                                                </td>
+                                                <td>
+                                                    <a href="#" ng-click="goRechargeClass(x.studentid, x.student_pack)">充值</a>
+                                                    <a href="#" ng-click="removeStudents(x.studentid)">移除</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-xs-2"></div>
+                        </div>
+                    </div>
+                </form>
+            </tab>
+        </tabset>
+    </div>
+</div>

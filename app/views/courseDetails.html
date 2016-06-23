@@ -114,7 +114,10 @@
                             <tr ng-repeat="x in courseDetailsData.class">
                                 <td>{{x.class_name}}</td>
                                 <td>{{x.class_quantity}}</td>
-                                <td>{{x.student_num}}</td>
+                                <td>
+                                    {{x.student_num+'人'}}
+                                    <a href="" ng-click="goStudentMngt(x.classid)" ng-class="{false: 'hiddenStudentHref', true: 'showStudentHref'}[x.student_num != 0]">查看</a>
+                                </td>
                                 <td><span ng-repeat="t in x.teacher" style="margin-right: 5px;">{{t}}</span></td>
                                 <td>{{x.class_table.split(",")[0]}}</td>
                                 <td>{{x.class_table.split(",")[x.class_table.split(",").length-1]}}</td>

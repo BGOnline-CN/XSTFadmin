@@ -1,5 +1,5 @@
 <h3>
-    <a ui-sref="app.courseDetails">返回上一页</a>
+    <a ui-sref="app.studentMngt">返回上一页</a>
 </h3>
 <div class="clearfix" ng-controller="rechargeClassController">
     <h4 class="page-header courseTitle">
@@ -31,7 +31,7 @@
                                                 <td>
                                                     <p ng-repeat="x in student_pack">
                                                         <span ng-bind="x.package_name+'*'+x.package_quantity"></span>
-                                                        <label class="radio-inline c-radio">
+                                                        <label class="radio-inline c-radio bannerRadio">
                                                             <input name="pRadio" title="{{x.package_quantity}}" type="radio" ng-checked="$index == 0" ng-click="selectpRadio(x.packageid, x.package_quantity)">
                                                             <span class="fa fa-circle"></span>
                                                         </label>

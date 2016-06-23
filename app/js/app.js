@@ -116,6 +116,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         resolve: helper.resolveFor('spinkit')
     })
     
+    .state('app.studentMngt', {
+        url: '/studentMngt',
+        title: '学生管理',
+        templateUrl: helper.basepath('studentMngt.html')
+    })
+
     .state('app.ZHCourse', {
         url: '/ZHCourse',
         title: '获取总部课程',
@@ -187,7 +193,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         url: '/setUp',
         title: '设置中心',
         templateUrl: helper.basepath('setUp.html'),
-        resolve: helper.resolveFor('angularFileUpload', 'filestyle')   
+        resolve: helper.resolveFor('angularFileUpload', 'filestyle', 'angular-carousel')
     })
 
     .state('app.adminInfo', {
@@ -1253,6 +1259,11 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
           $state.go('app.addBanji');  
       }
       
+      $scope.goStudentMngt = function(classid) {
+          sessionStorage.setItem('classid', classid);
+          $state.go('app.studentMngt');
+      }
+
       $scope.removeBanji = (function(classid) { // 删除班级
           $http
             .post(''+url+'/courseclass/del', {
@@ -2215,7 +2226,6 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                                   $scope.addBanji.class_quantity = response.data.data.class_quantity;
                                   $scope.addBanji.teacher = response.data.data.teacher;
                                   $scope.addBanji.class_table = response.data.data.class_table;
-                                  $scope.addBanji.student = response.data.data.student;
                                   class_tableData = $scope.addBanji.class_table;
                                   
                                   var teacherList = $('.teacherList > ul > li');
@@ -2255,91 +2265,45 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                           });
                         }
                         
-                        getClassDetails();
-                        
-                        $scope.addSubmit = function() {
-                            var cData = document.getElementById('iframepage').contentWindow.calenderData;
-                            var teacherArr = [];
-                            $('.bgSelected').each(function() {
-                                teacherArr.push($(this).attr('name'));
-                            });
-                            $http
-                              .post(''+url+'/courseclass/edit', {
-                                  token: sessionStorage.token, 
-                                  classid: sessionStorage.classid,
-                                  courseid: sessionStorage.tcourseid,
-                                  class_name: $scope.addBanji.class_name,
-                                  class_quantity: $scope.addBanji.class_quantity, 
-                                  class_status: 1,
-                                  teacher: teacherArr.join(','),
-                                  class_table: cData.join(",")
-                              })
-                              .then(function(response) {
-                                  if ( response.data.code != 200 ) {
-                                      requestError(response, $state, ngDialog);
-                                  }
-                                  else{ 
-                                      ngDialog.open({
-                                        template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                                        plain: true,
-                                        className: 'ngdialog-theme-default'
-                                      });
-                                      $state.go('app.courseDetails');
-                                  }
-                              }, function(x) {
-                                  ngDialog.open({
-                                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                                    plain: true,
-                                    className: 'ngdialog-theme-default'
-                                  });
+                          getClassDetails();
+                          
+                          $scope.addSubmit = function() {
+                              var cData = document.getElementById('iframepage').contentWindow.calenderData;
+                              var teacherArr = [];
+                              $('.bgSelected').each(function() {
+                                  teacherArr.push($(this).attr('name'));
                               });
-                        };
-                        
-                        
-                        
-                        $scope.removeStudents = function(studentid) { // 移除学生
-                            $http
-                              .post(''+url+'/courseclass/remove_student', {
-                                  token: sessionStorage.token, 
-                                  classid: sessionStorage.classid,
-                                  userid: studentid
-                              })
-                              .then(function(response) {
-                                  if ( response.data.code != 200 ) {
-                                      requestError(response, $state, ngDialog);
-                                  }
-                                  else{ 
-                                      ngDialog.open({
-                                        template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                                        plain: true,
-                                        className: 'ngdialog-theme-default'
-                                      });
-                                      getClassDetails();
-                                  }
-                              }, function(x) {
-                                ngDialog.open({
-                                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                                  plain: true,
-                                  className: 'ngdialog-theme-default'
+                              $http
+                                .post(''+url+'/courseclass/edit', {
+                                    token: sessionStorage.token, 
+                                    classid: sessionStorage.classid,
+                                    courseid: sessionStorage.tcourseid,
+                                    class_name: $scope.addBanji.class_name,
+                                    class_quantity: $scope.addBanji.class_quantity, 
+                                    class_status: 1,
+                                    teacher: teacherArr.join(','),
+                                    class_table: cData.join(",")
+                                })
+                                .then(function(response) {
+                                    if ( response.data.code != 200 ) {
+                                        requestError(response, $state, ngDialog);
+                                    }
+                                    else{ 
+                                        ngDialog.open({
+                                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                                          plain: true,
+                                          className: 'ngdialog-theme-default'
+                                        });
+                                        $state.go('app.courseDetails');
+                                    }
+                                }, function(x) {
+                                    ngDialog.open({
+                                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                                      plain: true,
+                                      className: 'ngdialog-theme-default'
+                                    });
                                 });
-                              });
-                        }
-                        
-                        
-                        $scope.goRechargeClass = function(studentid,student_pack) { // 充值课时
-                            if(student_pack.length < 1) {
-                                ngDialog.open({
-                                  template: "<p style='text-align:center;margin: 0;'>暂无可用学习卡！</p>",
-                                  plain: true,
-                                  className: 'ngdialog-theme-default'
-                                });
-                                ngDialog.close();
-                            }else {
-                                $state.go('app.rechargeClass');
-                                sessionStorage.setItem('studentid', studentid);
-                                patternNum = 2;
-                            }
-                        }
+                          };
                         break;
                 }
             }
@@ -2353,6 +2317,94 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
 
       //timeoutLock($state);
 }]);
+
+
+/**=========================================================
+ * studentMngtController
+ * author: BGOnline
+ * version 1.0 2016-5-5
+ =========================================================*/
+ 
+App.controller('studentMngtController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
+  function($scope, $http, $filter, $state, FileUploader, ngDialog) {
+      
+      errorJump($state);
+      $scope.addBanji = {};
+      var getStudentData = function() {
+          $http
+            .post(''+url+'/courseclass/getclassstudent', {
+                token: sessionStorage.token, classid: sessionStorage.classid
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                }
+                else{ 
+                    $scope.addBanji.student = response.data.data;
+                }
+            }, function(x) {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+
+      getStudentData();
+
+      $scope.removeStudents = function(studentid) { // 移除学生
+          $http
+            .post(''+url+'/courseclass/remove_student', {
+                token: sessionStorage.token, 
+                classid: sessionStorage.classid,
+                userid: studentid
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    getStudentData();
+                }
+            }, function(x) {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      }
+      
+      
+      $scope.goRechargeClass = function(studentid,student_pack) { // 充值课时
+          if(student_pack.length < 1) {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>暂无可用学习卡！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+          }else {
+              $state.go('app.rechargeClass');
+              sessionStorage.setItem('studentid', studentid);
+              patternNum = 2;
+          }
+      }
+                        
+
+      //timeoutLock($state);
+}]);
+
 
 /**=========================================================
  * rechargeClass
@@ -4968,12 +5020,191 @@ App.controller('lockScreenController',['$scope', '$state', function($scope, $sta
 App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDialog', function($scope, $http, FileUploader, $state, ngDialog) {
     
     errorJump($state);
-    $scope.slider1 = parseInt(localStorage.lockTime);
+    // $scope.slider1 = parseInt(localStorage.lockTime);
     
-    $scope.change = function() {
-        localStorage.setItem('lockTime', $scope.slider1);
+    // $scope.change = function() {
+    //     localStorage.setItem('lockTime', $scope.slider1);
+    // }
+
+    // var banner = {};
+    // var bannerArr = new Array();
+    // var bannerParam = ['type', 'adid', 'link', 'img'];
+
+
+    // // for(var r = 0; r < packageRow.length; r++) {
+    // //     var packages = {};
+    // //     for(var c = 0; c < packageRow.eq(r).children().length-1; c++) {
+    // //         packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val();
+    // //     }
+    // //     comboArr.push(packages);
+    // // }
+
+    // var getBanner = function() {
+    //     $http
+    //       .post(''+url+'/course/index', {
+    //           token: sessionStorage.token, get_type: 'all'
+    //       })
+    //       .then(function(response) {
+    //           if ( response.data.code != 200 ) {
+    //               requestError(response, $state, ngDialog);
+    //           }
+    //           else{ 
+    //               $scope.course = response.data.data; 
+    //           }
+    //       }, function(x) { 
+    //         ngDialog.open({
+    //           template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+    //           plain: true,
+    //           className: 'ngdialog-theme-default'
+    //         });
+    //     });
+    // }
+
+
+    $http
+      .post(''+url+'/course/index', { // 获取课程列表
+          token: sessionStorage.token, get_type: 'all'
+      })
+      .then(function(response) {
+          if ( response.data.code != 200 ) {
+              requestError(response, $state, ngDialog);
+          }
+          else{ 
+              $scope.course = response.data.data;
+          }
+      }, function(x) { 
+        ngDialog.open({
+          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+          plain: true,
+          className: 'ngdialog-theme-default'
+        });
+    });
+    
+    var uploader = $scope.uploader = new FileUploader({
+        url: ''+url+'/gd/upload'
+    })
+
+    var bannerUrl = function(_index) { // 生成图片地址
+        uploader.onSuccessItem = function(response) {
+            $('.bannerTr').eq(_index).children().eq(0).attr('name', jQuery.parseJSON(response._xhr.response).url);
+        };
+    }
+
+    $('.bannerTypeSetHide12').css({'display':'block'});
+    $('.bannerTypeSetHide22').css({'display':'block'});
+    $('.bannerTypeSetHide32').css({'display':'block'});
+    $('.bannerTypeSetHide42').css({'display':'block'});
+    
+    var jumpType = function(_index) { // 生成跳转方式
+        if(!($('.bannerTr').eq(_index).children().eq(1).attr('name'))) {
+            $('.bannerTr').eq(_index).children().eq(1).attr('name', 2);
+        }
+        $scope.selectbRadio = function(type) {
+            switch(type) {
+                case 1:
+                  $('.bannerTypeSetHide'+(_index+1)+'2').css({'display':'none'});
+                  $('.bannerTypeSetHide'+(_index+1)+'1').css({'display':'block'});
+                  $('.bannerTr').eq(_index).children().eq(1).attr('name', type);
+                  break;
+                case 2:
+                  $('.bannerTypeSetHide'+(_index+1)+'1').css({'display':'none'});
+                  $('.bannerTypeSetHide'+(_index+1)+'2').css({'display':'block'});
+                  $('.bannerTr').eq(_index).children().eq(1).attr('name', type);
+                  break;
+            }
+        }
     }
     
+    var jumpCourseId = function(_index) { // 生成课程id
+        $scope.getCourseId = function(courseid) {
+            $('.bannerTr').eq(_index).children().eq(2).attr('name', courseid);
+        }
+    }
+
+    var jumpUrl = function(_index) {
+        $scope.getJumpUrl = function(url) { // 生成跳转链接
+            $('.bannerTr').eq(_index).children().eq(2).attr('name', url);
+        }
+    }
+
+    var startCreate = function(_index) { // 开始生成name
+        bannerUrl(_index);
+        jumpType(_index);
+        jumpCourseId(_index);
+        jumpUrl(_index);
+    }
+
+    $scope.setImgUrl = function(_index) {
+        switch(_index) {
+            case 0:
+              startCreate(_index);
+              break; 
+            case 1:
+              startCreate(_index);
+              break; 
+            case 2:
+              startCreate(_index);
+              break; 
+            case 3:
+              startCreate(_index);
+              break; 
+        }
+    }
+
+    
+    $scope.createBanner = function() { // 生成预览
+
+        bannerArr = new Array();
+        var bannerTr = $('.bannerTr');
+        var attributeName = ['img', 'type', 'link'];
+        for(var i = 0; i < bannerTr.length; i++) {
+            var banners = {};
+            for(var c = 0; c < bannerTr.eq(i).children().length; c++) {
+                banners[attributeName[c]] = bannerTr.eq(i).children().eq(c).attr('name');
+            }
+            bannerArr.push(banners);
+        }
+        console.log(bannerArr);
+    }
+    
+    $scope.saveBanner = function() { // 确认保存
+
+        bannerArr = new Array();
+        var bannerTr = $('.bannerTr');
+        var attributeName = ['img', 'type', 'link'];
+        for(var i = 0; i < bannerTr.length; i++) {
+            var banners = {};
+            for(var c = 0; c < bannerTr.eq(i).children().length; c++) {
+                banners[attributeName[c]] = bannerTr.eq(i).children().eq(c).attr('name');
+            }
+            bannerArr.push(banners);
+        }
+
+        $http
+          .post(''+url+'/setting/setbanner', { // 设置启动图
+              token: sessionStorage.token, banner: bannerArr
+          })
+          .then(function(response) {
+              if ( response.data.code != 200 ) {
+                  requestError(response, $state, ngDialog);
+              }
+              else{ 
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  });
+              }
+          }, function(x) { 
+            ngDialog.open({
+              template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+              plain: true,
+              className: 'ngdialog-theme-default'
+            });
+        });
+    }
+      
+
 }])
 
 
