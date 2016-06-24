@@ -11,6 +11,7 @@ if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript 
 var url = 'http://xiaoshutong.thinktorch.cn/frontend/web'; // API
 var rootUrl = 'http://xiaoshutong.thinktorch.cn';
 var noF5speed = 5; // 无刷新获取数据的速度 秒
+var noF5Timer; // 无刷新计时器下标
 var getDataSpeed = 1000 * noF5speed; // 无刷新获取数据的速度
 var lockCountInit = 0; // 锁屏计数器初始化
 var lockClockInit = (function(lockCountInit){
@@ -547,6 +548,7 @@ App.controller('LoginFormController', ['$scope', '$http', '$state', function($sc
  =========================================================*/
  
 var signOut = (function() {
+    // clearInterval(noF5Timer);
     sessionStorage.clear();
     window.opener = null;
  　 window.open(' ', '_self', ' '); 
@@ -572,6 +574,7 @@ var requestError = (function(response, $state, ngDialog) {
           className: 'ngdialog-theme-default'
         });
         ngDialog.close();
+        // clearInterval(noF5Timer);
     }
 
 });
@@ -585,7 +588,10 @@ var requestError = (function(response, $state, ngDialog) {
  =========================================================*/
  
 var noRefreshGetData = (function(x, speed) { // x 取得数据的函数名 speed 无刷新获取数据的速度
-    return setInterval(function() {
+    if(noF5Timer) {
+        clearInterval(noF5Timer);
+    }
+    return noF5Timer = setInterval(function() {
         x();
     }, speed);
 });
@@ -963,6 +969,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
           }
       }
       
+      // clearInterval(noF5Timer);
       // timeoutLock($state);
 }]);
 
@@ -1038,6 +1045,8 @@ App.controller('ZHcourseClassController', ['$scope', '$rootScope', '$http', '$fi
       };
       
       judgeClassName();
+
+      // noRefreshGetData(getCourseClass, getDataSpeed);
 }]);
 
 
@@ -1141,7 +1150,10 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
           }
           
       }
+
       //timeoutLock($state);
+
+      // noRefreshGetData(getZHCourseData, getDataSpeed);
 }]);
 
 
@@ -1192,7 +1204,7 @@ App.controller('ZHCourseDetailsController', ['$scope', '$sce', '$rootScope', '$h
       };
       
       getZHCourseDetailsData();
-      //noRefreshGetData(getUserData, getDataSpeed); 
+      // noRefreshGetData(getZHCourseDetailsData, getDataSpeed); 
       //timeoutLock($state);
 }]);
 
@@ -1354,7 +1366,7 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
           return selected.length ? selected[0].text : 'Not set';
       };
       
-      //noRefreshGetData(getUserData, getDataSpeed);
+      // noRefreshGetData(getCourseDetailsData, getDataSpeed);
 
       //timeoutLock($state);
 }]);
@@ -1423,7 +1435,6 @@ App.controller('payLogController', ['$scope', '$sce', '$rootScope', '$http', '$f
       $scope.searchLog = function() {
           getCourseOrder($scope.sRLValue);
       }
-      //noRefreshGetData(getUserData, getDataSpeed);
       
       //timeoutLock($state);
 }]);
@@ -1697,7 +1708,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
             break;
       }
       
-      
+      // clearInterval(noF5Timer);
       
       //timeoutLock($state);
 }]);
@@ -1749,7 +1760,8 @@ App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state',
           sessionStorage.setItem('TUid', TUid)
           sessionStorage.setItem('editType', editType);
       }
-      //noRefreshGetData(getUserData, getDataSpeed);
+
+      // noRefreshGetData(getUserData, getDataSpeed);
       
       // $scope.types = [
       //     {value: 0, text: '普通会员'},
@@ -1984,7 +1996,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
             
       //   }
       // }
-      //noRefreshGetData(getUserData, getDataSpeed);
+
       
       // $scope.types = [
       //     {value: 0, text: '普通会员'},
@@ -2042,6 +2054,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
       // }
       
       //timeoutLock($state);
+      // clearInterval(noF5Timer);
 }]);
 
 
@@ -2316,6 +2329,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
       });
 
       //timeoutLock($state);
+      // clearInterval(noF5Timer);
 }]);
 
 
@@ -2401,7 +2415,7 @@ App.controller('studentMngtController', ['$scope', '$http', '$filter', '$state',
           }
       }
                         
-
+      // clearInterval(noF5Timer);
       //timeoutLock($state);
 }]);
 
@@ -2604,7 +2618,7 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
         });
       }
 
-      //noRefreshGetData(getUserData, getDataSpeed);
+      // noRefreshGetData(getUsersData, getDataSpeed);
       
       //timeoutLock($state);
 }]);
@@ -2671,8 +2685,6 @@ App.controller('rechargeRecordController', ['$scope', '$http', '$filter', '$stat
       $scope.rechargeTime = function(r) {
           return localData = new Date(parseInt(r.time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
       }
-
-      //noRefreshGetData(getUserData, getDataSpeed);
       
       //timeoutLock($state);
 }]);
@@ -2727,7 +2739,7 @@ App.controller('rechargeXXBController', ['$scope', '$http', '$state', 'ngDialog'
           }
           
       }
-      
+
 }]);
 
 
@@ -2883,7 +2895,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
       
       getCountData();
 
-      // noRefreshGetData(getUserData, getDataSpeed);
+      // noRefreshGetData(getCountData, getDataSpeed);
       
       //timeoutLock($state);
 }]);
@@ -3027,7 +3039,7 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
           }
       })
       
-      //noRefreshGetData(getUserData, getDataSpeed);
+      // noRefreshGetData(getOrderListData, getDataSpeed);
       
       //timeoutLock($state);
 }]);
@@ -5020,47 +5032,6 @@ App.controller('lockScreenController',['$scope', '$state', function($scope, $sta
 App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDialog', function($scope, $http, FileUploader, $state, ngDialog) {
     
     errorJump($state);
-    // $scope.slider1 = parseInt(localStorage.lockTime);
-    
-    // $scope.change = function() {
-    //     localStorage.setItem('lockTime', $scope.slider1);
-    // }
-
-    // var banner = {};
-    // var bannerArr = new Array();
-    // var bannerParam = ['type', 'adid', 'link', 'img'];
-
-
-    // // for(var r = 0; r < packageRow.length; r++) {
-    // //     var packages = {};
-    // //     for(var c = 0; c < packageRow.eq(r).children().length-1; c++) {
-    // //         packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val();
-    // //     }
-    // //     comboArr.push(packages);
-    // // }
-
-    // var getBanner = function() {
-    //     $http
-    //       .post(''+url+'/course/index', {
-    //           token: sessionStorage.token, get_type: 'all'
-    //       })
-    //       .then(function(response) {
-    //           if ( response.data.code != 200 ) {
-    //               requestError(response, $state, ngDialog);
-    //           }
-    //           else{ 
-    //               $scope.course = response.data.data; 
-    //           }
-    //       }, function(x) { 
-    //         ngDialog.open({
-    //           template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-    //           plain: true,
-    //           className: 'ngdialog-theme-default'
-    //         });
-    //     });
-    // }
-
-
     $http
       .post(''+url+'/course/index', { // 获取课程列表
           token: sessionStorage.token, get_type: 'all'
