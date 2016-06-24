@@ -51,9 +51,9 @@
                                         </td>
                                         <td name="">
                                             <input name="url" required="" ng-model="bannerUrl1" ng-change="getJumpUrl(bannerUrl1)" placeholder="http://" class="form-control ng-pristine ng-valid-url ng-invalid ng-invalid-required ng-touched bannerTypeHide bannerTypeSetHide11" type="url">
-                                            <select class="bg-select bannerTypeHide bannerTypeSetHide12" style="width:100%">
-                                                <option ng-click="getCourseId('')">请选择需要跳转的课程</option>
-                                                <option ng-repeat="c in course" ng-bind="c.course_name" ng-click="getCourseId(c.courseid)"></option>
+                                            <select class="bg-select bannerTypeHide bannerTypeSetHide12" style="width:100%" ng-click="getCourseId(bannerTypeSet1)" ng-model="bannerTypeSet1">
+                                                <option value="">请选择需要跳转的课程</option>
+                                                <option ng-repeat="c in course" ng-bind="c.course_name" ng-value="c.courseid"></option>
                                             </select>
                                         </td>
                                     </tr>
@@ -75,9 +75,9 @@
                                         </td>
                                         <td name="">
                                             <input name="url" required="" ng-model="bannerUrl2" ng-change="getJumpUrl(bannerUrl2)" placeholder="http://" class="form-control ng-pristine ng-valid-url ng-invalid ng-invalid-required ng-touched bannerTypeHide bannerTypeSetHide21" type="url">
-                                            <select class="bg-select bannerTypeHide bannerTypeSetHide22" style="width:100%">
-                                                <option ng-click="getCourseId('')">请选择需要跳转的课程</option>
-                                                <option ng-repeat="c in course" ng-bind="c.course_name" ng-click="getCourseId(c.courseid)"></option>
+                                            <select class="bg-select bannerTypeHide bannerTypeSetHide22" style="width:100%" ng-click="getCourseId(bannerTypeSet2)" ng-model="bannerTypeSet2">
+                                                <option value="">请选择需要跳转的课程</option>
+                                                <option ng-repeat="c in course" ng-bind="c.course_name" ng-value="c.courseid"></option>
                                             </select>
                                         </td>
                                     </tr>
@@ -99,9 +99,9 @@
                                         </td>
                                         <td name="">
                                             <input name="url" required="" ng-model="bannerUrl3" ng-change="getJumpUrl(bannerUrl3)" placeholder="http://" class="form-control ng-pristine ng-valid-url ng-invalid ng-invalid-required ng-touched bannerTypeHide bannerTypeSetHide31" type="url">
-                                            <select class="bg-select bannerTypeHide bannerTypeSetHide32" style="width:100%">
-                                                <option ng-click="getCourseId('')">请选择需要跳转的课程</option>
-                                                <option ng-repeat="c in course" ng-bind="c.course_name" ng-click="getCourseId(c.courseid)"></option>
+                                            <select class="bg-select bannerTypeHide bannerTypeSetHide32" style="width:100%"  ng-click="getCourseId(bannerTypeSet3)" ng-model="bannerTypeSet3">
+                                                <option value="">请选择需要跳转的课程</option>
+                                                <option ng-repeat="c in course" ng-bind="c.course_name" ng-value="c.courseid"></option>
                                             </select>
                                         </td>
                                     </tr>
@@ -123,9 +123,9 @@
                                         </td>
                                         <td name="">
                                             <input name="url" required="" ng-model="bannerUrl4" ng-change="getJumpUrl(bannerUrl4)" placeholder="http://" class="form-control ng-pristine ng-valid-url ng-invalid ng-invalid-required ng-touched bannerTypeHide bannerTypeSetHide41" type="url">
-                                            <select class="bg-select bannerTypeHide bannerTypeSetHide42" style="width:100%">
-                                                <option ng-click="getCourseId('')">请选择需要跳转的课程</option>
-                                                <option ng-repeat="c in course" ng-bind="c.course_name" ng-click="getCourseId(c.courseid)"></option>
+                                            <select class="bg-select bannerTypeHide bannerTypeSetHide42" style="width:100%" ng-click="getCourseId(bannerTypeSet4)" ng-model="bannerTypeSet4">
+                                                <option value="">请选择需要跳转的课程</option>
+                                                <option ng-repeat="c in course" ng-bind="c.course_name" ng-value="c.courseid"></option>
                                             </select>
                                         </td>
                                     </tr>
