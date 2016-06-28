@@ -2,5 +2,6 @@
 {
     "editor.fontSize": 16,
     "files.autoSave": "afterDelay",
-    "editor.quickSuggestionsDelay": 5
+    "editor.quickSuggestionsDelay": 5,
+    "window.reopenFolders": "all"
 }
