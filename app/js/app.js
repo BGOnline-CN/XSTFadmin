@@ -1358,20 +1358,7 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
       //     }
       //     return selected.length ? selected[0].text : 'Not set';
       // };
-      
-      $scope.sexs = [
-          {value: 0, text: '保密'},
-          {value: 1, text: '男'},
-          {value: 2, text: '女'}
-      ];
-      
-      $scope.showSex = function(x) {
-          if(x.sex) {
-              selected = $filter('filter')($scope.sexs, {value: x.sex});
-          }
-          return selected.length ? selected[0].text : 'Not set';
-      };
-      
+
       // noRefreshGetData(getCourseDetailsData, getDataSpeed);
 
       //timeoutLock($state);
@@ -2420,6 +2407,19 @@ App.controller('studentMngtController', ['$scope', '$http', '$filter', '$state',
               patternNum = 2;
           }
       }
+
+      $scope.sexs = [
+          {value: 0, text: '保密'},
+          {value: 1, text: '男'},
+          {value: 2, text: '女'}
+      ];
+      
+      $scope.showSex = function(x) {
+          if(x.sex) {
+              selected = $filter('filter')($scope.sexs, {value: x.sex});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
                         
       // clearInterval(noF5Timer);
       //timeoutLock($state);
