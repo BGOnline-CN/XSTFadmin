@@ -120,7 +120,7 @@
                                         <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-info">分班
                                             <span class="caret"></span>
                                         </button>
-                                        <ul role="menu" class="dropdown-menu">
+                                        <ul role="menu" class="dropdown-menu" ng-if="courseDetailsData.class.length > 0">
                                             <li ng-repeat="t in courseDetailsData.class"><a href="#" ng-click="placementStudent(t.classid, x.allotid)">{{t.class_name}}</a></li>
                                         </ul>
                                     </div> 
