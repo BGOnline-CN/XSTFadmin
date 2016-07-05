@@ -150,8 +150,14 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
     .state('app.orderList', {
         url: '/orderList',
-        title: '订单列表',
+        title: '课程订单',
         templateUrl: helper.basepath('orderList.html')
+    })
+
+    .state('app.commodityOrder', {
+        url: '/commodityOrder',
+        title: '商品订单',
+        templateUrl: helper.basepath('commodityOrder.html')
     })
 
     .state('app.editTeacher', {
@@ -667,7 +673,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           
           sessionStorage.setItem('sname', sname);
           sessionStorage.setItem('sortid', sortid);
-          $('.class-name').html(sname);
+          // $('.class-name').html(sname);
           getCourseData(sortid);
           
           nowClassName(i+1)
@@ -3044,6 +3050,155 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
       //timeoutLock($state);
 }]);
 
+
+
+/**=========================================================
+ * commodityOrderController
+ * author: BGOnline
+ * version 1.0 2016-6-17
+ =========================================================*/
+ 
+App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      getCommodityOrderListData = function(cp, t, st) {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/list/goods_order', {
+                token: sessionStorage.token, 
+                p: cp, 
+                search: sessionStorage.CSOLValue != undefined && sessionStorage.CSOLValue != 'undefined' ? sessionStorage.CSOLValue : '', 
+                time: t, 
+                status: sessionStorage.cOrderState
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.commodityOrderData = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                    $scope.commodityOrderData.length > 0 ? $scope.ONullType = 'isNullTypeHidden' : $scope.ONullType = 'isNullTypeShow';
+              }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getCommodityOrderListData();
+
+      $scope.pageChanged = function() {
+          getCommodityOrderListData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+
+      $scope.payTime = function(o) {
+          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+
+      $scope.sexs = [
+          {value: 0, text: '保密'},
+          {value: 1, text: '男'},
+          {value: 2, text: '女'}
+      ];
+      
+      $scope.showSex = function(x) {
+          if(x.sex) {
+              selected = $filter('filter')($scope.sexs, {value: x.sex});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+      $scope.types = [
+          {value: 0, class: 'label-default', text: '已取消'},
+          {value: 2, class: 'label-primary', text: '配货中'},
+          {value: 3, class: 'label-warning', text: '在途中'},
+          {value: 4, class: 'label-success', text: '已完成'},
+      ];
+      
+      $scope.orderStatusClass = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].class : 'Not set';
+      };
+      
+      $scope.orderStatusText = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+
+      $scope.searchResult = sessionStorage.sOLValue;
+      $scope.searchListData = function() {
+          sessionStorage.setItem('CSOLValue', $scope.sOLValue);
+          $scope.searchResult = $scope.sOLValue;
+          getCommodityOrderListData();
+      }
+
+      $scope.selectValue = sessionStorage.cOrderText;
+      $scope.downSValue = function(value, text) {
+          sessionStorage.setItem('cOrderState', value);
+          sessionStorage.setItem('cOrderText', text);
+          getCommodityOrderListData();
+          $scope.selectValue = text;
+          $('.downList').css({'visibility':'hidden'});
+      }
+
+      $('.downListIco').click(function() {
+          if($('.downList').css('visibility') == 'visible') {
+              $('.downList').css({'visibility':'hidden'});
+          }else {
+              $('.downList').css({'visibility':'visible'});
+          }
+      })
+      
+      $scope.confirmReceipt = function(orderid) { //确认收货
+          $http
+            .post(''+url+'/list/goods_order_edit', {
+                token: sessionStorage.token, status: 4, order_id: orderid
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  });
+                  getCommodityOrderListData();
+              }
+            }, function(x) { 
+                listLoading.css({'display':'none'});
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
+      }
+      
+
+      
+      //noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
+}]);
 
 
 /**=========================================================

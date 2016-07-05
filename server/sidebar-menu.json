@@ -29,10 +29,16 @@
     "translate": "sidebar.nav.USERSCENTER"
   },
   {
-    "text": "订单列表",
+    "text": "课程订单",
     "sref": "app.orderList",
     "icon": "fa fa-list-alt",
     "translate": "sidebar.nav.ORDERLIST"
+  },
+  {
+    "text": "商品订单",
+    "sref": "app.commodityOrder",
+    "icon": "fa fa-gift",
+    "translate": "sidebar.nav.COMMODITYORDER"
   },
   {
     "text": "系统配置",

@@ -11097,8 +11097,8 @@ flatdoc .button .badge {
 .courseList > a.dashed > img {
     margin: 40px auto;
     display: block;
-    width: 49px;
-    height: 49px;
+    width: 49px !important;
+    height: 49px !important;
 }
 
 .courseDesc {
@@ -11750,6 +11750,7 @@ flatdoc .button .badge {
   left: 0;
   background-color: #F5F7FA;
   visibility: hidden;
+  z-index: 999;
 }
 .downList li {
   cursor: pointer;
@@ -11818,4 +11819,13 @@ flatdoc .button .badge {
   position: relative;
   left: 10px;
   top: -10px;
+}
+.statusAction {
+  padding-top: 10px;
+}
+.statusAction > a {
+  margin-right: 5px;
+}
+.statusAction > .noAction {
+  color: #ddd;
 }
