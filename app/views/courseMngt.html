@@ -33,7 +33,7 @@
                 <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-info">移动课程到
                     <span class="caret"></span>
                 </button>
-                <ul role="menu" class="dropdown-menu">
+                <ul role="menu" class="dropdown-menu" ng-if="courseClass.length > 0">
                     <li ng-repeat="x in courseClass"><a href="#" ng-bind="x.sname" ng-click="goStartClass(x.sortid, x.sname)"></a></li>
                 </ul>
             </div> 
