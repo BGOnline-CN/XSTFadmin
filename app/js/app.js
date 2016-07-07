@@ -2344,11 +2344,7 @@ App.controller('studentMngtController', ['$scope', '$http', '$filter', '$state',
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.addBanji.student = response.data.data;
