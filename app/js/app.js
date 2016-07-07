@@ -573,6 +573,9 @@ var requestError = (function(response, $state, ngDialog) {
     if(response.data.code == 202) {
         alert('账户在另一台电脑登陆，请确保账户安全！');
         $state.go('page.login');
+    }else if(response.data.code == 203){
+        alert('账户登录异常，请重新登录！');
+        $state.go('page.login');
     }else {
         ngDialog.open({
           template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
@@ -580,7 +583,6 @@ var requestError = (function(response, $state, ngDialog) {
           className: 'ngdialog-theme-default'
         });
         ngDialog.close();
-        // clearInterval(noF5Timer);
     }
 
 });
