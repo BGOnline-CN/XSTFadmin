@@ -1256,6 +1256,7 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                     $scope.graduate.length > 0 ? $scope.GNullType = 'isNullTypeHidden' : $scope.GNullType = 'isNullTypeShow';
                     $scope.WaitAllotStudent.length > 0 ? $scope.WNullType = 'isNullTypeHidden' : $scope.WNullType = 'isNullTypeShow';
                 }
+                ngDialog.close();
             }, function(x) { 
               listLoading.css({'display':'none'});
               ngDialog.open({
@@ -1263,6 +1264,7 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
+              ngDialog.close();
             });
       };
 
@@ -1301,12 +1303,14 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                     });
                     getCourseDetailsData();
                 }
+                ngDialog.close();
             }, function(x) {
                 ngDialog.open({
                   template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
                   plain: true,
                   className: 'ngdialog-theme-default'
                 });
+                ngDialog.close();
             });
       })
       
@@ -1328,13 +1332,26 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                     });
                     getCourseDetailsData();
                 }
+                ngDialog.close();
             }, function(x) {
                 ngDialog.open({
                   template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
                   plain: true,
                   className: 'ngdialog-theme-default'
                 });
+                ngDialog.close();
              });
+      }
+
+      $scope.isClass = function(classNum) { // 分班时判断是否存在班级
+          if(!classNum) {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>请先添加班级！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+          }
       }
       
       // $scope.classType = [
