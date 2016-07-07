@@ -11829,3 +11829,9 @@ flatdoc .button .badge {
 .statusAction > .noAction {
   color: #ddd;
 }
+.courseList > .tip {
+  position: absolute;
+  left: 5px;
+  top: -5px;
+  cursor: default;
+}

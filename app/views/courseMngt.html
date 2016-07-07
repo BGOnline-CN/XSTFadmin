@@ -57,6 +57,7 @@
                     <span class="fa fa-check"></span>
                 </label>
             </p>
+            <div class="label label-danger tip" ng-bind="c.WaitAllotStudent_num" ng-if="c.WaitAllotStudent_num > 0" title="课程下存在带分班学生"></div>
             <a ui-sref="app.courseDetails" ng-click="showCDetails(c.course_name,c.courseid,c.sname)" ng-mouseover="showCourseAct($index)">
                 <img ng-src="{{c.course_img}}">
                 <div class="courseDesc">
