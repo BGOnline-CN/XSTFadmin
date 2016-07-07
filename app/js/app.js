@@ -2161,7 +2161,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
       
       $http // 获取教师列表
         .post(''+url+'/teacher/index', {
-            token: sessionStorage.token
+            token: sessionStorage.token, p: all
         })
         .then(function(response) {
             if ( response.data.code != 200 ) {
