@@ -829,8 +829,8 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                     $('.class-name').html(changeSname);
                     sessionStorage.setItem('sname', changeSname); 
                     getCourseClass();
-                    ngDialog.close();
                 }
+                ngDialog.close();
             }, function(x) { 
                 ngDialog.open({
                   template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
@@ -1281,8 +1281,9 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
           $state.go('app.addBanji');  
       }
       
-      $scope.goStudentMngt = function(classid) {
+      $scope.goStudentMngt = function(classid, editOrAdd) {
           sessionStorage.setItem('classid', classid);
+          sessionStorage.setItem('editOrAdd', editOrAdd);
           $state.go('app.studentMngt');
       }
 
@@ -1316,6 +1317,8 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
       
       
       $scope.placementStudent = function(classid, allotid) { // 分配班级
+          $('.btn').addClass('disabled');
+          $('.fenbanUl').css({'display':'none'});
           $http
             .post(''+url+'/courseclass/allot', {
                 token: sessionStorage.token, classid: classid, allotid: allotid
@@ -1333,6 +1336,7 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                     getCourseDetailsData();
                 }
                 ngDialog.close();
+                $('.btn').removeClass('disabled');
             }, function(x) {
                 ngDialog.open({
                   template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
@@ -1340,7 +1344,8 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                   className: 'ngdialog-theme-default'
                 });
                 ngDialog.close();
-             });
+                $('.btn').removeClass('disabled');
+            });
       }
 
       $scope.isClass = function(classNum) { // 分班时判断是否存在班级
@@ -1354,6 +1359,19 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
           }
       }
       
+
+      $scope.sexs = [
+          {value: 0, text: '保密'},
+          {value: 1, text: '男'},
+          {value: 2, text: '女'}
+      ];
+      
+      $scope.showSex = function(x) {
+          if(x.sex) {
+              selected = $filter('filter')($scope.sexs, {value: x.sex});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
       // $scope.classType = [
       //     {value: 1, text: 'label-success'},
       //     {value: 2, text: 'label-danger'}
@@ -2186,6 +2204,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                     case '0':
                         $('.stuList').css({'display': 'none'});
                         $scope.addSubmit = function() {
+                            $('.btn').addClass('disabled');
                             var cData = document.getElementById('iframepage').contentWindow.calenderData;
                             var teacherArr = [];
                             $('.bgSelected').each(function() { // 遍历选中的教师
@@ -2218,6 +2237,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                                           });
                                           $state.go('app.courseDetails');
                                       }
+                                      $('.btn').removeClass('disabled');
                                   }, function(x) {
                                       ngDialog.open({
                                         template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
@@ -2231,6 +2251,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                                   plain: true,
                                   className: 'ngdialog-theme-default'
                                 });
+                                $('.btn').removeClass('disabled');
                             }
                             
                         };
@@ -2293,6 +2314,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                           getClassDetails();
                           
                           $scope.addSubmit = function() {
+                              $('.btn').addClass('disabled');
                               var cData = document.getElementById('iframepage').contentWindow.calenderData;
                               var teacherArr = [];
                               $('.bgSelected').each(function() {
@@ -2312,8 +2334,7 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                                 .then(function(response) {
                                     if ( response.data.code != 200 ) {
                                         requestError(response, $state, ngDialog);
-                                    }
-                                    else{ 
+                                    }else{ 
                                         ngDialog.open({
                                           template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                                           plain: true,
@@ -2321,12 +2342,14 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                                         });
                                         $state.go('app.courseDetails');
                                     }
+                                    $('.btn').removeClass('disabled');
                                 }, function(x) {
                                     ngDialog.open({
                                       template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                                       plain: true,
                                       className: 'ngdialog-theme-default'
                                     });
+                                    $('.btn').removeClass('disabled');
                                 });
                           };
                         break;

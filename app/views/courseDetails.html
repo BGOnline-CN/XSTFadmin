@@ -53,7 +53,7 @@
                                 <td>{{x.class_quantity}}</td>
                                 <td>
                                     {{x.student_num+'人'}}
-                                    <a href="" ng-click="goStudentMngt(x.classid)" ng-class="{false: 'hiddenStudentHref', true: 'showStudentHref'}[x.student_num != 0]">查看</a>
+                                    <a href="" ng-click="goStudentMngt(x.classid, 1)" ng-class="{false: 'hiddenStudentHref', true: 'showStudentHref'}[x.student_num != 0]">查看</a>
                                 </td>
                                 <td><span ng-repeat="t in x.teacher" style="margin-right: 5px;">{{t}}</span></td>
                                 <td>{{x.class_table.split(",")[0]}}</td>
@@ -120,7 +120,7 @@
                                         <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-info" ng-click="isClass(courseDetailsData.class.length)">分班
                                             <span class="caret"></span>
                                         </button>
-                                        <ul role="menu" class="dropdown-menu" ng-if="courseDetailsData.class.length > 0">
+                                        <ul role="menu" class="dropdown-menu fenbanUl" ng-if="courseDetailsData.class.length > 0">
                                             <li ng-repeat="t in courseDetailsData.class"><a href="#" ng-click="placementStudent(t.classid, x.allotid)">{{t.class_name}}</a></li>
                                         </ul>
                                     </div> 
