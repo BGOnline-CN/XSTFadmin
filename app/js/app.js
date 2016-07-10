@@ -1086,7 +1086,7 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
                     $scope.ZHCourse = response.data.data.mod_data; 
                     var page = response.data.data.page_data;
                     $scope.showZHtotalItems = page.totalCount;
-                    $scope.ZHtotalItems = page.totalCount;
+                    $scope.ZHtotalItems = page.totalCount - parseInt(page.totalCount/11);
                 }
             }, function(x) {
                 ngDialog.open({
