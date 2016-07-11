@@ -58,7 +58,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
   // Scope Globals
   // ----------------------------------- 
   $rootScope.app = {
-    name: 'Think Torch',
+    name: sessionStorage.branch_name,
     description: '小书童分校管理后台',
     year: ((new Date()).getFullYear()),
     layout: {
@@ -556,6 +556,7 @@ App.controller('LoginFormController', ['$scope', '$http', '$state', function($sc
 var signOut = (function() {
     // clearInterval(noF5Timer);
     sessionStorage.clear();
+    localStorage.clear();
     window.opener = null;
  　 window.open(' ', '_self', ' '); 
  　 window.close();
@@ -1626,13 +1627,15 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                                 $state.go('app.courseMngt');
                                 getCourseClass();
                             }
+                            ngDialog.close();
                         }, function(x) { 
-                          listLoading.css({'display':'none'});
-                          ngDialog.open({
-                            template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                            plain: true,
-                            className: 'ngdialog-theme-default'
-                          }); 
+                            listLoading.css({'display':'none'});
+                            ngDialog.open({
+                              template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                              plain: true,
+                              className: 'ngdialog-theme-default'
+                            }); 
+                            ngDialog.close();
                         });
                   }else {
                       ngDialog.open({
@@ -1640,6 +1643,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         plain: true,
                         className: 'ngdialog-theme-default'
                       });
+                      ngDialog.close();
                   }
               };
             break;
@@ -1664,12 +1668,13 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         sessionStorage.setItem('detailCourseImg', $scope.courseDetailsData.course_img);
                     }
                 }, function(x) { 
-                  listLoading.css({'display':'none'});
-                  ngDialog.open({
-                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                    plain: true,
-                    className: 'ngdialog-theme-default'
-                  });
+                    listLoading.css({'display':'none'});
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
                 });
               
               $scope.addSubmit = function() {
@@ -1727,13 +1732,15 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                             });
                             $state.go('app.courseMngt');
                         }
+                        ngDialog.close();
                     }, function(x) { 
-                      listLoading.css({'display':'none'});
-                      ngDialog.open({
-                        template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                        plain: true,
-                        className: 'ngdialog-theme-default'
-                      });
+                        listLoading.css({'display':'none'});
+                        ngDialog.open({
+                          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                          plain: true,
+                          className: 'ngdialog-theme-default'
+                        });
+                        ngDialog.close();
                     });
               };
               
@@ -2664,6 +2671,9 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
         });
       }
 
+      $scope.logintime = function(user) {
+          return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
       // noRefreshGetData(getUsersData, getDataSpeed);
       
       //timeoutLock($state);
@@ -2881,11 +2891,8 @@ App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
                         requestError(response, $state, ngDialog);
                     }
                     else{
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
+                        alert('密码修改成功，点击确定重新登录！');
+                        signOut();
                     }
                 }, function(x) { 
                     ngDialog.open({
@@ -2893,6 +2900,7 @@ App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
                       plain: true,
                       className: 'ngdialog-theme-default'
                     });
+                    ngDialog.close();
                 });
           }else {
               ngDialog.open({
@@ -2900,6 +2908,7 @@ App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
+              ngDialog.close();
           }
       };
       
@@ -3206,31 +3215,33 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
       })
       
       $scope.confirmReceipt = function(orderid) { //确认收货
-          $http
-            .post(''+url+'/list/goods_order_edit', {
-                token: sessionStorage.token, status: 4, order_id: orderid
-            })
-            .then(function(response) {
-                listLoading.css({'display':'none'});
-                if ( response.data.code != 200 ) {
-                    requestError(response, $state, ngDialog);
+          if(confirm('请确认商品已经送达！')) {
+            $http
+              .post(''+url+'/list/goods_order_edit', {
+                  token: sessionStorage.token, status: 4, order_id: orderid
+              })
+              .then(function(response) {
+                  listLoading.css({'display':'none'});
+                  if ( response.data.code != 200 ) {
+                      requestError(response, $state, ngDialog);
+                  }
+                  else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    getCommodityOrderListData();
                 }
-                else{ 
+              }, function(x) { 
+                  listLoading.css({'display':'none'});
                   ngDialog.open({
-                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                     plain: true,
                     className: 'ngdialog-theme-default'
                   });
-                  getCommodityOrderListData();
-              }
-            }, function(x) { 
-                listLoading.css({'display':'none'});
-                ngDialog.open({
-                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                  plain: true,
-                  className: 'ngdialog-theme-default'
-                });
-            });
+              });
+          }
       }
       
 
@@ -3248,7 +3259,7 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
  =========================================================*/
 App.controller('welcomeController', ['$scope', function ($scope) {
 
-    $scope.welcome = '欢迎来到'+sessionStorage.branch_name;
+    $scope.welcome = sessionStorage.branch_name;
 
 }]);
 
@@ -5769,7 +5780,7 @@ App.controller('AppController',
 
     $rootScope.currTitle = $state.current.title;
     $rootScope.pageTitle = function() {
-      var title = $rootScope.app.name + ' - ' + ($rootScope.currTitle || $rootScope.app.description);
+      var title = $rootScope.app.name;
       document.title = title;
       return title;
     };
