@@ -30,11 +30,13 @@
                         <thead>
                             <tr>
                                 <th style="width:10%;">头像</th>
-                                <th style="width:15%;">姓名</th>
-                                <th style="width:15%;">手机号码</th>
-                                <th style="width:20%;">孩子</th>
-                                <th style="width:20%;">所在分校</th>
-                                <th style="width:15%;">学习币</th>
+                                <th style="width:10%;">姓名</th>
+                                <th style="width:10%;">手机号码</th>
+                                <th style="width:10%;">孩子姓名</th>
+                                <th style="width:20%;">就读公立学校</th>
+                                <th style="width:10%;">孩子生日</th>
+                                <th style="width:10%;">学习币</th>
+                                <th style="width:15%;">最近登录时间</th>
                                 <th style="width:5%;">操作</th>
                             </tr>
                         </thead>
@@ -51,10 +53,16 @@
                                 <td>{{ u.tname }}</td>
                                 <td>{{ u.phone }}</a></td>
                                 <td>
-                                    <span style="margin-right: 10px;" ng-repeat="us in u.student" ng-bind="us.tname"></span>
+                                    <p style="height: 25px;line-height:25px;margin: 0;" ng-repeat="us in u.student" ng-bind="us.tname"></p>
                                 </td>
-                                <td>{{ branch_name }}</td>
+                                <td>
+                                    <p style="height: 25px;line-height:25px;margin: 0;" ng-repeat="us in u.student" ng-bind="us.real_school"></p>
+                                </td>
+                                <td>
+                                    <p style="height: 25px;line-height:25px;margin: 0;" ng-repeat="us in u.student" ng-bind="us.birthday"></p>
+                                </td>
                                 <td>{{ u.xxb }}</td>
+                                <td>{{ logintime(u) }}</td>
                                 <td><a href="#" ng-click="showRechargeWin(u.userid, u.tname, u.phone)">充值</a></td>
                             </tr>
                             <tr>

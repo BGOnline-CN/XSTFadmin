@@ -58,7 +58,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
   // Scope Globals
   // ----------------------------------- 
   $rootScope.app = {
-    name: '小书童分校管理后台',
+    name: sessionStorage.branch_name,
     description: '小书童分校管理后台',
     year: ((new Date()).getFullYear()),
     layout: {
@@ -2671,6 +2671,9 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
         });
       }
 
+      $scope.logintime = function(user) {
+          return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
       // noRefreshGetData(getUsersData, getDataSpeed);
       
       //timeoutLock($state);
@@ -3256,7 +3259,7 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
  =========================================================*/
 App.controller('welcomeController', ['$scope', function ($scope) {
 
-    $scope.welcome = '欢迎来到'+sessionStorage.branch_name;
+    $scope.welcome = sessionStorage.branch_name;
 
 }]);
 
@@ -5777,7 +5780,7 @@ App.controller('AppController',
 
     $rootScope.currTitle = $state.current.title;
     $rootScope.pageTitle = function() {
-      var title = $rootScope.app.name + ' - ' + ($rootScope.currTitle || $rootScope.app.description);
+      var title = $rootScope.app.name;
       document.title = title;
       return title;
     };
