@@ -1627,13 +1627,15 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                                 $state.go('app.courseMngt');
                                 getCourseClass();
                             }
+                            ngDialog.close();
                         }, function(x) { 
-                          listLoading.css({'display':'none'});
-                          ngDialog.open({
-                            template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                            plain: true,
-                            className: 'ngdialog-theme-default'
-                          }); 
+                            listLoading.css({'display':'none'});
+                            ngDialog.open({
+                              template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                              plain: true,
+                              className: 'ngdialog-theme-default'
+                            }); 
+                            ngDialog.close();
                         });
                   }else {
                       ngDialog.open({
@@ -1641,6 +1643,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         plain: true,
                         className: 'ngdialog-theme-default'
                       });
+                      ngDialog.close();
                   }
               };
             break;
@@ -1665,12 +1668,13 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         sessionStorage.setItem('detailCourseImg', $scope.courseDetailsData.course_img);
                     }
                 }, function(x) { 
-                  listLoading.css({'display':'none'});
-                  ngDialog.open({
-                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                    plain: true,
-                    className: 'ngdialog-theme-default'
-                  });
+                    listLoading.css({'display':'none'});
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
                 });
               
               $scope.addSubmit = function() {
@@ -1728,13 +1732,15 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                             });
                             $state.go('app.courseMngt');
                         }
+                        ngDialog.close();
                     }, function(x) { 
-                      listLoading.css({'display':'none'});
-                      ngDialog.open({
-                        template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                        plain: true,
-                        className: 'ngdialog-theme-default'
-                      });
+                        listLoading.css({'display':'none'});
+                        ngDialog.open({
+                          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                          plain: true,
+                          className: 'ngdialog-theme-default'
+                        });
+                        ngDialog.close();
                     });
               };
               
