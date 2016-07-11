@@ -556,6 +556,7 @@ App.controller('LoginFormController', ['$scope', '$http', '$state', function($sc
 var signOut = (function() {
     // clearInterval(noF5Timer);
     sessionStorage.clear();
+    localStorage.clear();
     window.opener = null;
  　 window.open(' ', '_self', ' '); 
  　 window.close();
@@ -2881,11 +2882,8 @@ App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
                         requestError(response, $state, ngDialog);
                     }
                     else{
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
+                        alert('密码修改成功，点击确定重新登录！');
+                        signOut();
                     }
                 }, function(x) { 
                     ngDialog.open({
@@ -2893,6 +2891,7 @@ App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
                       plain: true,
                       className: 'ngdialog-theme-default'
                     });
+                    ngDialog.close();
                 });
           }else {
               ngDialog.open({
@@ -2900,6 +2899,7 @@ App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
+              ngDialog.close();
           }
       };
       
