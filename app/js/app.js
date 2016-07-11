@@ -1086,7 +1086,7 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
                     $scope.ZHCourse = response.data.data.mod_data; 
                     var page = response.data.data.page_data;
                     $scope.showZHtotalItems = page.totalCount;
-                    $scope.ZHtotalItems = page.totalCount;
+                    $scope.ZHtotalItems = page.totalCount - parseInt(page.totalCount/11);
                 }
             }, function(x) {
                 ngDialog.open({
@@ -1124,6 +1124,7 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
 
       var ZHCourseArr = new Array();
       $scope.addZHCourse = function() { // 添加总部课程
+          $('.btn').addClass('disabled');
           ZHCourseArr = [];
           var ccbBg =  $('.ccb-bg');
           for(var i = 0; i < $scope.showZHtotalItems; i++) {
@@ -1139,8 +1140,7 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
                         requestError(response, $state, ngDialog);
-                    }
-                    else{ 
+                    }else{ 
                         ngDialog.open({
                           template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                           plain: true,
@@ -1148,6 +1148,7 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
                         });
                         $state.go('app.courseMngt');
                     }
+                    $('.btn').removeClass('disabled');
                 }, function(x) { alert('啊噢~，服务器开小差了！'); });
           }else {
               ngDialog.open({
@@ -1155,6 +1156,7 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
+              $('.btn').removeClass('disabled');
           }
           
       }
