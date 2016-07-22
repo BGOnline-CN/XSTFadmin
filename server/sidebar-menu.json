@@ -22,6 +22,7 @@
     "icon": "fa fa-graduation-cap",
     "translate": "sidebar.nav.TEACHERMNGT"
   },
+  
   {
     "text": "用户中心",
     "sref": "app.usersCenter",
@@ -39,6 +40,18 @@
     "sref": "app.commodityOrder",
     "icon": "fa fa-gift",
     "translate": "sidebar.nav.COMMODITYORDER"
+  },
+  {
+    "text": "文章管理",
+    "sref": "app.noticeMngt",
+    "icon": "fa fa-newspaper-o",
+    "translate": "sidebar.nav.NOTICEMNGT"
+  },
+  {
+    "text": "学校概况",
+    "sref": "app.schoolSurvey",
+    "icon": "fa fa-university",
+    "translate": "sidebar.nav.SCHOOLSURVEY"
   },
   {
     "text": "系统配置",

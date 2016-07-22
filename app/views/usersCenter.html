@@ -18,6 +18,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
                     <span class="panel-table-title">全部家长</span>
+                    <button class="btn btn-default addCourseBtn" type="button" ng-click="addUserInfo(1)"><i class="fa fa-plus addCourseFa"></i>添加</button>   
                     <div class="input-group">
                         <input type="text" placeholder="" class="input-sm form-control" ng-model="sUValue"/>
                         <span class="input-group-btn">
@@ -42,7 +43,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td ng-class="UNullType" colspan="7">暂无用户</td>
+                                <td ng-class="UNullType" colspan="9">暂无用户</td>
                             </tr>
                             <tr ng-repeat="u in users">
                                 <td>
@@ -66,7 +67,7 @@
                                 <td><a href="#" ng-click="showRechargeWin(u.userid, u.tname, u.phone)">充值</a></td>
                             </tr>
                             <tr>
-                                <td class="page-td" colspan="7">
+                                <td class="page-td" colspan="9">
                                     <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" first-text="首页" last-text="尾页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
                                 </td>
                             </tr>
