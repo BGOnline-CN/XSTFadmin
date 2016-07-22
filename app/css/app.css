@@ -11766,8 +11766,8 @@ flatdoc .button .badge {
   background-color: #fff;
 }
 .orderCourse-img {
-  width: 40px;
-  height: 40px;
+  width: 40px !important;
+  height: 40px !important;
   float: left;
   margin-right: 5px;
 }
