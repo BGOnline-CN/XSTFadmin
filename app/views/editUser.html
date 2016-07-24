@@ -1,0 +1,118 @@
+<h3>用户信息维护</h3>
+<div class="clearfix" ng-controller="editTeacherController">
+    <h4 class="page-header courseTitle">
+        添加、修改用户
+    </h4>
+    <div class="addCourse-div">
+        <tabset>
+            <tab heading="维护教师信息">
+                <form role="form" ng-submit="saveTeacher()" class="form-validate" novalidate="" enctype="multipart/form-data"> 
+                    <div class="row plate">
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">真实姓名</div>
+                            <div class="col-xs-2"><input type="text" class="form-control" ng-model="teacher.tname" required=""></div>
+                            <div class="col-xs-8"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">手机号码</div>
+                            <div class="col-xs-2"><input type="text" class="form-control" ng-model="teacher.phone" required="" ng-minlength="11" ng-maxlength="11" ng-pattern="/^[0-9]+$/"></div>
+                            <div class="col-xs-8"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">密码</div>
+                            <div class="col-xs-2"><input type="password" class="form-control" ng-model="teacher.password" required=""></div>
+                            <div class="col-xs-8"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">邮箱</div>
+                            <div class="col-xs-3"><input type="email" class="form-control" ng-model="teacher.email" required=""></div>
+                            <div class="col-xs-7"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">上传头像</div>
+                            <div class="col-xs-3">
+                                <input filestyle="" type="file" data-button-text="图片" data-class-button="btn btn-default" data-classinput="form-control inline" nv-file-select="" uploader="uploader" class="form-control" />
+                            </div>
+                            <div class="col-xs-7">
+                                <!--<div ng-if="uploader.queue.length">
+                                    <table ng-if="uploader.queue.length" class="table">
+                                        <thead>
+                                            <tr>
+                                                <td>文件名</td>
+                                                <td>大小</td>
+                                                <td>进度</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in uploader.queue">
+                                                <td>
+                                                    <strong>{{ item.file.name }}</strong>
+                                                </td>
+                                                <td ng-show="uploader.isHTML5" nowrap="">{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                                <td ng-show="uploader.isHTML5">
+                                                    <div style="margin-bottom: 0;width: 100px;" class="progress progress-xs">
+                                                        <div role="progressbar" ng-style="{ 'width': item.progress + '%' }" class="progress-bar"></div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-show="item.isSuccess">
+                                                        <em class="fa fa-check fa-fw"></em>
+                                                    </span>
+                                                    <span ng-show="item.isCancel">
+                                                        <em class="fa fa-ban-circle fa-fw"></em>
+                                                    </span>
+                                                    <span ng-show="item.isError">
+                                                        <em class="fa fa-times fa-fw"></em>
+                                                    </span>
+                                                </td>
+                                                <td nowrap="">
+                                                    <button type="button" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess" class="btn btn-info btn-xs">
+                                                        <span class="icon-cloud-upload mr"></span>上传</button>
+                                                    <button type="button" ng-click="item.cancel()" ng-disabled="!item.isUploading" class="btn btn-warning btn-xs">
+                                                        <span class="icon-close mr"></span>取消</button>
+                                                    <button type="button" ng-click="item.remove()" class="btn btn-danger btn-xs">
+                                                        <span class="icon-trash mr"></span>删除</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>-->
+                            </div>
+                        </div>
+                        <!--<div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">性别</div>
+                            <div class="col-xs-3">
+                                <label class="radio-inline c-radio">
+                                    <input id="inlineradio1" type="radio" name="sex-radio" value="1" checked />
+                                    <span class="fa fa-circle"></span>男
+                                </label>
+                                <label class="radio-inline c-radio">
+                                    <input id="inlineradio2" type="radio" name="sex-radio" value="0" />
+                                    <span class="fa fa-circle"></span>女
+                                </label>
+                            </div>
+                            <div class="col-xs-7"></div>
+                        </div>-->
+                        <!--<div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">是否锁定</div>
+                            <div class="col-xs-3">
+                                <label class="switch">
+                                    <input ng-click="lockUser(user.ball_id)" ng-checked="showLock(user)" type="checkbox">
+                                    <span></span>
+                                </label>
+                            </div>
+                            <div class="col-xs-7"></div>
+                        </div>-->
+                        <div class="coverPreview headerPreview">
+                            头像预览
+                            <img ng-src="{{img}}">
+                        </div>
+                        <button type="button" class="btn btn-danger saveCourse quxiao" ng-class="{true: 'hideBtn', false: 'showBtn'}[isShowQuxiao]" ui-sref="app.teacherMngt">取消</button>
+                        <button type="button" class="btn btn-danger saveCourse dt-btn" ng-class="{true: 'hideBtn', false: 'showBtn'}[isShowShanchu]" ng-click="delectTeacher()">删除</button>
+                        <button type="submit" class="btn btn-warning saveCourse">保存</button>
+                    </div>
+                </form>
+            </tab>
+        </tabset>
+    </div>
+</div>

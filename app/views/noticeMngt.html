@@ -1,10 +1,10 @@
-<h3 ng-controller="courseClassController">
-    <a class="course" href="#" ng-click="showCourse(0)">全部课程</a>
+<h3 ng-controller="noticeClassController">
+    <a class="course" href="#" ng-click="showCourse(0)">全部文章</a>
     <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" href="#" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
-    <input class="form-control ng-touched addCourseClassInput" type='text'>
-    <button class="btn btn-default addCourseBtn" type="button" ng-click="addCourseClass()"><i class="fa fa-plus addCourseFa"></i>添加</button>
+    <!--<input class="form-control ng-touched addCourseClassInput" type='text'>
+    <button class="btn btn-default addCourseBtn" type="button" ng-click="addCourseClass()"><i class="fa fa-plus addCourseFa"></i>添加</button>-->
 </h3>
-<div class="clearfix" ng-controller="courseMngtController">
+<div class="clearfix" ng-controller="noticeMngtController">
     <div class="ball-spin-fade-loader list-loading">
         <div></div>
         <div></div>
@@ -16,8 +16,8 @@
         <div></div>
     </div>
     <h4 class="page-header courseTitle">
-        <span class="class-name">{{sname == 'undefined' || sname == undefined ? '全部课程' : sname}}</span>（{{showTotalItems}}）
-        <div dropdown="dropdown" class="btn-group rdClassNameBtn">
+        <span class="class-name">{{sname == 'undefined' || sname == undefined ? '全部文章' : sname}}</span>（{{showTotalItems}}）
+        <!--<div dropdown="dropdown" class="btn-group rdClassNameBtn">
             <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-default changeCourseName">
                 <i class="fa fa-pencil changeCourseFa"></i>
             </button>
@@ -27,26 +27,23 @@
                 <li><a href="#" ng-click="dClassName()">删除</a>
                 </li>
             </ul>
-        </div>
-        <div class="operationCourse">
+        </div>-->
+        <!--<div class="operationCourse">
             <div dropdown="dropdown" class="btn-group mb-sm">
-                <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-info">移动课程到
+                <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-info">移动文章到
                     <span class="caret"></span>
                 </button>
                 <ul role="menu" class="dropdown-menu" ng-if="courseClass.length > 0">
                     <li ng-repeat="x in courseClass"><a href="#" ng-bind="x.sname" ng-click="goStartClass(x.sortid, x.sname)"></a></li>
                 </ul>
             </div> 
-            <div dropdown="dropdown" class="btn-group mb-sm">
-                <button type="button" class="btn dropdown-toggle btn-warning" ng-click="getZHCourse()">获取总部课程</button>
-            </div>
-        </div>
+        </div>-->
     </h4>
     <div class="row">
         <div class="col-xs-4 col-md-2 courseList">
             <a class="dashed" ng-click="addCourseType()">
                 <img src="app/img/add.png">
-                <p>添加自定义课程</p>
+                <p>添加自定义文章</p>
             </a>
         </div>
         <div class="col-xs-4 col-md-2 courseList" ng-repeat="c in course" ng-mouseleave="closeCourseAct($index)">
@@ -57,7 +54,6 @@
                     <span class="fa fa-check"></span>
                 </label>
             </p>
-            <div class="label label-danger tip" ng-bind="c.WaitAllotStudent_num" ng-if="c.WaitAllotStudent_num > 0" title="课程下存在待分班学生"></div>
             <a ui-sref="app.courseDetails" ng-click="showCDetails(c.course_name,c.courseid,c.sname)" ng-mouseover="showCourseAct($index)">
                 <img ng-src="{{c.course_img}}">
                 <div class="courseDesc">
