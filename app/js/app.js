@@ -183,11 +183,16 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         title: '课程详情',
         templateUrl: helper.basepath('courseDetails.html')
     })
-
+    
+    .state('app.noticeDetails', {
+        url: '/noticeDetails',
+        title: '文章详情',
+        templateUrl: helper.basepath('noticeDetails.html')
+    })
     .state('app.schoolSurvey', {
         url: '/schoolSurvey',
         title: '学校概况',
-        templateUrl: helper.basepath('SCHOOLSURVEY.html')
+        templateUrl: helper.basepath('schoolSurvey.html')
     })
     
     .state('app.addCustomCourse', {
@@ -196,7 +201,13 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('addCustomCourse.html'),
         resolve: helper.resolveFor('angularFileUpload', 'filestyle')      
     })
-    
+    .state('app.addNotice', {
+        url: '/addNotice',
+        title: '添加自定义文章',
+        templateUrl: helper.basepath('addNotice.html'),
+        resolve: helper.resolveFor('angularFileUpload', 'filestyle')      
+    })
+
     .state('app.addBanji', {
         url: '/addBanji',
         title: '添加班级',
@@ -1002,6 +1013,247 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
 }]);
 
 /**=========================================================
+ * noticeMngtController
+ * author: BGOnline
+ * version 1.0 2016-3-18
+ =========================================================*/
+ 
+App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filter', '$state','ngDialog',
+  function($scope, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      
+      getNoticeData = function(sortid, cp) { // 获取文章
+        
+          cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
+          
+          listLoading.css({'display':'block'});
+          $scope.sname = sessionStorage.sname;
+          $http
+            .post(''+url+'/faq/index', {
+                token: sessionStorage.token, p: cp, sortid: sortid
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.course = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getNoticeData(sessionStorage.sortid);
+      
+      $scope.pageChanged = function() {
+          getNoticeData(sessionStorage.sortid, $scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+      
+      $scope.showCDetails = function(tcourse_name, tcourseid, sname) {
+          sessionStorage.setItem('tcourse_name', tcourse_name);
+          sessionStorage.setItem('tcourseid', tcourseid);
+          sessionStorage.setItem('sname', sname);
+      }
+      
+      $scope.showCourseAct = (function(i) {
+          $('.courseAction').eq(i).css({'visibility':'visible'});
+      })
+      
+      
+      $scope.closeCourseAct = (function(i) {
+          if(!($('.ccb-bg').eq(i).is(':checked'))) {
+            $('.courseAction').eq(i).css({'visibility':'hidden'});
+          }
+      })
+      
+      // $scope.rClassName = function() {
+      //     $('.class-name').html("<input class='form-control ng-touched rcName' type='text' value='"+sessionStorage.sname+"'>");
+      //     $('.rcName').focus();
+      // }
+      
+      // $(document).on('blur', '.rcName', function() { // 修改分类名称
+      //     var changeSname = $(this).val();
+      //     $http
+      //       .post(''+url+'/sort/edit', {
+      //           token: sessionStorage.token, sortid: sessionStorage.sortid, sname: changeSname
+      //       })
+      //       .then(function(response) {
+      //           if ( response.data.code != 200 ) {
+      //               requestError(response, $state, ngDialog);
+      //           }
+      //           else{ 
+      //               ngDialog.open({
+      //                 template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+      //                 plain: true,
+      //                 className: 'ngdialog-theme-default'
+      //               });
+      //               $('.class-name').html(changeSname);
+      //               sessionStorage.setItem('sname', changeSname); 
+      //               getCourseClass();
+      //           }
+      //           ngDialog.close();
+      //       }, function(x) { 
+      //           ngDialog.open({
+      //             template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+      //             plain: true,
+      //             className: 'ngdialog-theme-default'
+      //           });
+      //           ngDialog.close();
+      //       });
+      // })
+      
+      
+      // var courseArr = new Array();
+      // $scope.goStartClass = function(sortid, sname) { // 移动课程
+      //     sessionStorage.setItem('sname', sname);
+      //     courseArr = [];
+      //     var ccbBg =  $('.ccb-bg');
+      //     for(var i = 0; i < $scope.showTotalItems; i++) {
+      //         if(ccbBg.eq(i).is(':checked')) {
+      //           courseArr.push(ccbBg.eq(i).attr('name'));
+      //         }
+      //     }
+          
+      //     if(courseArr.length > 0) {
+      //         listLoading.css({'display':'block'});
+      //         $http
+      //           .post(''+url+'/course/move_course', {
+      //               token: sessionStorage.token, sortid: sortid, courseid: courseArr.join(",")
+      //           })
+      //           .then(function(response) {
+      //               listLoading.css({'display':'none'});
+      //               if ( response.data.code != 200 ) {
+      //                   requestError(response, $state, ngDialog);
+      //               }
+      //               else{ 
+      //                   getNoticeData(sortid);
+      //                   getCourseClass();
+      //                   $('.class-name').html(sname);
+      //                   ngDialog.open({
+      //                     template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+      //                     plain: true,
+      //                     className: 'ngdialog-theme-default'
+      //                   });
+      //                   ngDialog.close();
+      //               }
+      //           }, function(x) { 
+      //               listLoading.css({'display':'none'});
+      //               ngDialog.open({
+      //                 template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+      //                 plain: true,
+      //                 className: 'ngdialog-theme-default'
+      //               });
+      //               ngDialog.close();
+      //           });
+      //     }else {
+      //         ngDialog.open({
+      //           template: "<p style='text-align:center;margin: 0;'>未选择课程！</p>",
+      //           plain: true,
+      //           className: 'ngdialog-theme-default'
+      //         });
+      //         ngDialog.close();
+      //     }
+          
+      // }
+      
+      // $scope.dClassName = function() { // 删除分类
+      //     if($scope.showTotalItems <= 0) {
+      //         if(confirm("确定要删除分类吗？")) {
+      //             listLoading.css({'display':'block'});
+      //             $http
+      //               .post(''+url+'/sort/del', {
+      //                   token: sessionStorage.token, sortid: sessionStorage.sortid
+      //               })
+      //               .then(function(response) {
+      //                   listLoading.css({'display':'none'});
+      //                   if ( response.data.code != 200 ) {
+      //                       requestError(response, $state, ngDialog);
+      //                       $('.rdClassNameBtn').removeClass('open');
+      //                   }
+      //                   else{ 
+      //                       sessionStorage.setItem('sortid', 0);
+      //                       sessionStorage.setItem('sname', undefined);
+      //                       $('.class-name').html('全部课程');
+      //                       getCourseData();
+      //                       getCourseClass();
+      //                       $('.rdClassNameBtn').removeClass('open');
+      //                       ngDialog.close();
+      //                   }
+      //               }, function(x) { 
+      //                   listLoading.css({'display':'none'});
+      //                   ngDialog.open({
+      //                     template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+      //                     plain: true,
+      //                     className: 'ngdialog-theme-default'
+      //                   });
+      //                   $('.rdClassNameBtn').removeClass('open');
+      //                   ngDialog.close();
+      //               });
+      //         }
+      //     }else {
+      //         ngDialog.open({
+      //           template: "<p style='text-align:center;margin: 0;'>分类下存在课程不允许删除！</p>",
+      //           plain: true,
+      //           className: 'ngdialog-theme-default'
+      //         });
+      //         ngDialog.close();
+      //     }
+      // }
+      
+      
+      $scope.removeCourse = function(i) { // 删除文章
+          if(confirm("确定要删除文章吗？")) {
+              listLoading.css({'display':'block'});
+              var tcourseid = $('.ccb-bg').eq(i).attr('name');
+              $http
+                .post(''+url+'/faq/del', {
+                    token: sessionStorage.token, faq_id: tcourseid
+                })
+                .then(function(response) {
+                    listLoading.css({'display':'none'});
+                    if ( response.data.code != 200 ) {
+                        requestError(response, $state, ngDialog);
+                    }
+                    else{ 
+                        getNoticeData(sessionStorage.sortid, $scope.currentPage - 1);
+                    }
+                }, function(x) { 
+                    listLoading.css({'display':'none'});
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                });
+          }
+      }
+      
+      $scope.addCourseType = function() {
+          sessionStorage.setItem('actionCourseType', 1); 
+          $state.go("app.addNotice");
+      }
+      
+      // clearInterval(noF5Timer);
+      // timeoutLock($state);
+}]);
+
+
+
+/**=========================================================
  * noticeClassController
  * author: BGOnline
  * version 1.0 2016-7-24
@@ -1010,7 +1262,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
 App.controller('noticeClassController', ['$scope', 'ngDialog', '$rootScope', '$http', '$filter', '$state',
   function($scope, ngDialog, $rootScope, $http, $filter, $state) {
       
-      getCourseClass = function(i) {
+      getNoticeClass = function(i) {
           
           $http
             .post(''+url+'/public/getsort', {
@@ -1038,7 +1290,7 @@ App.controller('noticeClassController', ['$scope', 'ngDialog', '$rootScope', '$h
             }, function(x) { alert('啊噢~，服务器开小差了！'); });
       }
 
-      getCourseClass();
+      getNoticeClass();
       
       nowClassName = (function(i) { // 当前的 的分类改变颜色 
           if(i) {
@@ -1057,7 +1309,7 @@ App.controller('noticeClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           sessionStorage.setItem('sname', sname);
           sessionStorage.setItem('sortid', sortid);
           // $('.class-name').html(sname);
-          getCourseData(sortid);
+          getNoticeData(sortid);
           
           nowClassName(i+1)
           
@@ -1114,248 +1366,6 @@ App.controller('noticeClassController', ['$scope', 'ngDialog', '$rootScope', '$h
       
 }]);
 
-/**=========================================================
- * noticeMngtController
- * author: BGOnline
- * version 1.0 2016-3-18
- =========================================================*/
- 
-App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filter', '$state','ngDialog',
-  function($scope, $rootScope, $http, $filter, $state, ngDialog) {
-      
-      errorJump($state);
-      var listLoading = $('.list-loading');
-      
-      getCourseData = function(sortid, cp) { // 获取课程
-        
-          cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
-          
-          listLoading.css({'display':'block'});
-          $scope.sname = sessionStorage.sname;
-          $http
-            .post(''+url+'/faq/index', {
-                token: sessionStorage.token, p: cp, sortid: sortid
-            })
-            .then(function(response) {
-                listLoading.css({'display':'none'});
-                if ( response.data.code != 200 ) {
-                    requestError(response, $state, ngDialog);
-                }
-                else{ 
-                    $scope.course = response.data.data.mod_data; 
-                    var page = response.data.data.page_data;
-                    $scope.showTotalItems = page.totalCount;
-                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
-                }
-            }, function(x) { 
-              listLoading.css({'display':'none'});
-              ngDialog.open({
-                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                plain: true,
-                className: 'ngdialog-theme-default'
-              });
-            });
-      };
-      
-      getCourseData(sessionStorage.sortid);
-      
-      $scope.pageChanged = function() {
-          getCourseData(sessionStorage.sortid, $scope.currentPage - 1);
-      };
-      $scope.maxSize = 5; // 最多显示5页
-      
-      $scope.showCDetails = function(tcourse_name, tcourseid, sname) {
-          sessionStorage.setItem('tcourse_name', tcourse_name);
-          sessionStorage.setItem('tcourseid', tcourseid);
-          sessionStorage.setItem('sname', sname);
-      }
-      
-      $scope.showCourseAct = (function(i) {
-          $('.courseAction').eq(i).css({'visibility':'visible'});
-      })
-      
-      
-      $scope.closeCourseAct = (function(i) {
-          if(!($('.ccb-bg').eq(i).is(':checked'))) {
-            $('.courseAction').eq(i).css({'visibility':'hidden'});
-          }
-      })
-      
-      $scope.rClassName = function() {
-          $('.class-name').html("<input class='form-control ng-touched rcName' type='text' value='"+sessionStorage.sname+"'>");
-          $('.rcName').focus();
-      }
-      
-      $(document).on('blur', '.rcName', function() { // 修改分类名称
-          var changeSname = $(this).val();
-          $http
-            .post(''+url+'/sort/edit', {
-                token: sessionStorage.token, sortid: sessionStorage.sortid, sname: changeSname
-            })
-            .then(function(response) {
-                if ( response.data.code != 200 ) {
-                    requestError(response, $state, ngDialog);
-                }
-                else{ 
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
-                    $('.class-name').html(changeSname);
-                    sessionStorage.setItem('sname', changeSname); 
-                    getCourseClass();
-                }
-                ngDialog.close();
-            }, function(x) { 
-                ngDialog.open({
-                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                  plain: true,
-                  className: 'ngdialog-theme-default'
-                });
-                ngDialog.close();
-            });
-      })
-      
-      
-      var courseArr = new Array();
-      $scope.goStartClass = function(sortid, sname) { // 移动课程
-          sessionStorage.setItem('sname', sname);
-          courseArr = [];
-          var ccbBg =  $('.ccb-bg');
-          for(var i = 0; i < $scope.showTotalItems; i++) {
-              if(ccbBg.eq(i).is(':checked')) {
-                courseArr.push(ccbBg.eq(i).attr('name'));
-              }
-          }
-          
-          if(courseArr.length > 0) {
-              listLoading.css({'display':'block'});
-              $http
-                .post(''+url+'/course/move_course', {
-                    token: sessionStorage.token, sortid: sortid, courseid: courseArr.join(",")
-                })
-                .then(function(response) {
-                    listLoading.css({'display':'none'});
-                    if ( response.data.code != 200 ) {
-                        requestError(response, $state, ngDialog);
-                    }
-                    else{ 
-                        getCourseData(sortid);
-                        getCourseClass();
-                        $('.class-name').html(sname);
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
-                        ngDialog.close();
-                    }
-                }, function(x) { 
-                    listLoading.css({'display':'none'});
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
-                    ngDialog.close();
-                });
-          }else {
-              ngDialog.open({
-                template: "<p style='text-align:center;margin: 0;'>未选择课程！</p>",
-                plain: true,
-                className: 'ngdialog-theme-default'
-              });
-              ngDialog.close();
-          }
-          
-      }
-      
-      $scope.dClassName = function() { // 删除分类
-          if($scope.showTotalItems <= 0) {
-              if(confirm("确定要删除分类吗？")) {
-                  listLoading.css({'display':'block'});
-                  $http
-                    .post(''+url+'/sort/del', {
-                        token: sessionStorage.token, sortid: sessionStorage.sortid
-                    })
-                    .then(function(response) {
-                        listLoading.css({'display':'none'});
-                        if ( response.data.code != 200 ) {
-                            requestError(response, $state, ngDialog);
-                            $('.rdClassNameBtn').removeClass('open');
-                        }
-                        else{ 
-                            sessionStorage.setItem('sortid', 0);
-                            sessionStorage.setItem('sname', undefined);
-                            $('.class-name').html('全部课程');
-                            getCourseData();
-                            getCourseClass();
-                            $('.rdClassNameBtn').removeClass('open');
-                            ngDialog.close();
-                        }
-                    }, function(x) { 
-                        listLoading.css({'display':'none'});
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
-                        $('.rdClassNameBtn').removeClass('open');
-                        ngDialog.close();
-                    });
-              }
-          }else {
-              ngDialog.open({
-                template: "<p style='text-align:center;margin: 0;'>分类下存在课程不允许删除！</p>",
-                plain: true,
-                className: 'ngdialog-theme-default'
-              });
-              ngDialog.close();
-          }
-      }
-      
-      
-      $scope.removeCourse = function(i) { // 删除课程
-          if(confirm("确定要删除课程吗？")) {
-              listLoading.css({'display':'block'});
-              var tcourseid = $('.ccb-bg').eq(i).attr('name');
-              $http
-                .post(''+url+'/course/del', {
-                    token: sessionStorage.token, courseid: tcourseid
-                })
-                .then(function(response) {
-                    listLoading.css({'display':'none'});
-                    if ( response.data.code != 200 ) {
-                        requestError(response, $state, ngDialog);
-                    }
-                    else{ 
-                        getCourseData(sessionStorage.sortid, $scope.currentPage - 1);
-                    }
-                }, function(x) { 
-                    listLoading.css({'display':'none'});
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
-                    ngDialog.close();
-                });
-          }
-      }
-      
-      $scope.addCourseType = function() {
-          if($rootScope.courseClass == undefined) {
-              alert('无可用分类，请先添加分类！');
-          }else {
-              sessionStorage.setItem('actionCourseType', 1); 
-              $state.go("app.addCustomCourse");
-          }
-      }
-      
-      // clearInterval(noF5Timer);
-      // timeoutLock($state);
-}]);
 
 
 /**=========================================================
@@ -1795,6 +1805,203 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                 controller: 'lineOrderController'
               });
       }
+      
+}]);
+
+
+/**=========================================================
+ * noticeDetailsController
+ * author: BGOnline
+ * version 1.0 2016-7-25
+ =========================================================*/
+ 
+App.controller('noticeDetailsController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      $scope.tcourse_name = sessionStorage.tcourse_name;
+      $scope.sname = sessionStorage.sname;
+      
+      var getCourseDetailsData = function() {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/faq/getfaq', {
+                token: sessionStorage.token, faq_id: sessionStorage.tcourseid
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.courseDetailsData = response.data.data; 
+                    $scope.summary = $scope.courseDetailsData.summary;
+                    $scope.content = $sce.trustAsHtml($scope.courseDetailsData.content);
+                    $scope.tcourse_img = rootUrl + $scope.courseDetailsData.img;
+                    sessionStorage.setItem('sortid', $scope.courseDetailsData.sortid);
+                }
+                ngDialog.close();
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+            });
+      };
+
+      getCourseDetailsData();
+      
+      $scope.goEditCourse = function(actionCourseType) {
+          $state.go('app.addNotice');  
+          sessionStorage.setItem('actionCourseType', actionCourseType);
+      }
+      
+      // $scope.goAddBanji = function(editOrAdd, classid) {
+      //     sessionStorage.setItem('editOrAdd', editOrAdd);
+      //     sessionStorage.setItem('classid', classid);
+      //     $state.go('app.addBanji');  
+      // }
+      
+      // $scope.goClassStudent = function(classid, editOrAdd) {
+      //     sessionStorage.setItem('classid', classid);
+      //     sessionStorage.setItem('editOrAdd', editOrAdd);
+      //     $state.go('app.classStudent');
+      // }
+
+      // $scope.removeBanji = (function(classid) { // 删除班级
+      //     $http
+      //       .post(''+url+'/courseclass/del', {
+      //           token: sessionStorage.token, classid: classid
+      //       })
+      //       .then(function(response) {
+      //           if ( response.data.code != 200 ) {
+      //               requestError(response, $state, ngDialog);
+      //           }
+      //           else{ 
+      //               ngDialog.open({
+      //                 template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+      //                 plain: true,
+      //                 className: 'ngdialog-theme-default'
+      //               });
+      //               getCourseDetailsData();
+      //           }
+      //           ngDialog.close();
+      //       }, function(x) {
+      //           ngDialog.open({
+      //             template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+      //             plain: true,
+      //             className: 'ngdialog-theme-default'
+      //           });
+      //           ngDialog.close();
+      //       });
+      // })
+      
+      
+      // $scope.placementStudent = function(classid, allotid) { // 分配班级
+      //     $('.btn').addClass('disabled');
+      //     $('.fenbanUl').css({'display':'none'});
+      //     $http
+      //       .post(''+url+'/courseclass/allot', {
+      //           token: sessionStorage.token, classid: classid, allotid: allotid
+      //       })
+      //       .then(function(response) {
+      //           if ( response.data.code != 200 ) {
+      //               requestError(response, $state, ngDialog);
+      //           }
+      //           else{ 
+      //               ngDialog.open({
+      //                 template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+      //                 plain: true,
+      //                 className: 'ngdialog-theme-default'
+      //               });
+      //               getCourseDetailsData();
+      //           }
+      //           ngDialog.close();
+      //           $('.btn').removeClass('disabled');
+      //       }, function(x) {
+      //           ngDialog.open({
+      //             template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+      //             plain: true,
+      //             className: 'ngdialog-theme-default'
+      //           });
+      //           ngDialog.close();
+      //           $('.btn').removeClass('disabled');
+      //       });
+      // }
+
+      // $scope.isClass = function(classNum) { // 分班时判断是否存在班级
+      //     if(!classNum) {
+      //         ngDialog.open({
+      //           template: "<p style='text-align:center;margin: 0;'>请先添加班级！</p>",
+      //           plain: true,
+      //           className: 'ngdialog-theme-default'
+      //         });
+      //         ngDialog.close();
+      //     }
+      // }
+      
+
+      // $scope.sexs = [
+      //     {value: 0, text: '保密'},
+      //     {value: 1, text: '男'},
+      //     {value: 2, text: '女'}
+      // ];
+      
+      // $scope.showSex = function(x) {
+      //     if(x.sex) {
+      //         selected = $filter('filter')($scope.sexs, {value: x.sex});
+      //     }
+      //     return selected.length ? selected[0].text : 'Not set';
+      // };
+
+
+      // $scope.lineOrder = function() {
+      //     ngDialog.open({
+      //           template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>"+
+      //                     "<span style='float:left;margin-left: 10px;'>录入线下订单</span>"+
+      //                     "<span style='color:#ccc;font-size:12px;'>订单一经录入，不可修改或删除，请谨慎添加！</span>"+
+      //                     "</p>"+
+      //                     "<div style='padding:10px 20px;width:100%;' class='clearfix'>"+
+      //                         "<div class='input-group' style='width: 250px;'>"+
+      //                             "<input type='text' placeholder='请输入完整的家长手机号' class='input-sm form-control userPhone'/>"+
+      //                             "<span class='input-group-btn'>"+
+      //                                 "<button type='button' class='btn btn-sm btn-info' style='margin-left: 10px;' ng-click='searchUserInfoData()'>搜索</button>"+
+      //                             "</span>"+
+      //                         "</div>"+
+      //                         "<p style='margin:20px 0;'>"+
+      //                             "<span>家长：{{userInfoData[0].tname?userInfoData[0].tname:'无'}}</span>"+
+      //                             "<span style='margin-left:15px;'>电话：{{userInfoData[0].phone?userInfoData[0].phone:'无'}}</span>"+
+      //                         "</p>"+
+      //                         "<div class='selectTeacher' style='border:none;padding:0;margin:15px 0;'>"+
+      //                             "<div class='teacherList' style='border-color:#eee;border-left:none;border-right:none;border-bottom:none;'>"+
+      //                                 "<ul>"+
+      //                                     "<li ng-repeat='x in userInfoData[0].student' ng-click='sTeacher($index)' name={{x.studentid}}>"+
+      //                                         "<img ng-src='{{x.header}}' alt='Image' class='img-responsive img-circle'>"+
+      //                                         "<span ng-bind='x.tname'></span>"+
+      //                                         "<i class='fa fa-check'></i>"+
+      //                                     "</li>"+
+      //                                 "</ul>"+
+      //                             "</div>"+
+      //                         "</div>"+
+      //                         "<p style='margin:10px 0;'><span>选择套餐</span></p>"+  
+      //                         "<p style='margin:10px 0;'>"+
+      //                           "<div class='label label-default packageRadio' ng-repeat='p in packages' ng-click='selectpRadio($index, x.packageid)' style='padding:6px;margin-right:5px;cursor:pointer;'>{{p.package_name}}/{{p.package_price}}</div>"+
+      //                         "</p>"+ 
+      //                         "<p style='margin:10px 0;'><span>数量</span></p>"+   
+      //                         "<i class='fa fa-plus-square-o fa-2x' style='color: #DDE6E9;' ng-click='increaseQ()'></i>"+
+      //                         "<input type='text' class='form-control' disabled ng-model='quantityVal' ng-change='setQuantityVal()' style='width: 50px;display: inline-block;padding: 0px 8px;vertical-align: bottom;'>"+
+      //                         "<i class='fa fa-minus-square-o fa-2x' style='color: #DDE6E9;' ng-click='reduceQ()'></i>" +
+      //                         '<button type="button" class="mb-sm btn btn-info" ng-click="addLineOrder(\''+1 +'\')" style="float:right;margin-top:30px;">确认录入</button>'+
+      //                     "</div>",
+      //           plain: true,
+      //           className: 'ngdialog-theme-default',
+      //           controller: 'lineOrderController'
+      //         });
+      // }
       
 }]);
 
@@ -2273,6 +2480,442 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
 }]);
 
 
+/**=========================================================
+ * schoolSurveyController
+ * author: BGOnline
+ * version 1.0 2016-7-26
+ =========================================================*/
+ 
+App.controller('schoolSurveyController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
+  function($scope, $http, $filter, $state, FileUploader, ngDialog) {
+    
+      errorJump($state);
+      var listLoading = $('.list-loading');
+
+      var getSchoolGK = function() {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/faq/getxxgk', {
+                token: sessionStorage.token
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    $scope.courseDetailsData = response.data.data;
+                    ifrCon = $scope.courseDetailsData.content;
+                }
+                listLoading.css({'display':'none'});
+            }, function(x) { 
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+                listLoading.css({'display':'none'});
+            });
+      }
+      
+      $scope.addSubmitSchoolInfo = function() { // 学校概况
+          var content = '<html>'+
+                          '<head>'+
+                              '<style>'+
+                                  'img {'+
+                                      'width:100% !important;'+
+                                  '}'+
+                              '</style>'+
+                          '</head>'+
+                          '<body>'+
+                              document.getElementById('iframepage').contentWindow.html +
+                          '</body>'+
+                        '</html>'
+          $http
+            .post(''+url+'/faq/editxxgk', {
+                  token: sessionStorage.token,
+                  content: content
+            })
+            .then(function(response) {
+                // listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    getSchoolGK();
+                }
+                ngDialog.close();
+            }, function(x) { 
+                // listLoading.css({'display':'none'});
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                }); 
+                ngDialog.close();
+            });
+          
+      };
+
+      // var getTeacherTD = function() {
+      //     listLoading.css({'display':'block'});
+      //     $http
+      //       .post(''+url+'/faq/editsztd', {
+      //             token: sessionStorage.token,
+      //             content: content
+      //       })
+      //       .then(function(response) {
+      //           listLoading.css({'display':'none'});
+      //           if ( response.data.code != 200 ) {
+      //               requestError(response, $state, ngDialog);
+      //           }else { 
+      //               $scope.courseDetailsData = response.data.data;
+      //               ifrCon = $scope.courseDetailsData.content;
+      //           }
+      //           ngDialog.close();
+      //       }, function(x) { 
+      //           listLoading.css({'display':'none'});
+      //           ngDialog.open({
+      //             template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+      //             plain: true,
+      //             className: 'ngdialog-theme-default'
+      //           }); 
+      //           ngDialog.close();
+      //       });
+      // }
+
+
+      
+
+      // $scope.addSubmitTeacherInfo = function() { // 师资团队
+      //     var content = '<html>'+
+      //                     '<head>'+
+      //                         '<style>'+
+      //                             'img {'+
+      //                                 'width:100% !important;'+
+      //                             '}'+
+      //                         '</style>'+
+      //                     '</head>'+
+      //                     '<body>'+
+      //                         document.getElementById('iframepage').contentWindow.html +
+      //                     '</body>'+
+      //                   '</html>'
+          
+          
+      //     // listLoading.css({'display':'block'});
+      //     $http
+      //       .post(''+url+'/faq/getsztd', {
+      //             token: sessionStorage.token, 
+      //             content: content
+      //       })
+      //       .then(function(response) {
+      //           // listLoading.css({'display':'none'});
+      //           if ( response.data.code != 200 ) {
+      //               requestError(response, $state, ngDialog);
+      //           }
+      //           else{ 
+      //               ngDialog.open({
+      //                 template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+      //                 plain: true,
+      //                 className: 'ngdialog-theme-default'
+      //               });
+      //               getTeacherTD();
+      //           }
+      //           ngDialog.close();
+      //       }, function(x) { 
+      //           // listLoading.css({'display':'none'});
+      //           ngDialog.open({
+      //             template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+      //             plain: true,
+      //             className: 'ngdialog-theme-default'
+      //           }); 
+      //           ngDialog.close();
+      //       });
+          
+      // };
+      // clearInterval(noF5Timer);
+      
+      //timeoutLock($state);
+}]);
+
+
+/**=========================================================
+ * addNoticeController
+ * author: BGOnline
+ * version 1.0 2016-4-14
+ =========================================================*/
+ 
+App.controller('addNoticeController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
+  function($scope, $http, $filter, $state, FileUploader, ngDialog) {
+    
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      parseInt(sessionStorage.sortid) ? $scope.isSortid = false : $scope.isSortid = true;
+      
+      var uploader = $scope.uploader = new FileUploader({
+        url: ''+url+'/gd/upload'
+      })
+
+      uploader.onSuccessItem = function(response) {
+        sessionStorage.setItem('uploadCourseImgUrl', jQuery.parseJSON(response._xhr.response).url);
+        $scope.img = rootUrl + sessionStorage.uploadCourseImgUrl;
+      };
+      
+      $scope.randomDate = (new Date()).getTime();
+      // var addTableRow = function() { // 添加一行
+      //     var r = document.getElementById('comboTable').insertRow(2);
+      //     r.setAttribute("class", "packageRow");
+      //     var t1 = r.insertCell(0);
+      //     var t2 = r.insertCell(1);
+      //     var t3 = r.insertCell(2);
+      //     var t4 = r.insertCell(3);
+      //     t1.innerHTML="<input class='form-control ng-touched comboInput' type='text' maxlength='20'>";
+      //     t2.innerHTML="<input class='form-control ng-touched comboInput' type='number'>";
+      //     t3.innerHTML="<input class='form-control ng-touched comboInput' type='text' maxlength='60'>";
+      //     t4.innerHTML="<button type='button' class='btn btn-sm btn-danger comboAction deleteRow'><em class='fa fa-trash-o'></em></button>";
+      // }
+      
+      // $scope.addCombo = (function() { // 执行添加
+      //     addTableRow();
+      // });
+      
+      // $(document).on('blur', '.comboInput', function() {
+      //     if($(this).val() != "") {
+      //         $(this).parent().html($(this).val());
+      //     }else {
+      //         ngDialog.open({
+      //           template: "<p style='text-align:center;margin: 0;'>套餐信息不完整！</p>",
+      //           plain: true,
+      //           className: 'ngdialog-theme-default'
+      //         });
+      //     }
+      // })
+
+      // $(document).on('click', '.deleteRow', function() {
+      //     var length = $('.packageRow').length;
+      //     if(length <= 1) {
+      //         ngDialog.open({
+      //           template: "<p style='text-align:center;margin: 0;'>至少需要一项套餐！</p>",
+      //           plain: true,
+      //           className: 'ngdialog-theme-default'
+      //         });
+      //     }else {
+      //         $(this).parent().parent().remove()
+      //     }
+          
+      // })
+      
+      // $(document).on('click', '.editRow', function() {
+      //     var comboInput = $('.comboInput');
+      //     var oldValArr = new Array();
+      //     if(comboInput.val() != "") {
+      //         for(var i = 0; i < $(this).parent().siblings().length; i++) {
+      //             oldValArr.push($(this).parent().siblings().eq(i).text());
+      //             $(this).parent().siblings().eq(i).html("<input class='form-control ng-touched comboInput' type='text' value="+oldValArr[i]+">"); 
+      //         }
+      //     }else {
+      //         ngDialog.open({
+      //           template: "<p style='text-align:center;margin: 0;'>套餐信息不完整！</p>",
+      //           plain: true,
+      //           className: 'ngdialog-theme-default'
+      //         });
+      //     }
+
+      // })
+      
+      $scope.addCourseSelectSort = function(selSort) {
+          var selSortArr = selSort.split(',');
+          sessionStorage.setItem('sortid', selSortArr[0]);
+          sessionStorage.setItem('sname', selSortArr[1]);
+      }
+      
+      $scope.sname = sessionStorage.sname;
+      $scope.addCourse = {};
+      
+      switch(sessionStorage.actionCourseType) {
+          
+          case "1": // 添加
+              ifrCon = undefined;
+              $scope.addSubmit = function() {
+                  // var packageRow = $('.packageRow');
+                  // var comboInput = $('.comboInput');
+                  
+                  // if(packageRow.length > 0) {
+                  //     var comboArr = new Array();
+                  //     var attributeName = ['package_name', 'package_price', 'package_content'];
+                  //     for(var r = 0; r < packageRow.length; r++) {
+                  //         var packages = {};
+                  //         for(var c = 0; c < packageRow.eq(r).children().length-1; c++) {
+                  //             packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val();
+                  //         }
+                  //         comboArr.push(packages);
+                  //     }
+
+                      
+                      var content = '<html>'+
+                                      '<head>'+
+                                          '<style>'+
+                                              'img {'+
+                                                  'width:100% !important;'+
+                                              '}'+
+                                          '</style>'+
+                                      '</head>'+
+                                      '<body>'+
+                                          document.getElementById('iframepage').contentWindow.html +
+                                      '</body>'+
+                                    '</html>'
+                      
+                      
+                      listLoading.css({'display':'block'});
+                      $http
+                        .post(''+url+'/faq/add', {
+                              token: sessionStorage.token, 
+                              title: $scope.addCourse.courseName, 
+                              sortid: sessionStorage.sortid,
+                              summary: $scope.addCourse.abstract,
+                              content: content,
+                              img: sessionStorage.uploadCourseImgUrl,
+                        })
+                        .then(function(response) {
+                            listLoading.css({'display':'none'});
+                            if ( response.data.code != 200 ) {
+                                requestError(response, $state, ngDialog);
+                            }
+                            else{ 
+                                ngDialog.open({
+                                  template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                                  plain: true,
+                                  className: 'ngdialog-theme-default'
+                                });
+                                $state.go('app.noticeMngt');
+                                getCourseClass();
+                            }
+                            ngDialog.close();
+                        }, function(x) { 
+                            listLoading.css({'display':'none'});
+                            ngDialog.open({
+                              template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                              plain: true,
+                              className: 'ngdialog-theme-default'
+                            }); 
+                            ngDialog.close();
+                        });
+                  // }else {
+                  //     ngDialog.open({
+                  //       template: "<p style='text-align:center;margin: 0;'>套餐信息不完整！</p>",
+                  //       plain: true,
+                  //       className: 'ngdialog-theme-default'
+                  //     });
+                  //     ngDialog.close();
+                  // }
+              };
+            break;
+          case "2": // 修改
+              listLoading.css({'display':'block'});
+              $http
+                .post(''+url+'/faq/getfaq', {
+                    token: sessionStorage.token, faq_id: sessionStorage.tcourseid
+                })
+                .then(function(response) {
+                    listLoading.css({'display':'none'});
+                    if ( response.data.code != 200 ) {
+                        requestError(response, $state, ngDialog);
+                    }
+                    else{ 
+                        $scope.courseDetailsData = response.data.data;
+                        $scope.addCourse.courseName = $scope.courseDetailsData.title;
+                        $scope.addCourse.abstract = $scope.courseDetailsData.summary;
+                        ifrCon = $scope.courseDetailsData.content;
+                        $scope.img = rootUrl + $scope.courseDetailsData.img;
+                        sessionStorage.setItem('detailCourseImg', $scope.courseDetailsData.img);
+                    }
+                }, function(x) { 
+                    listLoading.css({'display':'none'});
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                });
+              
+              $scope.addSubmit = function() {
+                  
+                  // var packageRow = $('.packageRow');
+                  // var comboInput = $('.comboInput');
+                  // var comboArr = new Array();
+                  // var attributeName = ['package_name', 'package_price', 'package_content'];
+                  // for(var r = 0; r < packageRow.length; r++) {
+                  //     var packages = {};
+                  //     for(var c = 0; c < packageRow.eq(r).children().length-1; c++) {
+                  //         packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val();
+                  //         packages['packageid'] = packageRow.eq(r).attr('name');
+                  //     }
+                  //     comboArr.push(packages);
+                  // }
+                  
+                  var content = '<html>'+
+                                      '<head>'+
+                                          '<style>'+
+                                              'img {'+
+                                                  'width:100% !important;'+
+                                              '}'+
+                                          '</style>'+
+                                      '</head>'+
+                                      '<body>'+
+                                          document.getElementById('iframepage').contentWindow.html +
+                                      '</body>'+
+                                    '</html>'
+
+
+                  listLoading.css({'display':'block'});
+                  
+                  $http
+                    .post(''+url+'/faq/edit', {
+                        token: sessionStorage.token, 
+                        faq_id: sessionStorage.tcourseid,
+                        title: $scope.addCourse.courseName, 
+                        sortid: sessionStorage.sortid,
+                        summary: $scope.addCourse.abstract,
+                        content: content,
+                        img: sessionStorage.uploadCourseImgUrl ? sessionStorage.uploadCourseImgUrl : sessionStorage.detailCourseImg,
+                    })
+                    .then(function(response) {
+                        listLoading.css({'display':'none'});
+                        if ( response.data.code != 200 ) {
+                            requestError(response, $state, ngDialog);
+                        }
+                        else{ 
+                            ngDialog.open({
+                              template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                              plain: true,
+                              className: 'ngdialog-theme-default'
+                            });
+                            $state.go('app.noticeMngt');
+                        }
+                        ngDialog.close();
+                    }, function(x) { 
+                        listLoading.css({'display':'none'});
+                        ngDialog.open({
+                          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                          plain: true,
+                          className: 'ngdialog-theme-default'
+                        });
+                        ngDialog.close();
+                    });
+              };
+              
+            break;
+      }
+      
+      // clearInterval(noF5Timer);
+      
+      //timeoutLock($state);
+}]);
 
 /**=========================================================
  * teacherMngtController

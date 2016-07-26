@@ -1,0 +1,62 @@
+<h3 ng-controller="noticeClassController">
+    <a class="course" ui-sref="app.noticeMngt" ng-click="showCourse(0)">全部文章</a>
+    <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" ui-sref="app.noticeMngt" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
+    <!--<input class="form-control ng-touched addCourseClassInput" type='text'>-->
+    <!--<button class="btn btn-default addCourseBtn" type="button" ng-click="addCourseClass()"><i class="fa fa-plus addCourseFa"></i>添加</button>   -->
+</h3>
+<div class="clearfix" ng-controller="noticeDetailsController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <h4 class="page-header courseTitle">
+        {{sname == 'undefined' || sname == undefined ? '全部课程' : sname}} > {{tcourse_name}}
+        <div class="operationCourse">
+            <div class="btn-group mb-sm">
+                <button type="button" class="btn dropdown-toggle btn-warning" ng-click="goEditCourse(2)">修改文章</button>
+            </div> 
+        </div>
+    </h4>
+    <div class="courseDetails-div">
+        <tabset>
+            <tab heading="文章详情">
+                <p class="cdd-title">
+                    文章信息
+                </p>
+                <div class="row plate">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-2">
+                        <p class="plate-title">文章标题：</p>
+                        <p class="plate-title">摘要：</p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p class="plate-con" ng-bind="tcourse_name"></p>
+                        <p class="plate-con" ng-bind="summary"></p>
+                    </div>
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-3">
+                        <a href="#" class="changeImg">
+                            <img ng-src="{{tcourse_img}}">
+                            <!--<p>更换图片</p>-->
+                        </a>
+                    </div>
+                    <div class="col-xs-2"></div>
+                </div>
+                <p class="cdd-title">
+                    文章内容
+                </p>
+                <div class="row plate">
+                    <div class="col-xs-12">
+                        <div class="couseDetailsDesc" ng-bind-html="content"></div>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

@@ -49,15 +49,15 @@
         <div class="col-xs-4 col-md-2 courseList" ng-repeat="c in course" ng-mouseleave="closeCourseAct($index)">
             <p class="courseAction">
                 <i class="fa fa-trash-o c-btn removeIco" ng-click="removeCourse($index)"></i>
-                <label class="checkbox-inline c-checkbox c-btn">
-                    <input id="inlinecheckbox10" class="ccb-bg" type="checkbox" ng-checked="" name="{{c.courseid}}">
+                <!--<label class="checkbox-inline c-checkbox c-btn">
+                    <input id="inlinecheckbox10" class="ccb-bg" type="checkbox" ng-checked="" name="{{c.faq_id}}">
                     <span class="fa fa-check"></span>
-                </label>
+                </label>-->
             </p>
-            <a ui-sref="app.courseDetails" ng-click="showCDetails(c.course_name,c.courseid,c.sname)" ng-mouseover="showCourseAct($index)">
-                <img ng-src="{{c.course_img}}">
+            <a ui-sref="app.noticeDetails" ng-click="showCDetails(c.title,c.faq_id,c.sname)" ng-mouseover="showCourseAct($index)">
+                <img ng-src="{{c.img}}">
                 <div class="courseDesc">
-                    <p ng-bind="c.course_name"></p>
+                    <p ng-bind="c.title"></p>
                     <small ng-bind="c.summary" title="{{c.summary}}"></small>
                 </div>
             </a>
