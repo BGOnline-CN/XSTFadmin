@@ -1217,7 +1217,7 @@ App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filte
       $scope.removeCourse = function(i) { // 删除文章
           if(confirm("确定要删除文章吗？")) {
               listLoading.css({'display':'block'});
-              var tcourseid = $('.ccb-bg').eq(i).attr('name');
+              var tcourseid = $('.courseAction').attr('name');
               $http
                 .post(''+url+'/faq/del', {
                     token: sessionStorage.token, faq_id: tcourseid
@@ -2490,6 +2490,7 @@ App.controller('schoolSurveyController', ['$scope', '$http', '$filter', '$state'
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
     
       errorJump($state);
+      $scope.randomDate = (new Date()).getTime();
       var listLoading = $('.list-loading');
 
       var getSchoolGK = function() {
@@ -2502,8 +2503,12 @@ App.controller('schoolSurveyController', ['$scope', '$http', '$filter', '$state'
                 if ( response.data.code != 200 ) {
                     requestError(response, $state, ngDialog);
                 }else { 
-                    $scope.courseDetailsData = response.data.data;
-                    ifrCon = $scope.courseDetailsData.content;
+                    if(response.data.data) {
+                        $scope.courseDetailsData = response.data.data;
+                        ifrCon = $scope.courseDetailsData.content;
+                    }else {
+                        ifrCon = undefined;
+                    }
                 }
                 listLoading.css({'display':'none'});
             }, function(x) { 
@@ -2517,6 +2522,8 @@ App.controller('schoolSurveyController', ['$scope', '$http', '$filter', '$state'
             });
       }
       
+      getSchoolGK();
+
       $scope.addSubmitSchoolInfo = function() { // 学校概况
           var content = '<html>'+
                           '<head>'+
@@ -2561,34 +2568,38 @@ App.controller('schoolSurveyController', ['$scope', '$http', '$filter', '$state'
           
       };
 
-      // var getTeacherTD = function() {
-      //     listLoading.css({'display':'block'});
-      //     $http
-      //       .post(''+url+'/faq/editsztd', {
-      //             token: sessionStorage.token,
-      //             content: content
-      //       })
-      //       .then(function(response) {
-      //           listLoading.css({'display':'none'});
-      //           if ( response.data.code != 200 ) {
-      //               requestError(response, $state, ngDialog);
-      //           }else { 
-      //               $scope.courseDetailsData = response.data.data;
-      //               ifrCon = $scope.courseDetailsData.content;
-      //           }
-      //           ngDialog.close();
-      //       }, function(x) { 
-      //           listLoading.css({'display':'none'});
-      //           ngDialog.open({
-      //             template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-      //             plain: true,
-      //             className: 'ngdialog-theme-default'
-      //           }); 
-      //           ngDialog.close();
-      //       });
-      // }
+      var getTeacherTD = function() {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/faq/editsztd', {
+                  token: sessionStorage.token,
+                  content: content
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    if(response.data.data) {
+                        $scope.courseDetailsData = response.data.data;
+                        ifrCon = $scope.courseDetailsData.content;
+                    }else {
+                        ifrCon = undefined;
+                    }
+                }
+                ngDialog.close();
+            }, function(x) { 
+                listLoading.css({'display':'none'});
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                }); 
+                ngDialog.close();
+            });
+      }
 
-
+      getTeacherTD();
       
 
       // $scope.addSubmitTeacherInfo = function() { // 师资团队

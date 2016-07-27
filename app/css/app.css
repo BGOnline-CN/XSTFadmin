@@ -11156,6 +11156,9 @@ flatdoc .button .badge {
     cursor: default;
     font-size: 14px;
 }
+.schoolSurveyEdit  > div .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus { 
+    border-bottom: none;
+}
 .atTheDetails-div > div .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     border: none;
 }
