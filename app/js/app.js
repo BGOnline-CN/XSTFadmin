@@ -208,6 +208,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         resolve: helper.resolveFor('angularFileUpload', 'filestyle')      
     })
 
+    .state('app.addSchoolSurvey', {
+        url: '/addSchoolSurvey',
+        title: '添加学校概况',
+        templateUrl: helper.basepath('addSchoolSurvey.html')
+    })
+
     .state('app.addBanji', {
         url: '/addBanji',
         title: '添加班级',
@@ -2328,7 +2334,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                                       '</body>'+
                                     '</html>'
                       
-                      
+
                       listLoading.css({'display':'block'});
                       $http
                         .post(''+url+'/course/add', {
@@ -2486,13 +2492,12 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
  * version 1.0 2016-7-26
  =========================================================*/
  
-App.controller('schoolSurveyController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
-  function($scope, $http, $filter, $state, FileUploader, ngDialog) {
-    
-      errorJump($state);
-      $scope.randomDate = (new Date()).getTime();
-      var listLoading = $('.list-loading');
+App.controller('schoolSurveyController', ['$rootScope', '$sce', '$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
+  function($rootScope, $sce, $scope, $http, $filter, $state, FileUploader, ngDialog) {
 
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      
       var getSchoolGK = function() {
           listLoading.css({'display':'block'});
           $http
@@ -2503,12 +2508,9 @@ App.controller('schoolSurveyController', ['$scope', '$http', '$filter', '$state'
                 if ( response.data.code != 200 ) {
                     requestError(response, $state, ngDialog);
                 }else { 
-                    if(response.data.data) {
-                        $scope.courseDetailsData = response.data.data;
-                        ifrCon = $scope.courseDetailsData.content;
-                    }else {
-                        ifrCon = undefined;
-                    }
+                    $scope.schoolInfoData = response.data.data;
+                    ifrCon = $scope.schoolInfoData.content;
+                    $scope.schoolInfoContent = $sce.trustAsHtml($scope.schoolInfoData.content);
                 }
                 listLoading.css({'display':'none'});
             }, function(x) { 
@@ -2524,68 +2526,20 @@ App.controller('schoolSurveyController', ['$scope', '$http', '$filter', '$state'
       
       getSchoolGK();
 
-      $scope.addSubmitSchoolInfo = function() { // 学校概况
-          var content = '<html>'+
-                          '<head>'+
-                              '<style>'+
-                                  'img {'+
-                                      'width:100% !important;'+
-                                  '}'+
-                              '</style>'+
-                          '</head>'+
-                          '<body>'+
-                              document.getElementById('iframepage').contentWindow.html +
-                          '</body>'+
-                        '</html>'
-          $http
-            .post(''+url+'/faq/editxxgk', {
-                  token: sessionStorage.token,
-                  content: content
-            })
-            .then(function(response) {
-                // listLoading.css({'display':'none'});
-                if ( response.data.code != 200 ) {
-                    requestError(response, $state, ngDialog);
-                }
-                else{ 
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
-                    getSchoolGK();
-                }
-                ngDialog.close();
-            }, function(x) { 
-                // listLoading.css({'display':'none'});
-                ngDialog.open({
-                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                  plain: true,
-                  className: 'ngdialog-theme-default'
-                }); 
-                ngDialog.close();
-            });
-          
-      };
-
       var getTeacherTD = function() {
           listLoading.css({'display':'block'});
           $http
-            .post(''+url+'/faq/editsztd', {
-                  token: sessionStorage.token,
-                  content: content
+            .post(''+url+'/faq/getsztd', {
+                  token: sessionStorage.token
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
                     requestError(response, $state, ngDialog);
-                }else { 
-                    if(response.data.data) {
-                        $scope.courseDetailsData = response.data.data;
-                        ifrCon = $scope.courseDetailsData.content;
-                    }else {
-                        ifrCon = undefined;
-                    }
+                }else {
+                    $scope.teacherInfoData = response.data.data;
+                    ifrCon = $scope.teacherInfoData.content;
+                    $scope.teacherInfoContent = $sce.trustAsHtml($scope.teacherInfoData.content);
                 }
                 ngDialog.close();
             }, function(x) { 
@@ -2601,53 +2555,140 @@ App.controller('schoolSurveyController', ['$scope', '$http', '$filter', '$state'
 
       getTeacherTD();
       
+      $scope.createTime = function(create) {
+          if(typeof(create) == 'undefined') return;
+          return localData = new Date(parseInt(create.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+      
+      $scope.openEdit = function(type) {
+          switch(type) { 
+              case 1:
+                $state.go('app.addSchoolSurvey');
+                sessionStorage.setItem('schoolSurveyType', type);
+                break;
+              case 2:
+                $state.go('app.addSchoolSurvey');
+                sessionStorage.setItem('schoolSurveyType', type);
+                break;
+          }
+      }
 
-      // $scope.addSubmitTeacherInfo = function() { // 师资团队
-      //     var content = '<html>'+
-      //                     '<head>'+
-      //                         '<style>'+
-      //                             'img {'+
-      //                                 'width:100% !important;'+
-      //                             '}'+
-      //                         '</style>'+
-      //                     '</head>'+
-      //                     '<body>'+
-      //                         document.getElementById('iframepage').contentWindow.html +
-      //                     '</body>'+
-      //                   '</html>'
-          
-          
-      //     // listLoading.css({'display':'block'});
-      //     $http
-      //       .post(''+url+'/faq/getsztd', {
-      //             token: sessionStorage.token, 
-      //             content: content
-      //       })
-      //       .then(function(response) {
-      //           // listLoading.css({'display':'none'});
-      //           if ( response.data.code != 200 ) {
-      //               requestError(response, $state, ngDialog);
-      //           }
-      //           else{ 
-      //               ngDialog.open({
-      //                 template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-      //                 plain: true,
-      //                 className: 'ngdialog-theme-default'
-      //               });
-      //               getTeacherTD();
-      //           }
-      //           ngDialog.close();
-      //       }, function(x) { 
-      //           // listLoading.css({'display':'none'});
-      //           ngDialog.open({
-      //             template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-      //             plain: true,
-      //             className: 'ngdialog-theme-default'
-      //           }); 
-      //           ngDialog.close();
-      //       });
-          
-      // };
+      // clearInterval(noF5Timer);
+      
+      //timeoutLock($state);
+}]);
+
+/**=========================================================
+ * addSchoolSurveyController
+ * author: BGOnline
+ * version 1.0 2016-7-26
+ =========================================================*/
+ 
+App.controller('addSchoolSurveyController', ['$rootScope', '$sce', '$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
+  function($rootScope, $sce, $scope, $http, $filter, $state, FileUploader, ngDialog) {
+      errorJump($state);
+      $scope.randomDate = (new Date()).getTime();
+      var listLoading = $('.list-loading');
+
+      var submitData = function(api) {
+          return $scope.addSubmit = function() {
+                    var content = '<html>'+
+                                    '<head>'+
+                                        '<style>'+
+                                            'img {'+
+                                                'width:100% !important;'+
+                                            '}'+
+                                        '</style>'+
+                                    '</head>'+
+                                    '<body>'+
+                                        document.getElementById('iframepage').contentWindow.html +
+                                    '</body>'+
+                                  '</html>'
+                    $http
+                      .post(''+url+api+'', {
+                            token: sessionStorage.token,
+                            content: content
+                      })
+                      .then(function(response) {
+                          if ( response.data.code != 200 ) {
+                              requestError(response, $state, ngDialog);
+                          }
+                          else{ 
+                              ngDialog.open({
+                                template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                                plain: true,
+                                className: 'ngdialog-theme-default'
+                              });
+                              $state.go('app.schoolSurvey');
+                          }
+                          ngDialog.close();
+                      }, function(x) { 
+                          ngDialog.open({
+                            template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                            plain: true,
+                            className: 'ngdialog-theme-default'
+                          }); 
+                          ngDialog.close();
+                      });
+                    
+                }
+      }
+
+
+
+      switch(sessionStorage.schoolSurveyType) {
+          case '1':
+            $http
+              .post(''+url+'/faq/getxxgk', {
+                    token: sessionStorage.token
+              })
+              .then(function(response) {
+                  if ( response.data.code != 200 ) {
+                      requestError(response, $state, ngDialog);
+                  }else {
+                      $scope.schoolInfoData = response.data.data;
+                      ifrCon = $scope.schoolInfoData.content;
+                      $scope.schoolInfoContent = $sce.trustAsHtml($scope.schoolInfoData.content);
+                  }
+                  ngDialog.close();
+              }, function(x) {
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  }); 
+                  ngDialog.close();
+              });
+            $scope.editPageTitle = '添加学校简介';
+            submitData('/faq/editxxgk');
+            break;
+          case '2':
+            $http
+              .post(''+url+'/faq/getsztd', {
+                    token: sessionStorage.token
+              })
+              .then(function(response) {
+                  if ( response.data.code != 200 ) {
+                      requestError(response, $state, ngDialog);
+                  }else {
+                      $scope.teacherInfoData = response.data.data;
+                      ifrCon = $scope.teacherInfoData.content;
+                      $scope.teacherInfoContent = $sce.trustAsHtml($scope.teacherInfoData.content);
+                  }
+                  ngDialog.close();
+              }, function(x) {
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  }); 
+                  ngDialog.close();
+              });
+            $scope.editPageTitle = '添加师资团队';
+            submitData('/faq/editsztd');
+            break;
+      }
+      
       // clearInterval(noF5Timer);
       
       //timeoutLock($state);
