@@ -17,7 +17,7 @@
         <tab heading="充值学习币" data-ng-controller="usersCenterController">
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
-                    <span class="panel-table-title">全部家长</span>
+                    <span class="panel-table-title">全部家长（{{showTotalItems}}）</span>
                     <button class="btn btn-default addCourseBtn" type="button" ng-click="addUserInfo(1)"><i class="fa fa-plus addCourseFa"></i>添加</button>   
                     <div class="input-group">
                         <input type="text" placeholder="" class="input-sm form-control" ng-model="sUValue"/>
@@ -80,7 +80,7 @@
         <tab heading="充值记录" data-ng-controller="rechargeRecordController">
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
-                    <span class="panel-table-title">充值时间</span>
+                    <span class="panel-table-title">充值记录（{{showTotalItems}}）</span>
                     <select class="bg-select" ng-change="showRechargeTime(time)" ng-model="time">
                         <option value="">全部</option>
                         <option value="a">最近一周</option>

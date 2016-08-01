@@ -18,10 +18,12 @@
                 <div class="col-lg-4">
                     <div class="panel">
                         <a href="" ng-click="openEdit(1)"><!--1学校-->
-                            <img src="app/img/bg1.jpg" class="img-responsive" />
+                            <img src="app/img/school.png" class="img-responsive" style="width:100px !important;height:100px;margin:20px auto 0 auto;"/>
                         </a>
                         <div class="panel-body">
-                            <p class="clearfix">
+                            <h4 style="text-align:center;" ng-bind="schoolInfoData.title"></h4>
+                            <p ng-bind-html="schoolInfoContent" style="margin-top:20px;"></p>
+                            <p class="clearfix" style="border-top:1px solid #eee;padding-top: 20px;color:#ccc;">
                                 <span class="pull-left">
                                     <small class="mr-sm">创建时间
                                     </small>
@@ -30,13 +32,10 @@
                                 <span class="pull-right">
                                     <small>
                                     <strong ng-bind="schoolInfoData.hits"></strong>
-                                    <span>点击量</span>
+                                    <span>人浏览</span>
                                     </small>
                                 </span>
                             </p>
-                            <h4><a href="" ng-bind="schoolInfoData.title"></a>
-                            </h4>
-                            <p ng-bind-html="schoolInfoContent"></p>
                         </div>
                     </div>
                 </div>
@@ -44,10 +43,12 @@
                 <div class="col-lg-4">
                     <div class="panel">
                         <a href="" ng-click="openEdit(2)">
-                            <img src="app/img/bg1.jpg" class="img-responsive" />
+                            <img src="app/img/tea.png" class="img-responsive" style="width:100px !important;height:100px;margin:20px auto 0 auto;"/>
                         </a>
                         <div class="panel-body">
-                            <p class="clearfix">
+                            <h4 style="text-align:center;" ng-bind="teacherInfoData.title"></h4>
+                            <p ng-bind-html="teacherInfoContent" style="margin-top:20px;"></p>
+                            <p class="clearfix" style="border-top:1px solid #eee;padding-top: 20px;color:#ccc;">
                                 <span class="pull-left">
                                     <small class="mr-sm">创建时间
                                     </small>
@@ -56,13 +57,10 @@
                                 <span class="pull-right">
                                     <small>
                                     <strong ng-bind="teacherInfoData.hits"></strong>
-                                    <span>点击量</span>
+                                    <span>人浏览</span>
                                     </small>
                                 </span>
                             </p>
-                            <h4> <a href="" ng-bind="teacherInfoData.title"></a>
-                            </h4>
-                            <p ng-bind-html="teacherInfoContent"></p>
                         </div>
                     </div>
                 </div>

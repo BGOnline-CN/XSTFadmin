@@ -16,7 +16,13 @@
     <div class="panel-footer">
       <div class="row">
          <div class="col-lg-4">
-            <!--当前校区：<a href="" class="crumbs" name="{{crumbsBranchid}}">{{orderBranchName ? orderBranchName : '全部校区'}}</a><i class="fa fa-close removeBranchid"></i>-->
+            <span class="panel-table-title" style="vertical-align: bottom;">课程订单（{{showTotalItems}}）</span>
+            <select class="bg-select" ng-change="showRechargeTime(time)" ng-model="time">
+                <option value="">全部</option>
+                <option value="a">最近一周</option>
+                <option value="b">最近一个月</option>
+                <option value="c">最近三个月</option>
+            </select>
          </div>
          <div class="col-lg-4"></div>
          <div class="col-lg-4">

@@ -13,15 +13,15 @@
         <div></div>
     </div>
     <h4 class="page-header courseTitle">
-        <span class="class-name">学校概况</span>  >  {{editPageTitle}}
+        <span class="class-name">学校概况</span>  >  添加{{editPageTitle}}
     </h4>
     <div class="addCourse-div">
         <tabset>
-            <tab heading="学校简介">
+            <tab heading="{{editPageTitle}}">
                 <form role="form" ng-submit="addSubmit()" novalidate="" class="form-validate" enctype="multipart/form-data"> 
                     <div class="row plate">
                         <div class="clearfix row-div">
-                            <div class="col-xs-2 customTitle">简介内容</div>
+                            <div class="col-xs-2 customTitle">修改内容</div>
                             <!--<div class="col-xs-10">
                                 <button type="button" class="btn btn-labeled btn-default preview">预览
                                     <span class="btn-label btn-label-right"><i class="fa fa-arrow-right"></i>

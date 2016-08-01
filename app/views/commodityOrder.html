@@ -15,7 +15,15 @@
     </div>
     <div class="panel-footer">
       <div class="row">
-         <div class="col-lg-8"></div>
+         <div class="col-lg-8">
+            <span class="panel-table-title" style="vertical-align: bottom;">商品订单（{{showTotalItems}}）</span>
+            <select class="bg-select" ng-change="showRechargeTime(time)" ng-model="time">
+                <option value="">全部</option>
+                <option value="a">最近一周</option>
+                <option value="b">最近一个月</option>
+                <option value="c">最近三个月</option>
+            </select>
+         </div>
          <div class="col-lg-4">
              <!--<div class="input-group" style="width: 200px;float:right;">
                 <input type="text" placeholder="{{searchResult != undefined && searchResult != 'undefined' && searchResult ? searchResult : '全部'}}" class="input-sm form-control" ng-model="sOLValue"/>

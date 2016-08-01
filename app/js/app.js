@@ -58,7 +58,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
   // Scope Globals
   // ----------------------------------- 
   $rootScope.app = {
-    name: sessionStorage.branch_name,
+    name: sessionStorage.branch_name ? sessionStorage.branch_name : '小书童分校管理后台',
     description: '小书童分校管理后台',
     year: ((new Date()).getFullYear()),
     layout: {
@@ -651,6 +651,7 @@ var noRefreshGetData = (function(x, speed) { // x 取得数据的函数名 speed
 var errorJump = (function($state) {
     if (!(sessionStorage.suserid && sessionStorage.token)) { 
         $state.go('page.login'); 
+        return false;
         // clearInterval(intervalTimer);
     }
 });
@@ -714,9 +715,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           sessionStorage.setItem('sortid', sortid);
           // $('.class-name').html(sname);
           getCourseData(sortid);
-          
-          nowClassName(i+1)
-          
+          nowClassName(i+1);
           judgeClassName();
       }
       
@@ -782,7 +781,6 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
       
       errorJump($state);
       var listLoading = $('.list-loading');
-      
       getCourseData = function(sortid, cp) { // 获取课程
         
           cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
@@ -791,7 +789,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
           $scope.sname = sessionStorage.sname;
           $http
             .post(''+url+'/course/index', {
-                token: sessionStorage.token, p: cp, sortid: sortid
+                token: sessionStorage.token, p: cp, sortid: sortid, order: sessionStorage.order_num
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -847,6 +845,21 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
           $('.rcName').focus();
       }
       
+      if(sessionStorage.radioIndex == '0') {
+          $('.packageRadio').eq(0).addClass('label-warning');
+      }else if(sessionStorage.radioIndex == '1') {
+          $('.packageRadio').eq(1).addClass('label-warning');
+      }else {
+          $('.packageRadio').eq(0).addClass('label-warning');
+      }
+      $scope.selectpRadio = function(_index, oNum) { // 按条件排序
+        sessionStorage.setItem('radioIndex', _index);
+        $('.packageRadio').removeClass('label-warning');
+        $('.packageRadio').eq(_index).addClass('label-warning');
+        sessionStorage.setItem('order_num', oNum);
+        getCourseData(sessionStorage.sortid);
+      }
+
       $(document).on('blur', '.rcName', function() { // 修改分类名称
           var changeSname = $(this).val();
           $http
@@ -1016,6 +1029,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
       
       // clearInterval(noF5Timer);
       // timeoutLock($state);
+      
 }]);
 
 /**=========================================================
@@ -1636,8 +1650,7 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
                     requestError(response, $state, ngDialog);
-                }
-                else{ 
+                }else { 
                     $scope.courseDetailsData = response.data.data; 
                     $scope.summary = $scope.courseDetailsData.summary;
                     $scope.content = $sce.trustAsHtml($scope.courseDetailsData.content);
@@ -2659,7 +2672,7 @@ App.controller('addSchoolSurveyController', ['$rootScope', '$sce', '$scope', '$h
                   }); 
                   ngDialog.close();
               });
-            $scope.editPageTitle = '添加学校简介';
+            $scope.editPageTitle = '学校简介';
             submitData('/faq/editxxgk');
             break;
           case '2':
@@ -2684,7 +2697,7 @@ App.controller('addSchoolSurveyController', ['$rootScope', '$sce', '$scope', '$h
                   }); 
                   ngDialog.close();
               });
-            $scope.editPageTitle = '添加师资团队';
+            $scope.editPageTitle = '师资团队';
             submitData('/faq/editsztd');
             break;
       }
@@ -4812,6 +4825,10 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
           $('.downList').css({'visibility':'hidden'});
       }
 
+      $scope.showRechargeTime = function(t) {
+          getOrderListData('', t, '');
+      }
+
       $('.downListIco').click(function() {
           if($('.downList').css('visibility') == 'visible') {
               $('.downList').css({'visibility':'hidden'});
@@ -4940,6 +4957,10 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
           }
       })
       
+      $scope.showRechargeTime = function(t) {
+          getCommodityOrderListData('', t, '');
+      }
+
       $scope.confirmReceipt = function(orderid) { //确认收货
           if(confirm('请确认商品已经送达！')) {
             $http
