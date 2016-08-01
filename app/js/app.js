@@ -1640,7 +1640,7 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
       $scope.tcourse_name = sessionStorage.tcourse_name;
       $scope.sname = sessionStorage.sname;
       
-      var getCourseDetailsData = function() {
+      getCourseDetailsData = function() {
           listLoading.css({'display':'block'});
           $http
             .post(''+url+'/course/getcourse', {
@@ -1842,7 +1842,7 @@ App.controller('noticeDetailsController', ['$scope', '$sce', '$rootScope', '$htt
       $scope.tcourse_name = sessionStorage.tcourse_name;
       $scope.sname = sessionStorage.sname;
       
-      var getCourseDetailsData = function() {
+      var getNoticeDetailsData = function() {
           listLoading.css({'display':'block'});
           $http
             .post(''+url+'/faq/getfaq', {
@@ -1872,7 +1872,7 @@ App.controller('noticeDetailsController', ['$scope', '$sce', '$rootScope', '$htt
             });
       };
 
-      getCourseDetailsData();
+      getNoticeDetailsData();
       
       $scope.goEditCourse = function(actionCourseType) {
           $state.go('app.addNotice');  
@@ -1906,7 +1906,7 @@ App.controller('noticeDetailsController', ['$scope', '$sce', '$rootScope', '$htt
       //                 plain: true,
       //                 className: 'ngdialog-theme-default'
       //               });
-      //               getCourseDetailsData();
+      //               getNoticeDetailsData();
       //           }
       //           ngDialog.close();
       //       }, function(x) {
@@ -1937,7 +1937,7 @@ App.controller('noticeDetailsController', ['$scope', '$sce', '$rootScope', '$htt
       //                 plain: true,
       //                 className: 'ngdialog-theme-default'
       //               });
-      //               getCourseDetailsData();
+      //               getNoticeDetailsData();
       //           }
       //           ngDialog.close();
       //           $('.btn').removeClass('disabled');
@@ -2128,6 +2128,7 @@ App.controller('lineOrderController', ['$scope', '$sce', '$rootScope', '$http', 
                     }
                     else{ 
                         getCourseOrder();
+                        getCourseDetailsData();
                         ngDialog.open({
                           template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                           plain: true,
