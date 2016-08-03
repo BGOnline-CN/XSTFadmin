@@ -29,12 +29,12 @@
                                     </small>
                                     <small class="mr-sm" ng-bind="createTime(schoolInfoData)"></small>
                                 </span>
-                                <span class="pull-right">
+                                <!--<span class="pull-right">
                                     <small>
                                     <strong ng-bind="schoolInfoData.hits"></strong>
                                     <span>人浏览</span>
                                     </small>
-                                </span>
+                                </span>-->
                             </p>
                         </div>
                     </div>
@@ -54,12 +54,36 @@
                                     </small>
                                     <small class="mr-sm" ng-bind="createTime(teacherInfoData)"></small>
                                 </span>
-                                <span class="pull-right">
+                                <!--<span class="pull-right">
                                     <small>
                                     <strong ng-bind="teacherInfoData.hits"></strong>
                                     <span>人浏览</span>
                                     </small>
+                                </span>-->
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel">
+                        <a href="" ng-click="openEdit(3)">
+                            <img src="app/img/recipe.png" class="img-responsive" style="width:100px !important;height:100px;margin:20px auto 0 auto;"/>
+                        </a>
+                        <div class="panel-body">
+                            <h4 style="text-align:center;" ng-bind="recipeInfoData.title"></h4>
+                            <!--<p ng-bind-html="teacherInfoContent" style="margin-top:20px;"></p>-->
+                            <p class="clearfix" style="border-top:1px solid #eee;padding-top: 20px;color:#ccc;">
+                                <span class="pull-left">
+                                    <small class="mr-sm">创建时间
+                                    </small>
+                                    <small class="mr-sm" ng-bind="createTime(recipeInfoData)"></small>
                                 </span>
+                                <!--<span class="pull-right">
+                                    <small>
+                                    <strong ng-bind="recipeInfoData.hits"></strong>
+                                    <span>人浏览</span>
+                                    </small>
+                                </span>-->
                             </p>
                         </div>
                     </div>

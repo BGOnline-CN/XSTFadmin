@@ -2573,6 +2573,36 @@ App.controller('schoolSurveyController', ['$rootScope', '$sce', '$scope', '$http
 
       getTeacherTD();
       
+      
+      var getRecipe = function() {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/faq/getrecipe', {
+                  token: sessionStorage.token
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else {
+                    $scope.recipeInfoData = response.data.data;
+                    ifrCon = $scope.recipeInfoData.content;
+                    $scope.recipeInfoContent = $sce.trustAsHtml($scope.recipeInfoData.content);
+                }
+                ngDialog.close();
+            }, function(x) { 
+                listLoading.css({'display':'none'});
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                }); 
+                ngDialog.close();
+            });
+      }
+
+      getRecipe();
+
       $scope.createTime = function(create) {
           if(typeof(create) == 'undefined') return;
           return localData = new Date(parseInt(create.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
@@ -2585,6 +2615,10 @@ App.controller('schoolSurveyController', ['$rootScope', '$sce', '$scope', '$http
                 sessionStorage.setItem('schoolSurveyType', type);
                 break;
               case 2:
+                $state.go('app.addSchoolSurvey');
+                sessionStorage.setItem('schoolSurveyType', type);
+                break;
+              case 3:
                 $state.go('app.addSchoolSurvey');
                 sessionStorage.setItem('schoolSurveyType', type);
                 break;
@@ -2704,6 +2738,31 @@ App.controller('addSchoolSurveyController', ['$rootScope', '$sce', '$scope', '$h
               });
             $scope.editPageTitle = '师资团队';
             submitData('/faq/editsztd');
+            break;
+          case '3':
+            $http
+              .post(''+url+'/faq/getrecipe', {
+                    token: sessionStorage.token
+              })
+              .then(function(response) {
+                  if ( response.data.code != 200 ) {
+                      requestError(response, $state, ngDialog);
+                  }else {
+                      $scope.recipeInfoData = response.data.data;
+                      ifrCon = $scope.recipeInfoData.content;
+                      $scope.recipeInfoContent = $sce.trustAsHtml($scope.recipeInfoData.content);
+                  }
+                  ngDialog.close();
+              }, function(x) {
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  }); 
+                  ngDialog.close();
+              });
+            $scope.editPageTitle = '每周食谱';
+            submitData('/faq/editrecipe');
             break;
       }
       
