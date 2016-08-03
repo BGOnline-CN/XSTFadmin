@@ -29,7 +29,7 @@
                                         <tbody>
                                             <tr ng-repeat="x in addBanji.student">
                                                 <td>
-                                                    <img ng-src="{{x.header}}" alt="Image" class="img-responsive img-circle">
+                                                    <img ng-src="{{x.header ? x.header : defaultHeader}}" class="img-responsive img-circle">
                                                     {{x.tname}}
                                                 </td>
                                                 <td ng-bind="showSex(x)"></td>

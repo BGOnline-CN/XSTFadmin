@@ -48,7 +48,7 @@
                             <tr ng-repeat="u in users">
                                 <td>
                                     <div class="media">
-                                        <img ng-src="{{u.header}}" alt="Image" class="img-responsive img-circle" />
+                                        <img ng-src="{{u.header ? u.header : defaultHeader}}" class="img-responsive img-circle" />
                                     </div>
                                 </td>
                                 <!--<td><a ui-sref='app.editUser'>{{ u.tname }}</a></td>-->
@@ -116,14 +116,14 @@
                                 <td>{{ r.log_id }}</td>
                                 <td>
                                     <div class="media">
-                                        <img ng-src="{{r.header}}" alt="Image" class="img-responsive img-circle" />
+                                        <img ng-src="{{r.header ? r.header : defaultHeader}}" class="img-responsive img-circle" />
                                     </div>
                                 </td>
                                 <td>{{ r.tname }}</td>
                                 <td>{{ r.phone }}</td>
                                 <td>{{ rechargeTime(r) }}</td>
                                 <td>{{ r.xxb }}</td>
-                                <td>{{ r.sys_tname }}</td>
+                                <td>{{ r.sys_tname ? r.sys_tname : '未设置' }}</td>
                             </tr>
                             <tr>
                                 <td class="page-td" colspan="7">

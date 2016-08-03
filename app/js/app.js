@@ -47,7 +47,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
   $rootScope.$state = $state;
   $rootScope.$stateParams = $stateParams;
   $rootScope.$storage = $window.localStorage;
-
+  $rootScope.defaultHeader = 'app/img/defaultHeader.png';
   // Uncomment this to disable template cache
   /*$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       if (typeof(toState) !== 'undefined'){
@@ -2204,7 +2204,11 @@ App.controller('payLogController', ['$scope', '$sce', '$rootScope', '$http', '$f
       }
       
       $scope.coursePayTime = function(o) {
-          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          if(o.pay_time) {
+              return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          }else {
+              return '未支付';
+          }
       }
       
       $scope.pageChanged = function() {
@@ -3074,7 +3078,12 @@ App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state',
       $scope.maxSize = 5; // 最多显示5页
 
       $scope.logintime = function(user) {
-          return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          if(user.logintime) {
+              return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          }else {
+              return '从未登录';
+          }
+          
       }
       
       // $scope.lockUser = function(ballId) { // 锁定用户
@@ -4222,7 +4231,11 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
       }
 
       $scope.logintime = function(user) {
-          return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          if(user.logintime) {
+              return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          }else {
+              return '从未登录';
+          }
       }
       // noRefreshGetData(getUsersData, getDataSpeed);
       
@@ -4757,7 +4770,7 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
       $scope.maxSize = 5; // 最多显示5页
 
       $scope.payTime = function(o) {
-          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          return localData = new Date(parseInt(o.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
       }
 
       $scope.sexs = [

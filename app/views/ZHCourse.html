@@ -27,7 +27,7 @@
                 </label>
             </p>
             <a ui-sref="app.ZHCourseDetails" ng-click="showZHCDetails(c.tcourse_name,c.tcourseid,c.sname)" ng-mouseover="showCourseAct($index)">
-                <img ng-src="{{c.tcourse_img}}">
+                <img ng-src="{{c.tcourse_img}}" alt="Image">
                 <div class="courseDesc">
                     <p ng-bind="c.tcourse_name"></p>
                     <small ng-bind="c.summary" title={{c.summary}}></small>

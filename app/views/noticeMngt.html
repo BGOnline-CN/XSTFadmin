@@ -55,7 +55,7 @@
                 </label>-->
             </p>
             <a ui-sref="app.noticeDetails" ng-click="showCDetails(c.title,c.faq_id,c.sname)" ng-mouseover="showCourseAct($index)">
-                <img ng-src="{{c.img}}">
+                <img ng-src="{{c.img}}" alt="Image">
                 <div class="courseDesc">
                     <p ng-bind="c.title"></p>
                     <small ng-bind="c.summary" title="{{c.summary}}"></small>

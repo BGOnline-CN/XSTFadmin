@@ -55,7 +55,7 @@
             <tr ng-repeat="user in teacher">
                <td>
                   <div class="media">
-                     <img ng-src="{{user.header}}" alt="Image" class="img-responsive img-circle" />
+                     <img ng-src="{{user.header ? user.header : defaultHeader}}" class="img-responsive img-circle" />
                   </div>
                </td>
                <!--<td>{{ showSex(user) }}</td>-->

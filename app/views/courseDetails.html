@@ -103,7 +103,7 @@
                             </tr>
                             <tr ng-repeat="x in WaitAllotStudent">
                                 <td>
-                                    <img ng-src="{{x.header}}" alt="Image" class="img-responsive img-circle">
+                                    <img ng-src="{{x.header ? x.header : defaultHeader}}" class="img-responsive img-circle">
                                     {{x.student_name}}
                                 </td>
                                 <td>{{showSex(x)}}</td>
@@ -152,7 +152,7 @@
                                     </tr>
                                     <tr ng-repeat="x in graduate">
                                         <td>
-                                            <img ng-src="{{x.header}}" alt="Image" class="img-responsive img-circle">
+                                            <img ng-src="{{x.header ? x.header : defaultHeader}}" class="img-responsive img-circle">
                                             {{x.tname}}
                                         </td>
                                         <td ng-bind="showSex(x)"></td>
