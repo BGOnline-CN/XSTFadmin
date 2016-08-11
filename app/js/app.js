@@ -58,8 +58,8 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
   // Scope Globals
   // ----------------------------------- 
   $rootScope.app = {
-    name: sessionStorage.branch_name ? sessionStorage.branch_name : '小书童分校管理后台',
-    description: '小书童分校管理后台',
+    name: sessionStorage.branch_name ? sessionStorage.branch_name : '课堂外分校管理系统',
+    description: '课堂外分校管理系统',
     year: ((new Date()).getFullYear()),
     layout: {
       isFixed: true,
