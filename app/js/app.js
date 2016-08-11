@@ -214,6 +214,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('addSchoolSurvey.html')
     })
 
+    .state('app.addExplain', {
+        url: '/addExplain',
+        title: '添加班级说明',
+        templateUrl: helper.basepath('addExplain.html')
+    })
+
     .state('app.addBanji', {
         url: '/addBanji',
         title: '添加班级',
@@ -1682,6 +1688,11 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
           sessionStorage.setItem('actionCourseType', actionCourseType);
       }
       
+      $scope.goAddExplain = function(classid) {
+          $state.go('app.addExplain'); 
+          sessionStorage.setItem('classid', classid);
+      }
+
       $scope.goAddBanji = function(editOrAdd, classid) {
           sessionStorage.setItem('editOrAdd', editOrAdd);
           sessionStorage.setItem('classid', classid);
@@ -2771,6 +2782,89 @@ App.controller('addSchoolSurveyController', ['$rootScope', '$sce', '$scope', '$h
       //timeoutLock($state);
 }]);
 
+/**=========================================================
+ * addExplainController
+ * author: BGOnline
+ * version 1.0 2016-7-26
+ =========================================================*/
+ 
+App.controller('addExplainController', ['$rootScope', '$sce', '$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
+  function($rootScope, $sce, $scope, $http, $filter, $state, FileUploader, ngDialog) {
+      errorJump($state);
+      $scope.randomDate = (new Date()).getTime();
+      var listLoading = $('.list-loading');
+
+      $scope.addSubmit = function() {
+          var content = '<html>'+
+                          '<head>'+
+                              '<style>'+
+                                  'img {'+
+                                      'width:100% !important;'+
+                                  '}'+
+                              '</style>'+
+                          '</head>'+
+                          '<body>'+
+                              document.getElementById('iframepage').contentWindow.html +
+                          '</body>'+
+                        '</html>'
+          $http
+            .post(''+url+'/courseclass/save_class_summary', {
+                  token: sessionStorage.token,
+                  class_summary: content,
+                  classid: sessionStorage.classid
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    $state.go('app.courseDetails');
+                }
+                ngDialog.close();
+            }, function(x) { 
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                }); 
+                ngDialog.close();
+            });
+          
+      }
+
+      
+      $http
+        .post(''+url+'/courseclass/getclass', {
+              token: sessionStorage.token,
+              classid: sessionStorage.classid
+        })
+        .then(function(response) {
+            if ( response.data.code != 200 ) {
+                requestError(response, $state, ngDialog);
+            }else {
+                $scope.schoolInfoData = response.data.data.class_summary;
+                ifrCon = $scope.schoolInfoData;
+            }
+            ngDialog.close();
+        }, function(x) {
+            ngDialog.open({
+              template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+              plain: true,
+              className: 'ngdialog-theme-default'
+            }); 
+            ngDialog.close();
+        });
+
+      // clearInterval(noF5Timer);
+      
+      //timeoutLock($state);
+}]);
+
 
 /**=========================================================
  * addNoticeController
@@ -3838,13 +3932,13 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                                   
                               }
                           }, function(x) {
-                              ngDialog.open({
-                                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                                plain: true,
-                                className: 'ngdialog-theme-default'
-                              });
-                          });
-                        }
+                                ngDialog.open({
+                                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                                  plain: true,
+                                  className: 'ngdialog-theme-default'
+                                });
+                            });
+                          }
                         
                           getClassDetails();
                           
@@ -3855,39 +3949,49 @@ App.controller('addBanjiController', ['$scope', '$http', '$filter', '$state', 'F
                               $('.bgSelected').each(function() {
                                   teacherArr.push($(this).attr('name'));
                               });
-                              $http
-                                .post(''+url+'/courseclass/edit', {
-                                    token: sessionStorage.token, 
-                                    classid: sessionStorage.classid,
-                                    courseid: sessionStorage.tcourseid,
-                                    class_name: $scope.addBanji.class_name,
-                                    class_quantity: $scope.addBanji.class_quantity, 
-                                    class_status: 1,
-                                    teacher: teacherArr.join(','),
-                                    class_table: cData.join(",")
-                                })
-                                .then(function(response) {
-                                    if ( response.data.code != 200 ) {
-                                        requestError(response, $state, ngDialog);
-                                    }else{ 
+                              if(cData) {
+                                  $http
+                                    .post(''+url+'/courseclass/edit', {
+                                        token: sessionStorage.token, 
+                                        classid: sessionStorage.classid,
+                                        courseid: sessionStorage.tcourseid,
+                                        class_name: $scope.addBanji.class_name,
+                                        class_quantity: $scope.addBanji.class_quantity, 
+                                        class_status: 1,
+                                        teacher: teacherArr.join(','),
+                                        class_table: cData.join(",")
+                                    })
+                                    .then(function(response) {
+                                        if ( response.data.code != 200 ) {
+                                            requestError(response, $state, ngDialog);
+                                        }else{ 
+                                            ngDialog.open({
+                                              template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                                              plain: true,
+                                              className: 'ngdialog-theme-default'
+                                            });
+                                            getClassDetails();
+                                            $state.go('app.courseDetails');
+                                        }
+                                        $('.btn').removeClass('disabled');
+                                    }, function(x) {
                                         ngDialog.open({
-                                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                                          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                                           plain: true,
                                           className: 'ngdialog-theme-default'
                                         });
-                                        $state.go('app.courseDetails');
-                                    }
-                                    $('.btn').removeClass('disabled');
-                                }, function(x) {
-                                    ngDialog.open({
-                                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                                      plain: true,
-                                      className: 'ngdialog-theme-default'
+                                        $('.btn').removeClass('disabled');
                                     });
-                                    $('.btn').removeClass('disabled');
-                                });
-                          };
-                        break;
+                                }else {
+                                  ngDialog.open({
+                                    template: "<p style='text-align:center;margin: 0;'>请选择开班日期！</p>",
+                                    plain: true,
+                                    className: 'ngdialog-theme-default'
+                                  });
+                                  $('.btn').removeClass('disabled');
+                                }
+                          }
+                      break;
                 }
             }
         }, function(x) {
