@@ -2616,7 +2616,12 @@ App.controller('schoolSurveyController', ['$rootScope', '$sce', '$scope', '$http
 
       $scope.createTime = function(create) {
           if(typeof(create) == 'undefined') return;
-          return localData = new Date(parseInt(create.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          if(create.add_time) {
+            return localData = new Date(parseInt(create.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          }else {
+              return '未创建';
+          }
+          
       }
       
       $scope.openEdit = function(type) {
