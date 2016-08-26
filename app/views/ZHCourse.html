@@ -7,6 +7,11 @@
         获取总部课程 > <span class="class-name">{{ZHsname == 'undefined' || ZHsname == undefined ? '全部课程' : ZHsname}}</span>（{{showZHtotalItems}}）
         <div class="operationCourse">
             <div dropdown="dropdown" class="btn-group mb-sm">
+                <button type="button" class="btn dropdown-toggle btn-primary" ng-click="goCourseMngt()">
+                    <span class="fa fa-mail-reply"></span>
+                    返回课程管理</button>
+            </div>
+            <div dropdown="dropdown" class="btn-group mb-sm">
                 <button type="button" class="btn dropdown-toggle btn-warning" ng-click="addZHCourse()">添加到本地课程库</button>
             </div>
         </div>

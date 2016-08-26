@@ -1573,6 +1573,9 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
           
       }
 
+      $scope.goCourseMngt = function() {
+        $state.go('app.courseMngt');
+      }
       //timeoutLock($state);
 
       // noRefreshGetData(getZHCourseData, getDataSpeed);
