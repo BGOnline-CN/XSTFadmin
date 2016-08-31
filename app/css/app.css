@@ -10996,11 +10996,14 @@ flatdoc .button .badge {
 }
 
 .c-checkbox:hover span, .c-radio:hover span {
-    border-color: #FF881C;
+    /*border-color: #FF881C;*/
+    border-color: #23b7e5;
 }
 .c-checkbox input[type="checkbox"]:checked + span, .c-radio input[type="checkbox"]:checked + span, .c-checkbox input[type="radio"]:checked + span, .c-radio input[type="radio"]:checked + span {
-    border-color: #FF881C;
-    background-color: #FF881C;
+    /*border-color: #FF881C;*/
+    /*background-color: #FF881C;*/
+    border-color: #23b7e5;
+    background-color: #23b7e5;
 }
 
 .bg-alert {
