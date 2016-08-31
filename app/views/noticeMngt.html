@@ -40,13 +40,13 @@
         </div>-->
     </h4>
     <div class="row">
-        <div class="col-xs-4 col-md-2 courseList">
+        <div class="col-xs-4 col-md-3 courseList noticeList">
             <a class="dashed" ng-click="addCourseType()">
                 <img src="app/img/add.png">
                 <p>添加自定义文章</p>
             </a>
         </div>
-        <div class="col-xs-4 col-md-2 courseList" ng-repeat="c in course" ng-mouseleave="closeCourseAct($index)">
+        <div class="col-xs-4 col-md-3 courseList noticeList" ng-repeat="c in course" ng-mouseleave="closeCourseAct($index)">
             <p class="courseAction" name="{{c.faq_id}}">
                 <i class="fa fa-trash-o c-btn removeIco" ng-click="removeCourse($index)"></i>
                 <!--<label class="checkbox-inline c-checkbox c-btn">
@@ -56,7 +56,7 @@
             </p>
             <a ui-sref="app.noticeDetails" ng-click="showCDetails(c.title,c.faq_id,c.sname)" ng-mouseover="showCourseAct($index)">
                 <img ng-src="{{c.img}}" alt="Image">
-                <div class="courseDesc">
+                <div class="courseDesc noticeDesc">
                     <p ng-bind="c.title"></p>
                     <small ng-bind="c.summary" title="{{c.summary}}"></small>
                 </div>

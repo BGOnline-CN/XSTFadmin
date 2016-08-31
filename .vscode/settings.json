@@ -1,7 +1,7 @@
 // Place your settings in this file to overwrite default and user settings.
 {
     "editor.fontSize": 16,
-    "files.autoSave": "afterDelay",
+    "files.autoSave": "off",
     "editor.quickSuggestionsDelay": 5,
     "window.reopenFolders": "all"
 }

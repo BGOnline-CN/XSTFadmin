@@ -11103,7 +11103,12 @@ flatdoc .button .badge {
     width: 49px !important;
     height: 49px !important;
 }
-
+.noticeList > a {
+    height: 160px;
+}
+.noticeList > a.dashed > img{
+    margin: 30px auto;
+}
 .courseDesc {
     height: 80px;
     padding: 13px;
@@ -11124,6 +11129,9 @@ flatdoc .button .badge {
     text-overflow: ellipsis;
     -o-text-overflow:ellipsis;
 }
+.noticeDesc {
+    padding: 8px 13px;
+}
 .courseDesc > small {
     color: #aaa;
 }
@@ -11136,6 +11144,12 @@ flatdoc .button .badge {
     width: 400px;
     margin: 0 auto;
     border: none;
+}
+.noticeDetails-div > div .nav-tabs > li {
+    margin-left: 100px;
+}
+.noticeDetails-div > div .nav-tabs > li > a {
+    border-bottom: none !important;
 }
 .atTheDetails-div > div .nav-tabs {
     width: 200px;
@@ -11193,6 +11207,9 @@ flatdoc .button .badge {
     width: 100%;
     height: 200px;
     position: relative;
+}
+.changeNoticeImg {
+    height: 100px;
 }
 .changeImg img {
     width: 100%;
@@ -11346,6 +11363,11 @@ flatdoc .button .badge {
   text-align: center;
   line-height: 200px;
   color: #DADADA;
+}
+.noticePre {
+  width: 280px;
+  height: 98px;
+  line-height: 98px;
 }
 .coverPreview > img {
   width: 100%;
