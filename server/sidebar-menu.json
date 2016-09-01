@@ -17,6 +17,12 @@
     "translate": "sidebar.nav.COURSEMNGT"
   },
   {
+    "text": "商品管理",
+    "sref": "app.commodityMngt",
+    "icon": "fa fa-gift",
+    "translate": "sidebar.nav.COMMODITYMNGT"
+  },
+  {
     "text": "教师管理",
     "sref": "app.teacherMngt",
     "icon": "fa fa-graduation-cap",

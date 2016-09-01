@@ -11074,6 +11074,7 @@ flatdoc .button .badge {
     min-width: 130px;
 }
 .courseList > a {
+    position: relative;
     display: block;
     width: 100%;
     height: 200px;
@@ -11081,6 +11082,33 @@ flatdoc .button .badge {
     border-bottom: 2px solid #DADADA;
     text-decoration: none;
 }
+.courseList > a > .mask {
+    position: absolute;
+    border: 1px solid red;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.5);
+    text-align: center;
+}
+.courseList > a > .mask i{
+    color: #fff;
+    margin: 0 10px;
+}
+
+@media \0screen\,screen\9 {/* 只支持IE6、7、8 */
+  .courseList > a > .mask{
+      background-color:#000000;
+      filter:Alpha(opacity=50);
+      position:static; /* IE6、7、8只能设置position:static(默认属性) ，否则会导致子元素继承Alpha值 */
+      *zoom:1; /* 激活IE6、7的haslayout属性，让它读懂Alpha */
+  }
+  .courseList > a > .mask span{
+    position: relative;
+  }
+}
+
 .courseList > a:hover { text-decoration: none; }
 .courseList > a:link { text-decoration: none; }
 .courseList > a:focus { outline: none; }

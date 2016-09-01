@@ -15,6 +15,7 @@
     "nav": {
       "DEFAULT": "欢迎中心",
       "COURSEMNGT": "课程管理",
+      "COMMODITYMNGT": "商品管理",
       "TEACHERMNGT": "教师管理",
       "USERSCENTER": "用户中心",
       "ORDERLIST": "课程订单",

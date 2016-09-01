@@ -116,7 +116,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('courseMngt.html'),
         resolve: helper.resolveFor('spinkit')
     })
-
+    .state('app.commodityMngt', {
+        url: '/commodityMngt',
+        title: '商品管理',
+        templateUrl: helper.basepath('commodityMngt.html'),
+        resolve: helper.resolveFor('spinkit')
+    })
     .state('app.noticeMngt', {
         url: '/noticeMngt',
         title: '文章管理',
@@ -135,6 +140,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         title: '获取总部课程',
         templateUrl: helper.basepath('ZHCourse.html')
     })
+
+    .state('app.ZHCommodity', {
+        url: '/ZHCommodity',
+        title: '获取总部商品',
+        templateUrl: helper.basepath('ZHCommodity.html')
+    })
     
     .state('app.ZHCourseDetails', {
         url: '/ZHCourseDetails',
@@ -142,6 +153,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('ZHCourseDetails.html')
     })
     
+    .state('app.ZHCommodityDetails', {
+        url: '/ZHCommodityDetails',
+        title: '总部商品详情',
+        templateUrl: helper.basepath('ZHCommodityDetails.html')
+    })
+
     .state('app.teacherMngt', {
         url: '/teacherMngt',
         title: '教师管理',

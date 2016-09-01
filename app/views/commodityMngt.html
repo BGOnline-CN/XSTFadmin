@@ -1,0 +1,73 @@
+<h3 ng-controller="courseClassController">
+    <a class="course" href="#" ng-click="showCourse(0)">全部商品</a>
+    <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" href="#" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
+    <input class="form-control ng-touched addCourseClassInput" type='text'>
+    <button class="btn btn-default addCourseBtn" type="button" ng-click="addCourseClass()"><i class="fa fa-plus addCourseFa"></i>添加</button>
+</h3>
+<div class="clearfix" ng-controller="courseMngtController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <h4 class="page-header courseTitle">
+        <span class="class-name">{{sname == 'undefined' || sname == undefined ? '全部商品' : sname}}</span>（{{showTotalItems}}）
+        <div dropdown="dropdown" class="btn-group rdClassNameBtn">
+            <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-default changeCourseName">
+                <i class="fa fa-pencil changeCourseFa"></i>
+            </button>
+            <ul role="menu" class="dropdown-menu">
+                <li><a href="#" ng-click="rClassName()">重命名</a>
+                </li>
+                <li><a href="#" ng-click="dClassName()">删除</a>
+                </li>
+            </ul>
+        </div>
+        <div class="label label-default packageRadio" ng-click="selectpRadio(0, '')" style="padding:6px;margin-left:10px;cursor:pointer;font-size:80%;">上架时间</div>
+        <div class="label label-default packageRadio" ng-click="selectpRadio(1, 'sales')" style="padding:6px;margin-left:10px;cursor:pointer;font-size:80%;">销量</div>
+        <div class="operationCourse">
+            <div dropdown="dropdown" class="btn-group mb-sm">
+                <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-info">移动课程到
+                    <span class="caret"></span>
+                </button>
+                <ul role="menu" class="dropdown-menu" ng-if="courseClass.length > 0">
+                    <li ng-repeat="x in courseClass"><a href="#" ng-bind="x.sname" ng-click="goStartClass(x.sortid, x.sname)"></a></li>
+                </ul>
+            </div> 
+            <div dropdown="dropdown" class="btn-group mb-sm">
+                <button type="button" class="btn dropdown-toggle btn-warning" ng-click="getZHCourse()">获取总部商品</button>
+            </div>
+        </div>
+    </h4>
+    <div class="row">
+        <div class="col-xs-4 col-md-2 courseList">
+            <a class="dashed" ng-click="addCourseType()">
+                <img src="app/img/add.png">
+                <p>添加自定义商品</p>
+            </a>
+        </div>
+        <div class="col-xs-4 col-md-2 courseList" ng-repeat="c in course" ng-mouseleave="closeCourseAct($index)">
+            <p class="courseAction">
+                <i class="fa fa-trash-o c-btn removeIco" ng-click="removeCourse($index)"></i>
+                <label class="checkbox-inline c-checkbox c-btn">
+                    <input id="inlinecheckbox10" class="ccb-bg" type="checkbox" ng-checked="" name="{{c.courseid}}">
+                    <span class="fa fa-check"></span>
+                </label>
+            </p>
+            <div class="label label-danger tip" ng-bind="c.WaitAllotStudent_num" ng-if="c.WaitAllotStudent_num > 0" title=""></div>
+            <a ui-sref="app.courseDetails" ng-click="showCDetails(c.course_name,c.courseid,c.sname)" ng-mouseover="showCourseAct($index)">
+                <img ng-src="{{c.course_img}}" alt="Image">
+                <div class="courseDesc">
+                    <p ng-bind="c.course_name"></p>
+                    <small ng-bind="c.summary" title="{{c.summary}}"></small>
+                </div>
+            </a>
+        </div>
+    </div>
+    <pagination class="page-bg" total-items="totalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+</div>

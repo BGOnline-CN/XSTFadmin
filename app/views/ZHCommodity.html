@@ -1,0 +1,54 @@
+<h3 ng-controller="ZHcourseClassController">
+    <a class="course" href="#" ng-click="showCourse(0)">全部课程</a>
+    <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" href="#" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
+</h3>
+<div class="clearfix" ng-controller="ZHCourseController">
+    <h4 class="page-header courseTitle">
+        获取总部课程 > <span class="class-name">{{ZHsname == 'undefined' || ZHsname == undefined ? '全部课程' : ZHsname}}</span>（{{showZHtotalItems}}）
+        <div class="operationCourse">
+            <div dropdown="dropdown" class="btn-group mb-sm">
+                <button type="button" class="btn dropdown-toggle btn-primary" ng-click="goCourseMngt()">
+                    <span class="fa fa-mail-reply"></span>
+                    返回课程管理</button>
+            </div>
+            <div dropdown="dropdown" class="btn-group mb-sm">
+                <button type="button" class="btn dropdown-toggle btn-warning" ng-click="addZHCourse()">添加到本地课程库</button>
+            </div>
+        </div>
+    </h4>
+    <div class="row">
+        <div class="col-xs-4 col-md-2 courseList ZHCourseList">
+            <a href="javascript:void(0)" class="dashed">
+                <p style="color:#555">总部课程</p>
+                <p>你可以批量或者单个<br/>下载总部课程</p>
+                <p class="ZHimg"></p>
+            </a>
+        </div>
+        <div class="col-xs-4 col-md-2 courseList" ng-repeat="c in ZHCourse" ng-mouseleave="closeCourseAct($index)">
+            <p class="courseAction">
+                <label class="checkbox-inline c-checkbox c-btn">
+                    <input id="inlinecheckbox10" class="ccb-bg" type="checkbox" ng-checked="" name={{c.tcourseid}}>
+                    <span class="fa fa-check"></span>
+                </label>
+            </p>
+            <a href="javascript:return false;" ng-mouseover="showCourseAct($index)">
+                <img ng-src="{{c.tcourse_img}}" alt="Image">
+                <div class="courseDesc">
+                    <p ng-bind="c.tcourse_name"></p>
+                    <small ng-bind="c.summary" title={{c.summary}}></small>
+                </div>
+                <div class="mask">
+                    <!--<span class="fa-stack fa-lg">-->
+                        <!--<i class="fa fa-circle-o fa-stack-3x"></i>-->
+                        <i class="fa fa-file-text-o fa-3x"></i>
+                    <!--</span>-->
+                    <!--<span class="fa-stack fa-lg">-->
+                        <!--<i class="fa fa-circle-o fa-stack-3x"></i>-->
+                        <i class="fa fa-cart-plus fa-3x"></i>
+                    <!--</span>-->
+                </div>
+            </a>
+        </div>
+    </div>
+    <pagination class="page-bg" total-items="ZHtotalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+</div>

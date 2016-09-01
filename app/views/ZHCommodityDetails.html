@@ -1,0 +1,87 @@
+<h3 ng-controller="ZHcourseClassController">
+    <a class="course" ui-sref="app.ZHCourse" ng-click="showCourse(0)">全部课程</a>
+    <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" ui-sref="app.ZHCourse" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
+</h3>
+<div class="clearfix" ng-controller="ZHCourseDetailsController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <h4 class="page-header courseTitle">
+        {{ZHsname == 'undefined' || ZHsname == undefined ? '全部课程' : ZHsname}} > {{tcourse_name}}
+    </h4>
+    
+    <div class="courseDetails-div atTheDetails-div">
+        <tabset>
+            <tab heading="课程详情">
+                <p class="cdd-title">
+                    课程信息
+                </p>
+                <div class="row plate">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-2">
+                        <p class="plate-title">课程名称：</p>
+                        <p class="plate-title">简介：</p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p class="plate-con" ng-bind="tcourse_name"></p>
+                        <p class="plate-con" ng-bind="summary"></p>
+                    </div>
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-3">
+                        <a href="#" class="changeImg">
+                            <img ng-src="{{tcourse_img}}">
+                            <!--<p>更换图片</p>-->
+                        </a>
+                    </div>
+                    <div class="col-xs-2"></div>
+                </div>
+                <p class="cdd-title">
+                    套餐类型
+                </p>
+                <div class="row plate">
+                    <div class="comboList cTitle clearfix">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-2">
+                            <p>套餐名称</p>
+                        </div>
+                        <div class="col-xs-3">
+                            <p>价格</p>
+                        </div>
+                        <div class="col-xs-5">
+                            <p>服务介绍</p>
+                        </div>
+                        <div class="col-xs-1"></div>
+                    </div>
+                    <div class="comboList clearfix" ng-repeat="p in packages">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-2">
+                            <p ng-bind="p.package_name"></p>
+                        </div>
+                        <div class="col-xs-3">
+                            <p ng-bind="p.package_price"></p>
+                        </div>
+                        <div class="col-xs-5">
+                            <p ng-bind="p.package_content"></p>
+                        </div>
+                        <div class="col-xs-1"></div>
+                    </div>
+                </div>
+                <p class="cdd-title">
+                    课程介绍
+                </p>
+                <div class="row plate">
+                    <div class="col-xs-12">
+                        <div class="couseDetailsDesc" ng-bind-html="content"></div>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>
