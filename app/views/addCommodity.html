@@ -1,0 +1,210 @@
+<h3 ng-controller="commodityClassController">
+    <a class="course" ui-sref="app.commodityList" ng-click="showCourse(0)">全部商品</a>
+    <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" ui-sref="app.commodityList" ng-repeat="x in commodityClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
+    <input class="form-control ng-touched addCourseClassInput" type='text'>
+    <button class="btn btn-default addCourseBtn" type="button" ng-click="addCourseClass()"><i class="fa fa-plus addCourseFa"></i>添加</button>
+</h3>
+<div class="clearfix" ng-controller="addCommodityController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <h4 class="page-header courseTitle">
+        <span class="class-name">{{sname == 'undefined' || sname == undefined ? '全部商品' : sname}}</span>  >  添加商品
+    </h4>
+    <div class="addCourse-div">
+        <tabset>
+            <tab heading="自定义课程">
+                <form role="form" ng-submit="addSubmit()" novalidate="" class="form-validate" enctype="multipart/form-data"> 
+                    <div class="row plate">
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">商品名称</div>
+                            <div class="col-xs-3"><input type="text" class="form-control" ng-model="addCommodity.goods_name" required=""></div>
+                            <div class="col-xs-7"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">商品图片</div>
+                            <div class="col-xs-3">
+                                <span style="color:#F05050;">建议尺寸：300px*300px</span>
+                                <input filestyle="" type="file" data-button-text="图片" data-class-button="btn btn-default" data-classinput="form-control inline" nv-file-select="" uploader="uploader" class="form-control" required=""/>
+                                <div class="coverPreview">
+                                    图片预览
+                                    <img ng-src="{{img}}">
+                                </div>
+                            </div>
+                            <div class="col-xs-7">
+                                <!--<div class="col-xs-5">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <div class="coverPreview commodityImg">
+                                                主图
+                                                <img ng-src="{{img}}">
+                                            </div>
+                                            <input type="file" nv-file-select="" uploader="uploader" class="form-control uploadCommodityImg" required=""/>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="coverPreview commodityImg">
+                                                正面
+                                                <img ng-src="{{img}}">
+                                            </div>
+                                            <input type="file" nv-file-select="" uploader="uploader" class="form-control uploadCommodityImg" required=""/>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="coverPreview commodityImg">
+                                                背面
+                                                <img ng-src="{{img}}">
+                                            </div>
+                                            <input type="file" nv-file-select="" uploader="uploader" class="form-control uploadCommodityImg" required=""/>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="coverPreview commodityImg">
+                                                细节
+                                                <img ng-src="{{img}}">
+                                            </div>
+                                            <input type="file" nv-file-select="" uploader="uploader" class="form-control uploadCommodityImg" required=""/>
+                                        </div>
+                                    </div>
+                                </div>-->
+                                <!--<div class="col-xs-5">
+                                    <div ng-if="uploader.queue.length">
+                                        <table ng-if="uploader.queue.length" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <td>文件名</td>
+                                                    <td>大小</td>
+                                                    <td>进度</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in uploader.queue">
+                                                    <td>
+                                                        <strong>{{ item.file.name }}</strong>
+                                                    </td>
+                                                    <td ng-show="uploader.isHTML5" nowrap="">{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                                    <td ng-show="uploader.isHTML5">
+                                                        <div style="margin-bottom: 0;width: 100px;" class="progress progress-xs">
+                                                            <div role="progressbar" ng-style="{ 'width': item.progress + '%' }" class="progress-bar"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span ng-show="item.isSuccess">
+                                                            <em class="fa fa-check fa-fw"></em>
+                                                        </span>
+                                                        <span ng-show="item.isCancel">
+                                                            <em class="fa fa-ban-circle fa-fw"></em>
+                                                        </span>
+                                                        <span ng-show="item.isError">
+                                                            <em class="fa fa-times fa-fw"></em>
+                                                        </span>
+                                                    </td>
+                                                    <td nowrap="">
+                                                        <button type="button" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess" class="btn btn-info btn-xs">
+                                                            <span class="icon-cloud-upload mr"></span>上传</button>
+                                                        <button type="button" ng-click="item.cancel()" ng-disabled="!item.isUploading" class="btn btn-warning btn-xs">
+                                                            <span class="icon-close mr"></span>取消</button>
+                                                        <button type="button" ng-click="item.remove()" class="btn btn-danger btn-xs">
+                                                            <span class="icon-trash mr"></span>删除</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>-->
+                            </div>
+                        </div>
+                        <div class="clearfix row-div" ng-class="{false: 'sort-div', true: 'no-sort-div'}[isSortid]">
+                            <div class="col-xs-2 customTitle">商品分类</div>
+                            <div class="col-xs-4">
+                                <span style="vertical-align: bottom;" class="showEditAtTheArea">{{addCommodity.sname ? '当前分类：' + addCommodity.sname + '，修改 -->' : ''}}</span>
+                                <select class="bg-select" ng-change="addCourseSelectSort(selSort)" ng-model="selSort">
+                                    <option value="">--- 请选择分类 ---</option>
+                                    <option ng-repeat="c in commodityClass" ng-bind="c.sname" value="{{c.sortid+','+c.sname}}"></option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">默认商品价格</div>
+                            <div class="col-xs-2">
+                                <input type="number" class="form-control" ng-model="addCommodity.shop_price" required="">
+                            </div>
+                            <div class="col-xs-8"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">商品简介</div>
+                            <div class="col-xs-5"><input type="text" class="form-control" ng-model="addCommodity.goods_brief" required=""></div>
+                            <div class="col-xs-5"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">属性/价格</div>
+                            <div class="col-xs-5">
+                                <div class="table-responsive addCombo">
+                                    <table class="table" id="comboTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:80px;">属性名称</th>
+                                                <th style="width:50px;">价格（元）</th>
+                                                <th style="width:50px;">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="packageRow" ng-repeat="ap in addCommodity.attribute" name="{{ap.attr_id}}">
+                                                <td><input class="form-control ng-touched comboInput" type="text" value="{{ap.attr_name}}"></td>
+                                                <td><input class="form-control ng-touched comboInput" type="number" value="{{ap.attr_price}}"></td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-danger comboAction deleteRow"><em class="fa fa-trash-o"></em></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" class="addRow">
+                                                    <button class="btn btn-default addCourseBtn" type="button" ng-click="addCombo()"><i class="fa fa-plus addCourseFa"></i>添加</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-xs-5"></div>
+                        </div>
+                        <div class="clearfix row-div">
+                            <div class="col-xs-2 customTitle">商品详情</div>
+                            <!--<div class="col-xs-10">
+                                <button type="button" class="btn btn-labeled btn-default preview">预览
+                                    <span class="btn-label btn-label-right"><i class="fa fa-arrow-right"></i>
+                                    </span>
+                                </button>
+                            </div>-->
+                            <div class="col-xs-10">
+                                <div class="bg-edit">
+                                    <iframe ng-src="{{'app/views/editor.html?'+randomDate}}" allowtransparency="true" name="iframepage" id="iframepage" style="background-color=transparent" frameborder="0" width="100%" onLoad="iFrameHeight()" scrolling="no"></iframe>                    
+                                    <script type="text/javascript" language="javascript">
+                                        function iFrameHeight() {
+                                            var ifm= document.getElementById("iframepage");
+                                            var subWeb = document.frames ? document.frames["iframepage"].document : ifm.contentDocument;
+                                            if(ifm != null && subWeb != null) {
+                                                ifm.height = subWeb.body.scrollHeight;
+                                            }
+                                                
+                                            // $('.preview').click(function() {
+                                            //     var iframeVal = document.getElementById('iframepage').contentWindow.html;
+                                            //     document.getElementsByClassName('phone-show')[0].innerHTML = iframeVal;
+                                            // })        
+                                        }
+                                    </script> 
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning saveCourse">保存</button>
+                        <button type="button" class="btn btn-danger saveCourse" ui-sref="app.courseMngt">取消</button>
+                    </div>
+                </form>
+            </tab>
+        </tabset>
+    </div>
+</div>

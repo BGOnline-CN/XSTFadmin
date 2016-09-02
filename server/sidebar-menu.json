@@ -60,6 +60,12 @@
     "translate": "sidebar.nav.SCHOOLSURVEY"
   },
   {
+    "text": "资金管理",
+    "sref": "app.fundsMngt",
+    "icon": "fa fa-money",
+    "translate": "sidebar.nav.FUNDSMNGT"
+  },
+  {
     "text": "系统配置",
     "sref": "app.setUp",
     "icon": "fa fa-cogs",

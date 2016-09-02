@@ -1,8 +1,8 @@
-<h3 ng-controller="ZHcourseClassController">
-    <a class="course" href="#" ng-click="showCourse(0)">全部课程</a>
+<h3 ng-controller="ZHCommodityClassController">
+    <a class="course" href="#" ng-click="showCourse(0)">全部商品</a>
     <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" href="#" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
 </h3>
-<div class="clearfix" ng-controller="ZHCourseController">
+<div class="clearfix" ng-controller="ZHCommodityController">
     <h4 class="page-header courseTitle">
         获取总部课程 > <span class="class-name">{{ZHsname == 'undefined' || ZHsname == undefined ? '全部课程' : ZHsname}}</span>（{{showZHtotalItems}}）
         <div class="operationCourse">

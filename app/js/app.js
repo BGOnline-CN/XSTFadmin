@@ -5,11 +5,15 @@
  */
 
 if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript requires jQuery'); }
+// "remotePath": "/home/workplace/www/201604xiaoshutong/Fadmin",
+// "host": "211.149.218.116",
 
 
 // 全局
-var url = 'http://xiaoshutong.thinktorch.cn/frontend/web'; // API
-var rootUrl = 'http://xiaoshutong.thinktorch.cn';
+// var url = 'http://xiaoshutong.thinktorch.cn/frontend/web'; // API
+// var rootUrl = 'http://xiaoshutong.thinktorch.cn';
+var url = 'http://192.168.1.200/xst/frontend/web'; // API
+var rootUrl = 'http://192.168.1.200/xst';
 var noF5speed = 5; // 无刷新获取数据的速度 秒
 var noF5Timer; // 无刷新计时器下标
 var getDataSpeed = 1000 * noF5speed; // 无刷新获取数据的速度
@@ -218,6 +222,14 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('addCustomCourse.html'),
         resolve: helper.resolveFor('angularFileUpload', 'filestyle')      
     })
+
+    .state('app.addCommodity', {
+        url: '/addCommodity',
+        title: '添加商品',
+        templateUrl: helper.basepath('addCommodity.html'),
+        resolve: helper.resolveFor('angularFileUpload', 'filestyle')      
+    })
+
     .state('app.addNotice', {
         url: '/addNotice',
         title: '添加自定义文章',
@@ -636,6 +648,9 @@ var requestError = (function(response, $state, ngDialog) {
     }else if(response.data.code == 203){
         alert('账户登录异常，请重新登录！');
         $state.go('page.login');
+    }else if(response.data.code == 204){
+        alert('账户被冻结，请联系管理员！');
+        $state.go('page.login');
     }else {
         ngDialog.open({
           template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
@@ -690,8 +705,9 @@ var errorJump = (function($state) {
 App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$http', '$filter', '$state',
   function($scope, ngDialog, $rootScope, $http, $filter, $state) {
       
-      getCourseClass = function(i) {
-          
+      getCourseClass = function() {
+          $('.course').removeClass('coureColor');
+          $scope.activeSname = sessionStorage.sname;
           $http
             .post(''+url+'/sort/getsort', {
                 token: sessionStorage.token, type: 1 
@@ -710,9 +726,6 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
                     nowClassName(i);
                     if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) { 
                         $('.course').eq(0).addClass('coureColor');
-                    }else {
-                        $('.course').removeClass('coureColor');
-                        $scope.activeSname = sessionStorage.sname;
                     }
                 }
             }, function(x) { alert('啊噢~，服务器开小差了！'); });
@@ -794,6 +807,116 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
 
 
 /**=========================================================
+ * commodityClassController
+ * author: BGOnline
+ * version 1.0 2016-4-13
+ =========================================================*/
+ 
+App.controller('commodityClassController', ['$scope', 'ngDialog', '$rootScope', '$http', '$filter', '$state',
+  function($scope, ngDialog, $rootScope, $http, $filter, $state) {
+      
+      getCommodityClass = function() {
+          $('.course').removeClass('coureColor');
+          $scope.activeSname = sessionStorage.sname;
+          $http
+            .post(''+url+'/sort/getsort', {
+                token: sessionStorage.token, type: 2 
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                }
+                else{ 
+                    $rootScope.commodityClass = response.data.data;
+                    judgeClassName();
+                    nowClassName(i);
+                    if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) { 
+                        $('.course').eq(0).addClass('coureColor');
+                    }
+                }
+            }, function(x) { alert('啊噢~，服务器开小差了！'); });
+      }
+
+      getCommodityClass();
+      
+      nowClassName = (function(i) { // 当前的 的分类改变颜色 
+          if(i) {
+            $('.course').removeClass('coureColor');
+            $('.course').eq(i).addClass('coureColor');
+          }else {
+            $('.course').removeClass('coureColor');
+            $('.course').eq(0).addClass('coureColor');
+          }
+      });
+      
+      //nowClassName();
+      
+      $scope.showCourse = function(sortid, sname, i) { // 展示 现在所在的 分类
+          
+          sessionStorage.setItem('sname', sname);
+          sessionStorage.setItem('sortid', sortid);
+          // $('.class-name').html(sname);
+          getCourseData(sortid);
+          nowClassName(i+1);
+          judgeClassName();
+      }
+      
+      var judgeClassName = function() { // 判断当前 是否在全部课程下
+          if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) {
+              $('.rdClassNameBtn').css({'display':'none'});
+          }else {
+              $('.rdClassNameBtn').css({'display':'inline-block'});
+          }
+      };
+      
+      judgeClassName();
+      
+      $scope.addCourseClass = function() {
+          $('.addCourseClassInput').css({'display':'inline-block'});
+          $('.addCourseClassInput').focus();
+      }
+      
+      $('.addCourseClassInput').change(function() { // 添加分类
+          if($(this).val()) {
+              var newClassName = $(this).val();
+              
+              $http
+                .post(''+url+'/sort/add', {
+                    token: sessionStorage.token, sname: newClassName, parent_id: 1, type: 2, row: 0
+                })
+                .then(function(response) {
+                    if ( response.data.code != 200 ) {
+                        requestError(response, $state, ngDialog);
+                    }
+                    else{ 
+                        $('.addCourseClassInput').val("");
+                        getCommodityClass();
+                        $('.addCourseClassInput').css({'display':'none'});
+                    }
+                }, function(x) { 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                });
+          }
+      })
+      
+      $('.addCourseClassInput').blur(function() {
+          $(this).css({'display':'none'});
+      })
+      
+      
+}]);
+
+
+/**=========================================================
  * courseMngtController
  * author: BGOnline
  * version 1.0 2016-3-18
@@ -804,7 +927,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
       
       errorJump($state);
       var listLoading = $('.list-loading');
-      getCourseData = function(sortid, cp) { // 获取课程
+      getCourseData = function(cp) { // 获取课程
         
           cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
           
@@ -812,7 +935,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
           $scope.sname = sessionStorage.sname;
           $http
             .post(''+url+'/course/index', {
-                token: sessionStorage.token, p: cp, sortid: sortid, order: sessionStorage.order_num
+                token: sessionStorage.token, p: cp, sortid: sessionStorage.sortid, order: sessionStorage.order_num
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -835,14 +958,14 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
             });
       };
       
-      getCourseData(sessionStorage.sortid);
+      getCourseData();
       
       $scope.getZHCourse = function() {
           $state.go('app.ZHCourse');
       }
       
       $scope.pageChanged = function() {
-          getCourseData(sessionStorage.sortid, $scope.currentPage - 1);
+          getCourseData($scope.currentPage - 1);
       };
       $scope.maxSize = 5; // 最多显示5页
       
@@ -985,7 +1108,6 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                         else{ 
                             sessionStorage.setItem('sortid', 0);
                             sessionStorage.setItem('sname', undefined);
-                            $('.class-name').html('全部课程');
                             getCourseData();
                             getCourseClass();
                             $('.rdClassNameBtn').removeClass('open');
@@ -1054,6 +1176,270 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
       // timeoutLock($state);
       
 }]);
+
+
+/**=========================================================
+ * commodityMngtController
+ * author: BGOnline
+ * version 1.0 2016-3-18
+ =========================================================*/
+ 
+App.controller('commodityMngtController', ['$scope', '$rootScope', '$http', '$filter', '$state','ngDialog',
+  function($scope, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      getCommodityData = function(sortid, cp) { // 获取商品
+        
+          cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
+          
+          listLoading.css({'display':'block'});
+          $scope.sname = sessionStorage.sname;
+          $http
+            .post(''+url+'/goods/index', {
+                token: sessionStorage.token, p: cp, sortid: sessionStorage.sortid
+                // , order: sessionStorage.order_num 按销量等排序
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.course = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getCommodityData();
+      
+      $scope.getZHCourse = function() {
+          $state.go('app.ZHCommodity');
+      }
+      
+      $scope.pageChanged = function() {
+          getCommodityData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+      
+      $scope.showCDetails = function(tcourse_name, tcourseid, sname) {
+          sessionStorage.setItem('tcourse_name', tcourse_name);
+          sessionStorage.setItem('tcourseid', tcourseid);
+          sessionStorage.setItem('sname', sname);
+      }
+      
+      $scope.showCourseAct = (function(i) {
+          $('.courseAction').eq(i).css({'visibility':'visible'});
+      })
+      
+      
+      $scope.closeCourseAct = (function(i) {
+          if(!($('.ccb-bg').eq(i).is(':checked'))) {
+            $('.courseAction').eq(i).css({'visibility':'hidden'});
+          }
+      })
+      
+      $scope.rClassName = function() {
+          $('.class-name').html("<input class='form-control ng-touched rcName' type='text' value='"+sessionStorage.sname+"'>");
+          $('.rcName').focus();
+      }
+      
+      if(sessionStorage.radioIndex == '0') {
+          $('.packageRadio').eq(0).addClass('label-warning');
+      }else if(sessionStorage.radioIndex == '1') {
+          $('.packageRadio').eq(1).addClass('label-warning');
+      }else {
+          $('.packageRadio').eq(0).addClass('label-warning');
+      }
+      $scope.selectpRadio = function(_index, oNum) { // 按条件排序
+        sessionStorage.setItem('radioIndex', _index);
+        $('.packageRadio').removeClass('label-warning');
+        $('.packageRadio').eq(_index).addClass('label-warning');
+        sessionStorage.setItem('order_num', oNum);
+        getCourseData(sessionStorage.sortid);
+      }
+
+      $(document).on('blur', '.rcName', function() { // 修改分类名称
+          var changeSname = $(this).val();
+          $http
+            .post(''+url+'/sort/edit', {
+                token: sessionStorage.token, sortid: sessionStorage.sortid, sname: changeSname
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    $('.class-name').html(changeSname);
+                    sessionStorage.setItem('sname', changeSname); 
+                    getCommodityClass();
+                }
+                ngDialog.close();
+            }, function(x) { 
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+            });
+      })
+      
+      
+      var courseArr = new Array();
+      $scope.goStartClass = function(sortid, sname) { // 移动课程
+          sessionStorage.setItem('sname', sname);
+          courseArr = [];
+          var ccbBg =  $('.ccb-bg');
+          for(var i = 0; i < $scope.showTotalItems; i++) {
+              if(ccbBg.eq(i).is(':checked')) {
+                courseArr.push(ccbBg.eq(i).attr('name'));
+              }
+          }
+          
+          if(courseArr.length > 0) {
+              listLoading.css({'display':'block'});
+              $http
+                .post(''+url+'/course/move_course', {
+                    token: sessionStorage.token, sortid: sortid, courseid: courseArr.join(",")
+                })
+                .then(function(response) {
+                    listLoading.css({'display':'none'});
+                    if ( response.data.code != 200 ) {
+                        requestError(response, $state, ngDialog);
+                    }
+                    else{ 
+                        getCommodityData(sortid);
+                        getCommodityClass();
+                        $('.class-name').html(sname);
+                        ngDialog.open({
+                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                          plain: true,
+                          className: 'ngdialog-theme-default'
+                        });
+                        ngDialog.close();
+                    }
+                }, function(x) { 
+                    listLoading.css({'display':'none'});
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                });
+          }else {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>未选择课程！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+          }
+          
+      }
+      
+      $scope.dClassName = function() { // 删除分类
+          if($scope.showTotalItems <= 0) {
+              if(confirm("确定要删除分类吗？")) {
+                  listLoading.css({'display':'block'});
+                  $http
+                    .post(''+url+'/sort/del', {
+                        token: sessionStorage.token, sortid: sessionStorage.sortid
+                    })
+                    .then(function(response) {
+                        listLoading.css({'display':'none'});
+                        if ( response.data.code != 200 ) {
+                            requestError(response, $state, ngDialog);
+                            $('.rdClassNameBtn').removeClass('open');
+                        }
+                        else{ 
+                            sessionStorage.setItem('sortid', 0);
+                            sessionStorage.setItem('sname', undefined);
+                            getCommodityData();
+                            getCommodityClass();
+                            $('.rdClassNameBtn').removeClass('open');
+                            ngDialog.close();
+                        }
+                    }, function(x) { 
+                        listLoading.css({'display':'none'});
+                        ngDialog.open({
+                          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                          plain: true,
+                          className: 'ngdialog-theme-default'
+                        });
+                        $('.rdClassNameBtn').removeClass('open');
+                        ngDialog.close();
+                    });
+              }
+          }else {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>分类下存在课程不允许删除！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+          }
+      }
+      
+      
+      $scope.removeCourse = function(i) { // 删除课程
+          if(confirm("确定要删除课程吗？")) {
+              listLoading.css({'display':'block'});
+              var tcourseid = $('.ccb-bg').eq(i).attr('name');
+              $http
+                .post(''+url+'/course/del', {
+                    token: sessionStorage.token, courseid: tcourseid
+                })
+                .then(function(response) {
+                    listLoading.css({'display':'none'});
+                    if ( response.data.code != 200 ) {
+                        requestError(response, $state, ngDialog);
+                    }
+                    else{ 
+                        getCommodityData(sessionStorage.sortid, $scope.currentPage - 1);
+                    }
+                }, function(x) { 
+                    listLoading.css({'display':'none'});
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                });
+          }
+      }
+      
+      $scope.addCourseType = function() {
+          if($rootScope.courseClass == undefined) {
+              alert('无可用分类，请先添加分类！');
+          }else {
+              sessionStorage.setItem('actionCourseType', 1); 
+              $state.go("app.addCommodity");
+          }
+      }
+      
+      // clearInterval(noF5Timer);
+      // timeoutLock($state);
+      
+}]);
+
 
 /**=========================================================
  * noticeMngtController
@@ -1488,6 +1874,82 @@ App.controller('ZHcourseClassController', ['$scope', '$rootScope', '$http', '$fi
 
 
 /**=========================================================
+ * ZHCommodityClassController
+ * author: BGOnline
+ * version 1.0 2016-4-26
+ =========================================================*/
+ 
+App.controller('ZHCommodityClassController', ['$scope', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $rootScope, $http, $filter, $state, ngDialog) {
+
+      getCommodityClass = function(i) {
+          
+          $http
+            .post(''+url+'/public/getsort', {
+                token: sessionStorage.token, type: 2
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                }
+                else{ 
+                    $rootScope.courseClass = response.data.data;
+                    nowClassName(i);
+                    if(sessionStorage.ZHsname == "undefined" || sessionStorage.ZHsname == undefined) { 
+                        $('.course').eq(0).addClass('coureColor');
+                    }else {
+                        $('.course').removeClass('coureColor');
+                        $scope.activeSname = sessionStorage.ZHsname;
+                    }
+                }
+            }, function(x) { alert('啊噢~，服务器开小差了！'); });
+      }
+
+      getCommodityClass();
+
+      nowClassName = (function(i) { // 当前的 的分类改变颜色 
+          if(i) {
+            $('.course').removeClass('coureColor');
+            $('.course').eq(i).addClass('coureColor');
+          }else {
+            $('.course').removeClass('coureColor');
+            $('.course').eq(0).addClass('coureColor');
+          }
+      });
+      
+      
+      //nowClassName();
+      
+      $scope.showCourse = function(sortid, sname, i) { // 展示 现在所在的 分类
+          
+          sessionStorage.setItem('ZHsname', sname);
+          sessionStorage.setItem('ZHsortid', sortid);
+          getZHCommodityData(sortid);
+          
+          nowClassName(i+1);
+          
+          judgeClassName();
+      }
+      
+      var judgeClassName = function() { // 判断当前 是否在全部课程下
+          if(sessionStorage.ZHsname == "undefined" || sessionStorage.ZHsname == undefined) {
+              $('.rdClassNameBtn').css({'display':'none'});
+          }else {
+              $('.rdClassNameBtn').css({'display':'inline-block'});
+          }
+      };
+      
+      judgeClassName();
+
+      // noRefreshGetData(getCourseClass, getDataSpeed);
+}]);
+
+
+/**=========================================================
  * ZHCourseController
  * author: BGOnline
  * version 1.0 2016-3-18
@@ -1599,6 +2061,119 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
 }]);
 
 
+
+/**=========================================================
+ * ZHCommodityController
+ * author: BGOnline
+ * version 1.0 2016-3-18
+ =========================================================*/
+ 
+App.controller('ZHCommodityController', ['$scope', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+
+      getZHCommodityData = function(sortid, cp) { // 获取课程
+        
+          cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
+
+          $scope.ZHsname = sessionStorage.ZHsname;
+          $http
+            .post(''+url+'/goods/get_supplies_all', {
+                token: sessionStorage.token, p: cp, sortid: sortid
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.ZHCourse = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showZHtotalItems = page.totalCount;
+                    $scope.ZHtotalItems = page.totalCount - parseInt(page.totalCount/11);
+                }
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
+      };
+      
+      getZHCommodityData(sessionStorage.ZHsortid);
+      //getCourseData(sessionStorage.delClassNameLastSortid);
+      
+      $scope.pageChanged = function() {
+          getZHCommodityData(sessionStorage.ZHsortid, $scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+      
+      $scope.showZHCDetails = function(tcourse_name, tcourseid, sname) {
+          sessionStorage.setItem('tcourse_name', tcourse_name);
+          sessionStorage.setItem('tcourseid', tcourseid);
+          sessionStorage.setItem('ZHsname', sname);
+      }
+      
+      $scope.showCourseAct = (function(i) {
+          $('.courseAction').eq(i).css({'visibility':'visible'});
+      })
+      
+      
+      $scope.closeCourseAct = (function(i) {
+          if(!($('.ccb-bg').eq(i).is(':checked'))) {
+            $('.courseAction').eq(i).css({'visibility':'hidden'});
+          }
+      })
+
+      var ZHCourseArr = new Array();
+      $scope.addZHCourse = function() { // 添加总部课程
+          $('.btn').addClass('disabled');
+          ZHCourseArr = [];
+          var ccbBg =  $('.ccb-bg');
+          for(var i = 0; i < $scope.showZHtotalItems; i++) {
+              if(ccbBg.eq(i).is(':checked')) {
+                ZHCourseArr.push(ccbBg.eq(i).attr('name'));
+              }
+          }
+          if(ZHCourseArr.length > 0) {
+              $http
+                .post(''+url+'/course/add_tcourse', {
+                    token: sessionStorage.token, tcourseid: ZHCourseArr.join(",")
+                })
+                .then(function(response) {
+                    if ( response.data.code != 200 ) {
+                        requestError(response, $state, ngDialog);
+                    }else{ 
+                        ngDialog.open({
+                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                          plain: true,
+                          className: 'ngdialog-theme-default'
+                        });
+                        $state.go('app.courseMngt');
+                    }
+                    $('.btn').removeClass('disabled');
+                }, function(x) { alert('啊噢~，服务器开小差了！'); });
+          }else {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>未选择课程！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              $('.btn').removeClass('disabled');
+          }
+          
+      }
+
+      $scope.goCourseMngt = function() {
+        $state.go('app.commodityMngt');
+      }
+      //timeoutLock($state);
+
+      // noRefreshGetData(getZHCourseData, getDataSpeed);
+}]);
+
+
 /**=========================================================
  * ZHCourseDetailsController
  * author: BGOnline
@@ -1606,6 +2181,58 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
  =========================================================*/
  
 App.controller('ZHCourseDetailsController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+
+      var listLoading = $('.list-loading');
+      $scope.tcourse_name = sessionStorage.tcourse_name;
+      $scope.ZHsname = sessionStorage.ZHsname;
+      
+      var getZHCourseDetailsData = function() {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/course/get_one_tcourse', {
+                token: sessionStorage.token, tcourseid: sessionStorage.tcourseid
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.courseDetailsData = response.data.data; 
+                    $scope.summary = $scope.courseDetailsData.summary;
+                    $scope.content = $sce.trustAsHtml($scope.courseDetailsData.content);
+                    $scope.packages = $scope.courseDetailsData.packages;
+                    $scope.tcourse_img = rootUrl + $scope.courseDetailsData.tcourse_img;
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
+      };
+      
+      getZHCourseDetailsData();
+      // noRefreshGetData(getZHCourseDetailsData, getDataSpeed); 
+      //timeoutLock($state);
+}]);
+
+
+/**=========================================================
+ * ZHCommodityDetailsController
+ * author: BGOnline
+ * version 1.0 2016-4-28
+ =========================================================*/
+ 
+App.controller('ZHCommodityDetailsController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
   function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
       
       errorJump($state);
@@ -2530,6 +3157,242 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
       }
       
       // clearInterval(noF5Timer);
+      
+      //timeoutLock($state);
+}]);
+
+
+/**=========================================================
+ * addCommodityController
+ * author: BGOnline
+ * version 1.0 2016-4-14
+ =========================================================*/
+ 
+App.controller('addCommodityController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
+  function($scope, $http, $filter, $state, FileUploader, ngDialog) {
+    
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      parseInt(sessionStorage.sortid) ? $scope.isSortid = false : $scope.isSortid = true;
+     
+      var uploader = $scope.uploader = new FileUploader({
+        url: ''+url+'/gd/upload'
+      })
+
+      uploader.onSuccessItem = function(response) {
+        sessionStorage.setItem('uploadCommodityImgUrl', jQuery.parseJSON(response._xhr.response).url);
+        $scope.img = rootUrl + sessionStorage.uploadCommodityImgUrl;
+      };
+      
+      $scope.randomDate = (new Date()).getTime();
+
+      var addTableRow = function() { // 添加一行
+          var r = document.getElementById('comboTable').insertRow(1);
+          r.setAttribute("class", "packageRow");
+          var t1 = r.insertCell(0);
+          var t2 = r.insertCell(1);
+          var t3 = r.insertCell(2);
+          t1.innerHTML="<input class='form-control ng-touched comboInput' type='text' maxlength='20'>";
+          t2.innerHTML="<input class='form-control ng-touched comboInput' type='number'>";
+          t3.innerHTML="<button type='button' class='btn btn-sm btn-danger comboAction deleteRow'><em class='fa fa-trash-o'></em></button>";
+      }
+
+      $scope.addCombo = (function() { // 执行添加
+          addTableRow();
+      });
+
+      $(document).on('click', '.deleteRow', function() {
+          $(this).parent().parent().remove();
+      })
+      
+      $scope.addCourseSelectSort = function(selSort) {
+          var selSortArr = selSort.split(',');
+          sessionStorage.setItem('sortid', selSortArr[0]);
+          sessionStorage.setItem('sname', selSortArr[1]);
+      }
+      
+      $scope.sname = sessionStorage.sname;
+      $scope.addCommodity = {};
+
+      switch(sessionStorage.actionaddCommodityType) {
+          
+          case "1": // 添加
+              ifrCon = undefined;
+              $scope.addSubmit = function() {
+                  
+                  var packageRow = $('.packageRow');
+                  var comboInput = $('.comboInput');
+                  
+                  if(packageRow.length > 0) {
+                      var comboArr = new Array();
+                      var attributeName = ['attr_name', 'attr_price'];
+                      for(var r = 0; r < packageRow.length; r++) {
+                          var packages = {};
+                          for(var c = 0; c < packageRow.eq(r).children().length-1; c++) {
+                              packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val(); 
+                          }
+                          comboArr.push(packages);
+                      }
+                                         
+                      var content = '<html>'+
+                                      '<head>'+
+                                          '<style>'+
+                                              'img {'+
+                                                  'width:100% !important;'+
+                                              '}'+
+                                          '</style>'+
+                                      '</head>'+
+                                      '<body>'+
+                                          document.getElementById('iframepage').contentWindow.html +
+                                      '</body>'+
+                                    '</html>'
+                      
+                      listLoading.css({'display':'block'});
+                      $http
+                        .post(''+url+'/goods/add', {
+                            token: sessionStorage.token, 
+                            goods_name: $scope.addCommodity.goods_name,
+                            sortid: sessionStorage.sortid,
+                            goods_brief: $scope.addCommodity.goods_brief,
+                            shop_price: $scope.addCommodity.shop_price,
+                            goods_desc: content,
+                            goods_img: sessionStorage.uploadCommodityImgUrl,
+                            attribute: JSON.stringify(comboArr)
+                        })
+                        .then(function(response) {
+   
+                            listLoading.css({'display':'none'});
+                            if ( response.data.code != 200 ) {
+                                requestError(response, $state, ngDialog);
+                            }
+                            else{ 
+                                ngDialog.open({
+                                  template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                                  plain: true,
+                                  className: 'ngdialog-theme-default'
+                                });
+                                $state.go('app.commodityMngt');
+                                getCommodityClass();
+                            }
+                        }, function(x) { 
+
+                          listLoading.css({'display':'none'});
+                          ngDialog.open({
+                            template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                            plain: true,
+                            className: 'ngdialog-theme-default'
+                          }); 
+                        });
+                  }else {
+                      ngDialog.open({
+                        template: "<p style='text-align:center;margin: 0;'>套餐信息不完整！</p>",
+                        plain: true,
+                        className: 'ngdialog-theme-default'
+                      });
+                  }
+              };
+            break;
+          case "2": // 修改
+              listLoading.css({'display':'block'});
+              $scope.isSortid = true;
+              $http
+                .post(''+url+'/goods/get_supplies_one', {
+                    token: sessionStorage.token, supplies_goods_id: sessionStorage.goods_id
+                })
+                .then(function(response) {
+                    listLoading.css({'display':'none'});
+                    if ( response.data.code != 200 ) {
+                        requestError(response, $state, ngDialog);
+                    }
+                    else{ 
+                        $scope.commodityDetailsData = response.data.data;
+                        $scope.addCommodity.goods_name = $scope.commodityDetailsData.goods_name;
+                        $scope.addCommodity.shop_price = $scope.commodityDetailsData.shop_price;
+                        $scope.addCommodity.goods_brief = $scope.commodityDetailsData.goods_brief;
+                        $scope.addCommodity.sname = $scope.commodityDetailsData.sname;
+                        ifrCon = $scope.commodityDetailsData.goods_desc;
+                        $scope.addCommodity.attribute = $scope.commodityDetailsData.attribute;
+                        $scope.img = rootUrl + $scope.commodityDetailsData.goods_img;
+                        sessionStorage.setItem('detailCommodityImgUrl', $scope.commodityDetailsData.goods_img);
+                    }
+                }, function(x) { 
+                  listLoading.css({'display':'none'});
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  });
+              });
+              
+              $scope.addSubmit = function() {
+                $('.btn').addClass('disabled');
+                var packageRow = $('.packageRow');
+                var comboInput = $('.comboInput');
+
+                var comboArr = new Array();
+                var attributeName = ['attr_name', 'attr_price'];
+                for(var r = 0; r < packageRow.length; r++) {
+                    var packages = {};
+                    for(var c = 0; c < packageRow.eq(r).children().length-1; c++) {
+                        packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val(); 
+                    }
+                    comboArr.push(packages);
+                }
+                                    
+                var content = '<html>'+
+                                '<head>'+
+                                    '<style>'+
+                                        'img {'+
+                                            'width:100% !important;'+
+                                        '}'+
+                                    '</style>'+
+                                '</head>'+
+                                '<body>'+
+                                    document.getElementById('iframepage').contentWindow.html +
+                                '</body>'+
+                              '</html>'
+                
+                listLoading.css({'display':'block'});
+                $http
+                  .post(''+url+'/goods/edit', {
+                      token: sessionStorage.token, 
+                      goods_name: $scope.addCommodity.goods_name,
+                      supplies_goods_id: sessionStorage.goods_id,
+                      sortid: sessionStorage.sortid,
+                      goods_brief: $scope.addCommodity.goods_brief,
+                      shop_price: $scope.addCommodity.shop_price,
+                      goods_desc: content,
+                      goods_img: sessionStorage.uploadCommodityImgUrl ? sessionStorage.uploadCommodityImgUrl : sessionStorage.detailCommodityImgUrl,
+                      attribute: JSON.stringify(comboArr)
+                  })
+                  .then(function(response) {
+                      $('.btn').removeClass('disabled');
+                      listLoading.css({'display':'none'});
+                      if ( response.data.code != 200 ) {
+                          requestError(response, $state, ngDialog);
+                      }else { 
+                          ngDialog.open({
+                            template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                            plain: true,
+                            className: 'ngdialog-theme-default'
+                          });
+                          $state.go('app.commodityMngt');
+                          getCommodityClass();
+                      }
+                  }, function(x) { 
+                    $('.btn').removeClass('disabled');
+                    listLoading.css({'display':'none'});
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    }); 
+                });
+            };
+            break;
+      }
+      
+      
       
       //timeoutLock($state);
 }]);

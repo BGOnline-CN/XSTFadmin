@@ -2,7 +2,7 @@
     <a class="course" ui-sref="app.ZHCourse" ng-click="showCourse(0)">全部课程</a>
     <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" ui-sref="app.ZHCourse" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
 </h3>
-<div class="clearfix" ng-controller="ZHCourseDetailsController">
+<div class="clearfix" ng-controller="ZHCommodityDetailsController">
     <div class="ball-spin-fade-loader list-loading">
         <div></div>
         <div></div>

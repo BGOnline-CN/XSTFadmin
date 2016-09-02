@@ -16,7 +16,7 @@
         <div></div>
     </div>
     <h4 class="page-header courseTitle">
-        <span class="class-name">{{sname == 'undefined' || sname == undefined ? '全部课程' : sname}}</span>（{{showTotalItems}}）
+        <span class="class-name" ng-bind="sname == 'undefined' || sname == undefined ? '全部课程' : sname"></span>（{{showTotalItems}}）
         <div dropdown="dropdown" class="btn-group rdClassNameBtn">
             <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-default changeCourseName">
                 <i class="fa fa-pencil changeCourseFa"></i>
