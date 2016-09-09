@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url(//fonts.useso.com/css?family=Source+Sans+Pro:300,400,600,400italic);
+/*@import url(//fonts.useso.com/css?family=Source+Sans+Pro:300,400,600,400italic);*/
 /*!
  * 
  * Angle - Bootstrap Admin App + AngularJS
@@ -11084,17 +11084,93 @@ flatdoc .button .badge {
 }
 .courseList > a > .mask {
     position: absolute;
-    border: 1px solid red;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0);
     text-align: center;
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
 }
-.courseList > a > .mask i{
+.u-flyer {
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    position: fixed;
+    z-index: 999;
+}
+.courseList > a > .mask:hover {
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+    background-color: rgba(0,0,0,0.5);
+}
+.courseList > a > .mask > ul li {
+    visibility: hidden;
+    position: relative;
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+}
+.courseList > a > .mask > ul li:hover {
+    background-color: #47C3E9;
+}
+.courseList > a > .mask > ul li:first-child {
+    left: -80px;
+}
+.courseList > a > .mask > ul li:last-child {
+    left: 80px;
+}
+.courseList > a > .mask:hover > ul li:first-child {
+    visibility: visible;
+    left: 0px;
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+}
+.courseList > a > .mask:hover > ul li:last-child {
+    visibility: visible;
+    left: 0px;
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+}
+.courseList > a > .mask > ul li i {
+    text-align: center;
+    line-height: 45px;
     color: #fff;
-    margin: 0 10px;
+}
+
+/* 垂直居中 限固定高度 */
+.courseList > a > .mask:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em;
+}
+.courseList > a > .mask ul{
+  padding:0;
+  display: inline-block; /* 垂直居中 */
+  vertical-align: middle; /* 垂直居中 */
+}
+.courseList > a > .mask > ul li {
+  cursor: pointer;
+  list-style: none;
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  border: 2px solid #eee;
+  float: left;
+  border-radius: 50%;
 }
 
 @media \0screen\,screen\9 {/* 只支持IE6、7、8 */
@@ -11115,6 +11191,7 @@ flatdoc .button .badge {
 .courseList > a > img {
     width: 100%;
     height: 60%;
+    display: block;
 }
 .courseList > a.dashed {
     border: 2px dashed #DADADA;
@@ -11890,4 +11967,86 @@ flatdoc .button .badge {
   left: 5px;
   top: -5px;
   cursor: default;
+  z-index: 999;
+}
+.shoppingCartTable > .table-bordered {
+  background-color: #fff;
+}
+.shoppingCartTable > .table-bordered > thead > tr > th,
+.shoppingCartTable > .table-bordered > tbody > tr > td, 
+.shoppingCartTable > .table-bordered > tfoot > tr > td {
+  border-right: none;
+  border-left: none; 
+}
+.shoppingCartTable > .table-bordered > thead > tr > th,
+.shoppingCartTable > .table-bordered > tbody > tr > td {
+  text-align: center; 
+}
+.shoppingCartTable > .table-bordered > thead > tr > th {
+  font-weight: 500;
+  color: #aaa;
+}
+.shoppingCartTitle {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.panel.panel-border-warning {
+  border: 2px solid #FCA252;
+  border-radius: 0;
+  padding: 0 10px;
+  font-size: 0.8em;
+  background-color: #FAF4F4;
+}
+.panel > p.addressee {
+  border-bottom: 1px solid #eee;
+  padding: 5px 0;
+  margin-bottom: 10px;
+}
+.panel > p.addressee > span {
+  margin-right: 10px;
+}
+.panel > ul {
+  margin: 0;
+  padding: 0;
+}
+.panel > ul li {
+  list-style: none;
+  padding: 2px 0;
+}
+.panel > ul li span{
+  margin-right: 10px;
+}
+.panel > p.control {
+  margin-top: 10px;
+}
+.panel > p.control > span {
+  color: #ccc;
+}
+.shoppingCartTable > .table-bordered > tfoot > tr > td {
+  padding: 10px 25px;
+}
+.shoppingCartTable > .table-bordered > tfoot > tr > td.left-area {
+  font-size: .8em;
+}
+.shoppingCartTable > .table-bordered > tfoot > tr > td.left-area >textarea {
+  border: 2px solid #eee;
+  width: 80%;
+  height: 100px;
+  resize: none;
+}
+.shoppingCartTable > .table-bordered > tfoot > tr > td.right-area {
+  text-align: right;
+  font-size: .8em;
+}
+.shoppingCartTable > .table-bordered > tfoot > tr > td.right-area p {
+  color: #aaa;
+}
+.shoppingCartTable > .table-bordered > tfoot > tr > td.right-area span {
+  color: #000;
+  display: inline-block;
+  width: 80px;
+}
+.shoppingCartTable > .table-bordered > tfoot > tr > td.right-area span.font-warning {
+  color: #ff902b;
 }

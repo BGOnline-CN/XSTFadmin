@@ -1,0 +1,147 @@
+<h3>购物车</h3>
+<div class="courseDetails-div usersCenterList schoolSurveyEdit" data-ng-controller="shoppingCartController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="row">
+        <!-- Blog Content-->
+        <div class="col-lg-12">
+            <span class="shoppingCartTitle">选择收货地址</span>
+            <div class="row">
+                <!-- Posts column 1-->
+                <div class="col-lg-3">
+                    <div class="panel panel-border-default panel-border-warning">
+                        <p class="addressee">
+                            <span ng-bind="envelope.addressee"></span>收
+                        </p>
+                        <ul class="clearfix">
+                            <li class="address">
+                                <span ng-bind="province"></span>
+                                <span ng-bind="countyLevel"></span>
+                                <span ng-bind="city"></span>
+                            </li>
+                            <li class="street">
+                                <span ng-bind="envelope.address"></span>
+                            </li>
+                            <li class="phoneNum">
+                                <span ng-bind="envelope.phone"></span>
+                            </li>
+                        </ul>
+                        <p class="control">
+                            <span ng-click="showEditAddress()">修改</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <span class="shoppingCartTitle">商品信息</span>
+            <div class="row">
+                <!-- Posts column 1-->
+                <div class="col-lg-12">
+                    <!--<div class="panel-footer">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <span class="panel-table-title" style="vertical-align: bottom;">课程订单（{{showTotalItems}}）</span>
+                                <select class="bg-select" ng-change="showRechargeTime(time)" ng-model="time">
+                                    <option value="">全部</option>
+                                    <option value="a">最近一周</option>
+                                    <option value="b">最近一个月</option>
+                                    <option value="c">最近三个月</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4"></div>
+                            <div class="col-lg-4">
+                                <div class="input-group" style="width: 200px;float:right;">
+                                    <input type="text" placeholder="{{searchResult != undefined && searchResult != 'undefined' && searchResult ? searchResult : '全部'}}" class="input-sm form-control" ng-model="sOLValue"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-sm btn-default" ng-click="searchListData()">搜索</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                    <div class="table-responsive shoppingCartTable">
+                        <table id="table-ext-1" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width:5%;">
+                                        <div class="checkbox c-checkbox pull-left mt0">
+                                            <label>
+                                                <input type="checkbox" ng-click="selectAll($event)" ng-checked="isSelectedAll()" />
+                                                <span class="fa fa-check"></span></label>
+                                        </div>
+                                    </th>
+                                    <th style="width:25%;">商品信息</th>
+                                    <th style="width:20%;">单价</th>
+                                    <th style="width:20%;">数量</th>
+                                    <th style="width:20%;">金额</th>
+                                    <th style="width:10%;">操作</th>
+                                    <!--<th style="width:7%;position:relative">
+                                        {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有'}}
+                                        <i class="fa fa-angle-down downListIco"></i>
+                                        <ul class="downList clearfix">
+                                            <li ng-click="downSValue('')">所有</li>
+                                            <li ng-click="downSValue(s.value, s.text)" name="{{s.value}}" ng-repeat="s in types" ng-bind="s.text"></li>
+                                        </ul>
+                                    </th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td ng-class="ONullType" colspan="6">暂无数据</td>
+                                </tr>
+                                <tr ng-repeat="o in ZHCourse">
+                                    <td>
+                                        <div class="checkbox c-checkbox pull-left mt0">
+                                            <label>
+                                                <input type="checkbox" ng-checked="isSelected(o.cart_id)" ng-click="updateSelection($event, o.cart_id, o.attr_price*o.attr_num)"/>
+                                                <span class="fa fa-check"></span></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <img ng-src="{{o.goods_img_thumb}}" alt="Image" class="img-responsive orderCourse-img" style="display:inline-block;display: inline-block;float: none;" />
+                                        <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;margin:0;vertical-align: middle;display:inline-block;">
+                                            <span ng-bind="o.goods_name" title="{{o.goods_name}}"></span><br/>
+                                            <span ng-bind='"规格："+o.attr_name' style="color:#ccc;"></span>
+                                        </p>
+                                    </td>
+                                    <td ng-bind='o.attr_price+"学习币"'></td>
+                                    <td>
+                                        <button class='btn btn-default' ng-click='increaseQ(o.cart_id, o.attr_num, o.attr_price, isSelected(o.cart_id), $event)'><i class='fa fa-plus'></i></button>
+                                        <span style='width: 50px;display: inline-block;' ng-bind='o.attr_num'></span>
+                                        <button class='btn btn-default' ng-click='reduceQ(o.cart_id, o.attr_num, o.attr_price, isSelected(o.cart_id), $event)'><i class='fa fa-minus'></i></button>
+                                    </td>
+                                    <td ng-bind='o.attr_price*o.attr_num+"学习币"'></td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger comboAction deleteRow" ng-click="delectCart(o.cart_id)"><em class="fa fa-trash-o"></em></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="page-td left-area" colspan="3">
+                                        <p>备注</p>
+                                        <textarea ng-model="envelope.message" style="padding: 6px;"></textarea>
+                                    </td>
+                                    <td class="page-td right-area" colspan="3">
+                                        <p style="margin-top: 20px;">商品应付总计： <span>{{priceCunt}}学习币</span></p>
+                                        <!--<p>运费： <span>0学习币</span></p>
+                                        <p>优惠： <span>0学习币</span></p>-->
+                                        <p style="font-size: 1.1em;">实付： <span class="font-warning">{{priceCunt}}学习币</span></p>
+                                        <button class="btn btn-warning" style="margin: 15px 0;" ng-click="placeOrder($event)">提交订单</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>

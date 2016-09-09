@@ -1,6 +1,6 @@
 <h3 ng-controller="ZHcourseClassController">
-    <a class="course" href="#" ng-click="showCourse(0)">全部课程</a>
-    <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" href="#" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
+    <a class="course" ui-sref="#" ng-click="showCourse(0)">全部课程</a>
+    <a class="course" ng-class="{true:'coureColor', false: ''}[x.sname == activeSname]" ui-sref="#" ng-repeat="x in courseClass" ng-bind="x.sname" name={{x.sortid}} ng-click="showCourse(x.sortid, x.sname, $index)"></a>
 </h3>
 <div class="clearfix" ng-controller="ZHCourseController">
     <h4 class="page-header courseTitle">
