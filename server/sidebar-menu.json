@@ -42,10 +42,16 @@
     "translate": "sidebar.nav.ORDERLIST"
   },
   {
-    "text": "商品订单",
+    "text": "物资订单",
     "sref": "app.commodityOrder",
-    "icon": "fa fa-gift",
+    "icon": "fa fa-truck",
     "translate": "sidebar.nav.COMMODITYORDER"
+  },
+  {
+    "text": "商品订单",
+    "sref": "app.userCommodityOrder",
+    "icon": "fa fa-gift",
+    "translate": "sidebar.nav.USERCOMMODITYORDER"
   },
   {
     "text": "文章管理",

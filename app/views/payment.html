@@ -3,18 +3,47 @@
     <div class="row">
         <!-- Blog Content-->
         <div class="col-lg-12">
-            <span class="shoppingCartTitle">选择收货地址</span>
             <div class="row">
                 <!-- Posts column 1-->
                 <div class="col-lg-12">
-                    
+                    <div class="orderScussBox">
+                        <span class="orderTypeText"><i class="fa fa-check-circle" style="color:#53C937;"></i>订单提交成功</span>
+                        <P class="info-top-border">
+                            收货信息：
+                            <span ng-bind="province"></span>
+                            <span ng-bind="countyLevel"></span>
+                            <span ng-bind="city"></span>
+                            <span ng-bind="envelope.address"></span>
+                            <span ng-bind="envelope.addressee"></span>
+                            <span ng-bind="envelope.phone"></span>
+                            <a href="#">我的订单 > </a>
+                        </P>
+                    </div>
                 </div>
             </div>
-            <span class="shoppingCartTitle">商品信息</span>
             <div class="row">
                 <!-- Posts column 1-->
                 <div class="col-lg-12">
-                    
+                    <div class="orderScussBox">
+                        <P class="info-bottom-border">
+                            支付：
+                            <span>2400学习币</span>
+                            （可用学习币：{{admin.xxb}}）
+                        </P>
+                        <div class="payment">
+                            <div class="radio c-radio">
+                                <label>
+                                    <input type="radio" name="pay" value="2" checked="" ng-model="payment" />
+                                    <span class="fa fa-circle" style="border-color: #ccc;background-color: #fff;"></span>学习币支付</label>
+                            </div>
+                            <div class="radio c-radio">
+                                <label>
+                                    <input type="radio" name="pay" value="1" ng-model="payment" />
+                                    <span class="fa fa-circle" style="border-color: #ccc;background-color: #fff;"></span>线下支付</label>
+                            </div>
+                            <button type="button" class="btn btn-warning" style="margin: 15px 0;padding: 6px 30px;border-radius: 0;" ng-click="submitOrder($event)">立即支付</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

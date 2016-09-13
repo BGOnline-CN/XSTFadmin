@@ -190,9 +190,22 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
     .state('app.commodityOrder', {
         url: '/commodityOrder',
-        title: '商品订单',
+        title: '物资订单',
         templateUrl: helper.basepath('commodityOrder.html')
     })
+
+    .state('app.fundsMngt', {
+        url: '/fundsMngt',
+        title: '资金管理',
+        templateUrl: helper.basepath('fundsMngt.html')
+    })
+
+    .state('app.userCommodityOrder', {
+        url: '/userCommodityOrder',
+        title: '商品订单',
+        templateUrl: helper.basepath('userCommodityOrder.html')
+    })
+    
 
     .state('app.shoppingCart', {
         url: '/shoppingCart',
@@ -2180,25 +2193,32 @@ App.controller('ZHCommodityController', ['$scope', '$rootScope', '$http', '$filt
               }
           }if(ZHCourseArr.length > 0) {
               $http
-                .post(''+url+'/course/add_tcourse', {
-                    token: sessionStorage.token, tcourseid: ZHCourseArr.join(",")
+                .post(''+url+'/goods/add_cupplies', {
+                    token: sessionStorage.token, supplies_goods_id: ZHCourseArr.join(",")
                 })
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
                         requestError(response, $state, ngDialog);
-                    }else{ 
+                    }else { 
                         ngDialog.open({
                           template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                           plain: true,
                           className: 'ngdialog-theme-default'
                         });
-                        $state.go('app.courseMngt');
+                        $state.go('app.commodityMngt');
                     }
                     $('.btn').removeClass('disabled');
-                }, function(x) { alert('啊噢~，服务器开小差了！'); });
+                }, function(x) {
+                    ngDialog.open({
+                        template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                        plain: true,
+                        className: 'ngdialog-theme-default'
+                    });
+                    $('.btn').removeClass('disabled');
+                });
           }else {
               ngDialog.open({
-                template: "<p style='text-align:center;margin: 0;'>未选择课程！</p>",
+                template: "<p style='text-align:center;margin: 0;'>未选择商品！</p>",
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
@@ -2474,6 +2494,8 @@ App.controller('shoppingCartController', ['$scope', '$rootScope', '$http', '$fil
                     });
                     ngDialog.close();
                 });
+          }else {
+              $($event.target).addClass('disabled');
           }
           
       }
@@ -2500,7 +2522,6 @@ App.controller('shoppingCartController', ['$scope', '$rootScope', '$http', '$fil
         var action = (checkbox.checked ? 'add' : 'remove');
         updateSelected(action, id, price);
       };
-
 
       $scope.selectAll = function ($event) {
         var checkbox = $event.target;
@@ -2563,14 +2584,9 @@ App.controller('shoppingCartController', ['$scope', '$rootScope', '$http', '$fil
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
                         requestError(response, $state, ngDialog);
-                    }else{ 
+                    }else { 
+                        sessionStorage.setItem('order_id', response.data.data.orderid);
                         $state.go('app.payment');
-                        ngDialog.open({
-                            template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                            plain: true,
-                            className: 'ngdialog-theme-default'
-                        });
-                        ngDialog.close();
                     }
                     $($event.target).removeClass('disabled');
                 }, function(x) {
@@ -2594,6 +2610,132 @@ App.controller('shoppingCartController', ['$scope', '$rootScope', '$http', '$fil
       //timeoutLock($state);
 
       // noRefreshGetData(getZHCourseData, getDataSpeed);
+}]);
+
+
+/**=========================================================
+ * paymentController
+ * author: BGOnline
+ * version 1.0 2016-4-28
+ =========================================================*/
+ 
+App.controller('paymentController', ['$scope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      $scope.payment = 2;
+      $scope.address = sessionStorage.branch_area.split(',');
+      
+      var getAddress = function() {
+          $http
+            .post(''+url+'/public/getareaall', {
+                token: sessionStorage.token,
+                provinceid: $scope.address[0],
+                cityid: $scope.address[1],
+                areaid: $scope.address[2]
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else {
+                    $scope.addressData = response.data.data;
+                    if($scope.addressData.province.length > 0) {
+                        for(var i = 0; i < $scope.addressData.province.length; i++) {
+                            if($scope.addressData.province[i].areaid == $scope.address[0]) {
+                                $scope.province = $scope.addressData.province[i].name;
+                            }
+                        }
+                    }
+                    if($scope.addressData.city.length > 0) {
+                        for(var j = 0; j < $scope.addressData.city.length; j++) {
+                            if($scope.addressData.city[j].areaid == $scope.address[1]) {
+                                $scope.countyLevel = $scope.addressData.city[j].name;
+                            }
+                        }
+                    }
+                    if($scope.addressData.area.length > 0) {
+                        for(var k = 0; k < $scope.addressData.area.length; k++) {
+                            if($scope.addressData.city[k].areaid == $scope.address[2]) {
+                                $scope.city = $scope.addressData.city[k].name;
+                            }
+                        }
+                    }
+                    
+                }
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+            });
+      }
+
+      getAddress();
+      $scope.envelope = {
+          send_area: sessionStorage.branch_area,
+          addressee: sessionStorage.branch_principal,
+          address: sessionStorage.branch_address,
+          phone: sessionStorage.branch_tel,
+          message: ''
+      }
+
+      var getBranchData = function() {
+        
+         $http // 获取校区信息
+            .post(''+url+'/setting/getbranch', {
+                token: sessionStorage.token
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.admin = response.data.data;
+                }
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
+      }
+      
+      getBranchData();
+
+      $scope.submitOrder = function(event, orderId) {
+          $(event.target).addClass('disabled');
+          $http
+            .post(''+url+'/suppliesorder/pay', {
+                token: sessionStorage.token, orderid: sessionStorage.order_id, payment_id: $scope.payment
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    ngDialog.open({
+                        template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                        plain: true,
+                        className: 'ngdialog-theme-default'
+                    });
+                    $state.go('app.commodityOrder');
+                }
+                $('.btn').removeClass('disabled');
+            }, function(x) { 
+              ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+              });
+              $('.btn').removeClass('disabled');
+            });
+      };
+
+      // noRefreshGetData(getZHCourseDetailsData, getDataSpeed); 
+      //timeoutLock($state);
 }]);
 
 
@@ -5745,6 +5887,247 @@ App.controller('rechargeXXBController', ['$scope', '$http', '$state', 'ngDialog'
 }]);
 
 
+
+/**=========================================================
+ * fundsMngtController
+ * author: BGOnline
+ * version 1.0 2016-3-18
+ =========================================================*/
+ 
+App.controller('fundsMngtController', ['$scope', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $rootScope, $http, $filter, $state, ngDialog) {
+    
+      errorJump($state);
+      var listLoading = $('.list-loading');
+
+      getXXBData = function() {
+        
+         $http // 获取学习币数量
+            .post(''+url+'/setting/getbranch', {
+                token: sessionStorage.token
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.admin = response.data.data;
+                }
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
+      }
+      
+      getXXBData();
+      
+      $scope.types = [
+        //   {value: 0, class: 'label-default', text: '已取消'},
+          {value: 1, class: 'label-danger', text: '待审核'},
+          {value: 2, class: 'label-success', text: '提交失败'},
+          {value: 3, class: 'label-success', text: '提现成功'},
+      ];
+      
+      $scope.pageChanged = function() {
+          getXXBreData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+
+      $scope.payTime = function(o) {
+          return localData = new Date(parseInt(o.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+
+      $scope.orderStatusClass = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].class : 'Not set';
+      };
+      
+      $scope.orderStatusText = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+      $scope.searchResult = sessionStorage.sOLValue;
+      $scope.searchListData = function() {
+          sessionStorage.setItem('sOLValue', $scope.sOLValue);
+          $scope.searchResult = $scope.sOLValue;
+          getXXBreData();
+      }
+
+      $scope.selectValue = sessionStorage.orderText;
+      $scope.downSValue = function(value, text) {
+          sessionStorage.setItem('orderState', value);
+          sessionStorage.setItem('orderText', text);
+          getXXBreData();
+          $scope.selectValue = text;
+          $('.downList').css({'visibility':'hidden'});
+      }
+
+      $scope.showRechargeTime = function(t) {
+          getXXBreData('', t, '');
+      }
+
+      $('.downListIco').click(function() {
+          if($('.downList').css('visibility') == 'visible') {
+              $('.downList').css({'visibility':'hidden'});
+          }else {
+              $('.downList').css({'visibility':'visible'});
+          }
+      })
+
+      getXXBreData = function() {
+        
+         $http // 获取提现记录
+            .post(''+url+'/user/apply_list', {
+                token: sessionStorage.token,
+                status: sessionStorage.cOrderState
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    $scope.reList = response.data.data.mod_data;
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                    $scope.reList.length > 0 ? $scope.ONullType = 'isNullTypeHidden' : $scope.ONullType = 'isNullTypeShow';
+                }
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
+      }
+      
+      getXXBreData();
+
+      var launchStartDatas,launchEndDatas;
+      var start = {
+        elem: '#start',
+        format: 'YYYY/MM/DD',
+        min: laydate.now(), //设定最小日期为当前日期
+        max: '2099-06-16', //最大日期
+        istime: true,
+        istoday: false,
+        choose: function(datas){
+            end.min = datas; //开始日选好后，重置结束日的最小日期
+            end.start = datas //将结束日的初始值设定为开始日
+            launchStartDatas = datas;
+        }
+      };
+      var end = {
+        elem: '#end',
+        format: 'YYYY/MM/DD',
+        min: laydate.now(),
+        max: '2099-06-16',
+        istime: true,
+        istoday: false,
+        choose: function(datas){
+            start.max = datas; //结束日选好后，重置开始日的最大日期
+            launchEndDatas = datas;
+        }
+      };
+    
+      $scope.showStartData = function() {
+        laydate(start);
+      }
+
+      $scope.showEndData = function() {
+        laydate(end);
+      }
+
+      $scope.payTime = function(o) {
+          return localData = new Date(parseInt(o.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+      
+      $scope.showWithdrawWin = function() {
+        ngDialog.open({
+          template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>学习币提现</p>"+
+                    "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
+                        "<p style='margin-bottom:20px;'>请输入提现金额，金额不能为小数与负数！</p>"+
+                        "<span style='float:left;line-height: 35px;'>提现金额：</span>"+
+                        "<div class='input-group' style='width:200px;float:left;'>"+
+                          "<input class='form-control xxb-input' type='number'>"+
+                          "<span class='input-group-addon'>元</span>"+
+                        "</div>"+
+                        '<button type="button" class="mb-sm btn btn-warning" ng-click="rechargeXXB()" style="float:right;margin-top:30px;">确认</button>'+
+                    "</div>",
+          plain: true,
+          className: 'ngdialog-theme-default',
+          controller: 'withdrawXXBController'
+        });
+      }
+      //noRefreshGetData(getUserData, getDataSpeed);
+      //timeoutLock($state);
+}]);
+
+
+
+
+/**=========================================================
+ * withdrawXXBController
+ * author: BGOnline
+ * version 1.0 2016-6-2
+ =========================================================*/
+ 
+App.controller('withdrawXXBController', ['$scope', '$http', '$state', 'ngDialog',
+  function($scope, $http, $state, ngDialog) {
+      
+      errorJump($state);
+      
+      $scope.rechargeXXB = function() {
+          var xxbNum = $('.xxb-input').val();
+          if(xxbNum) {
+            $http
+            .post(''+url+'/user/apply_xxbwithdraw', {
+                token: sessionStorage.token, xxb: xxbNum
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    getXXBData();
+                    getXXBreData();
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                }
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+            });
+          }else {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>金额输入有误！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+          }
+          
+      }
+
+}]);
+
+
+
+
 /**=========================================================
  * addUserController
  * author: BGOnline
@@ -5959,7 +6342,7 @@ App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
       
       $scope.admin = {};
       
-      getBranchData = function() {
+      var getBranchData = function() {
         
          $http // 获取校区信息
             .post(''+url+'/setting/getbranch', {
@@ -6086,6 +6469,100 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
       
       getCountData();
 
+      $scope.version = '';
+
+      try {
+            var judgeVer = (function(newVersion) {
+                //打开或新建一个数据库 数据库名 版本号 数据库描述 数据库大小 回调函数（可选）
+                var versionDB = openDatabase("version", "1.0", "web版本号存储", "1024*1024", function () {});
+                //对数据库进行事务处理
+                versionDB.transaction(function (tx) {
+                    //创建表
+                    //tx这里代表transaction对象 调用对象下的executeSql函数执行SQL语句
+                    //这里有3个参数  SQL语句 成功的回调函数（可选） 失败的回调函数（可选）
+                    tx.executeSql(
+                        'CREATE TABLE IF NOT EXISTS version (id REAL UNIQUE, versionNumber TEXT)', [], 
+                        function () {
+                            // alert("表创建成功");
+                        },
+                        function () {
+                            // alert("表创建失败");
+                        }
+                    );	
+
+                    //增加数据
+                    tx.executeSql(
+                        'INSERT INTO version (id, versionNumber) VALUES (?, ?)', [1, "v16.9.12.0.1beta"],
+                        function () {
+                            // alert("数据增加成功");
+                        },
+                        function () {
+                            // alert("数据增加失败");
+                        }
+                    );
+                    
+                    //修改数据
+                    tx.executeSql(
+                        'UPDATE version SET VERSIONNUMBER = ? WHERE ID = ?', [newVersion, 1], 
+                        function () {
+                            // alert("数据修改成功");
+                        },
+                        function () {
+                            // alert("数据修改失败");
+                        }
+                    );
+                    
+                    //查询数据
+                    tx.executeSql(
+                        'SELECT * FROM version', [],
+                        function (tx, result) {
+                            for(var i = 0; i < result.rows.length; i++) {
+                                $scope.version = result.rows.item(i)["versionNumber"];
+                            }
+
+                            // 判断版本号是否相同
+                            if($scope.version === $rootScope.v) {}
+                            else {
+                                ngDialog.open({
+                                    template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>版本更新说明</p>"+
+                                                "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
+                                                    "<p style='margin-bottom:20px;'>1：分校可以自营商品啦！</p>"+
+                                                    "<p style='margin-bottom:20px;'>2：新增分校能够购买总校物资的功能。</p>"+
+                                                    "<p style='margin-bottom:20px;'>3：新增物资订单功能。</p>"+
+                                                    "<p style='margin-bottom:20px;'>4：新增资金流向管理。</p>"+
+                                                    "<p style='margin-bottom:20px;'>5：分校资金可以提现啦！</p>"+
+                                                    "<p style='margin-bottom:20px;'>6：优化了若干影响用户体验的细节。</p>"+
+                                                    "<p style='margin-bottom:20px;'>7：新增了版本更新说明。</p>"+
+                                                    "<p style='margin-bottom:20px;'>8：修复了若干bug。</p>"+
+                                                "</div>",
+                                    plain: true,
+                                    className: 'ngdialog-theme-default'
+                                });
+                                localStorage.setItem('v', $scope.version);
+                                $rootScope.v = localStorage.v;
+                            }
+                        },
+                        function () {
+                            // alert("数据查询失败");
+                        }
+                    );
+
+                    // //删除数据
+                    // tx.executeSql(
+                    //     'DELETE FROM version WHERE ID = ?', [1],
+                    //     function () {
+                    //         alert("数据删除成功");
+                    //     },
+                    //     function () {
+                    //         alert("数据删除失败");
+                    //     }
+                    // );           
+                })
+            })('v16.9.12.0.4beta');
+      }catch (e){
+          console.log('该浏览器不支持websql，无法使用版本说明功能！');
+          return;
+      }
       // noRefreshGetData(getCountData, getDataSpeed);
       
       //timeoutLock($state);
@@ -6252,14 +6729,15 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
       
       errorJump($state);
       var listLoading = $('.list-loading');
-      getCommodityOrderListData = function(cp, t, st) {
+      var getCommodityOrderListData = function(cp, t, st) {
           listLoading.css({'display':'block'});
           $http
-            .post(''+url+'/list/goods_order', {
+            .post(''+url+'/suppliesorder/order_list', {
                 token: sessionStorage.token, 
                 p: cp, 
                 search: sessionStorage.CSOLValue != undefined && sessionStorage.CSOLValue != 'undefined' ? sessionStorage.CSOLValue : '', 
                 time: t, 
+                order_id: "",
                 status: sessionStorage.cOrderState
             })
             .then(function(response) {
@@ -6292,15 +6770,9 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
       $scope.maxSize = 5; // 最多显示5页
 
       $scope.payTime = function(o) {
-          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          return localData = new Date(parseInt(o.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
       }
 
-      $scope.sexs = [
-          {value: 0, text: '保密'},
-          {value: 1, text: '男'},
-          {value: 2, text: '女'}
-      ];
-      
       $scope.showSex = function(x) {
           if(x.sex) {
               selected = $filter('filter')($scope.sexs, {value: x.sex});
@@ -6310,9 +6782,11 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
 
       $scope.types = [
           {value: 0, class: 'label-default', text: '已取消'},
-          {value: 2, class: 'label-primary', text: '装包中'},
+          {value: 1, class: 'label-info', text: '未支付'},
           {value: 3, class: 'label-warning', text: '配送中'},
+          {value: 2, class: 'label-primary', text: '已支付'},
           {value: 4, class: 'label-success', text: '已完成'},
+          {value: 99, class: 'label-danger', text: '线下支付待审核'}
       ];
       
       $scope.orderStatusClass = function(x) {
@@ -6397,13 +6871,240 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
 
 
 /**=========================================================
+ * userCommodityOrderController
+ * author: BGOnline
+ * version 1.0 2016-6-17
+ =========================================================*/
+ 
+App.controller('userCommodityOrderController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      getUserCommodityOrderListData = function(cp, t, st) {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/list/goods_order', {
+                token: sessionStorage.token, 
+                p: cp, 
+                search: sessionStorage.CSOLValue != undefined && sessionStorage.CSOLValue != 'undefined' ? sessionStorage.CSOLValue : '', 
+                time: t, 
+                status: sessionStorage.cOrderState
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.commodityOrderData = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                    $scope.commodityOrderData.length > 0 ? $scope.ONullType = 'isNullTypeHidden' : $scope.ONullType = 'isNullTypeShow';
+              }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getUserCommodityOrderListData();
+
+      $scope.pageChanged = function() {
+          getUserCommodityOrderListData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+
+      $scope.payTime = function(o) {
+          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+
+      $scope.sexs = [
+          {value: 0, text: '保密'},
+          {value: 1, text: '男'},
+          {value: 2, text: '女'}
+      ];
+      
+      $scope.showSex = function(x) {
+          if(x.sex) {
+              selected = $filter('filter')($scope.sexs, {value: x.sex});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+      $scope.types = [
+          {value: 0, class: 'label-default', text: '已取消'},
+          {value: 1, class: 'label-danger', text: '未支付'},
+          {value: 2, class: 'label-primary', text: '已支付'},
+          {value: 3, class: 'label-warning', text: '配送中'},
+          {value: 4, class: 'label-success', text: '已完成'}
+      ];
+      
+      $scope.orderStatusClass = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].class : 'Not set';
+      };
+      
+      $scope.orderStatusText = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+
+      $scope.searchResult = sessionStorage.sOLValue;
+      $scope.searchListData = function() {
+          sessionStorage.setItem('CSOLValue', $scope.sOLValue);
+          $scope.searchResult = $scope.sOLValue;
+          getUserCommodityOrderListData();
+      }
+
+      $scope.selectValue = sessionStorage.cOrderText;
+      $scope.downSValue = function(value, text) {
+          sessionStorage.setItem('cOrderState', value);
+          sessionStorage.setItem('cOrderText', text);
+          getUserCommodityOrderListData();
+          $scope.selectValue = text;
+          $('.downList').css({'visibility':'hidden'});
+      }
+
+      $('.downListIco').click(function() {
+          if($('.downList').css('visibility') == 'visible') {
+              $('.downList').css({'visibility':'hidden'});
+          }else {
+              $('.downList').css({'visibility':'visible'});
+          }
+      })
+      
+      $scope.showRechargeTime = function(t) {
+          getUserCommodityOrderListData('', t, '');
+      }
+
+      $scope.cancelOrder = function(orderid) { //取消订单
+          if(confirm('确定取消订单？')) {
+            $http
+              .post(''+url+'/list/goods_order_edit', {
+                  token: sessionStorage.token, status: 0, order_id: orderid
+              })
+              .then(function(response) {
+                  listLoading.css({'display':'none'});
+                  if ( response.data.code != 200 ) {
+                      requestError(response, $state, ngDialog);
+                  }
+                  else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    getUserCommodityOrderListData();
+                }
+              }, function(x) { 
+                  listLoading.css({'display':'none'});
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  });
+              });
+          }
+      }
+      
+
+      $scope.sendCommodity = function(g, o) { // 发货
+          ngDialog.open({
+            template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>填写发货信息</p>"+
+                      "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
+                          "<p style='margin-bottom:20px;'><span>商品名："+g+"</span><span style='float:right;'>订单号："+o+"</span></p>"+
+                          "<span style='float:left;line-height: 35px;'>填写发货信息</span>"+
+                          "<input class='form-control xxb-input' type='text' ng-model='payMsg'>"+
+                          '<button type="button" class="mb-sm btn btn-warning" ng-click="sendPayMsg(\''+o+'\')" style="float:right;margin-top:30px;">确定</button>'+
+                      "</div>",
+            plain: true,
+            className: 'ngdialog-theme-default',
+            controller: 'payMsgController'
+        });
+      }
+      //noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
+}]);
+
+/**=========================================================
+ * payMsgController
+ * author: BGOnline
+ * version 1.0 2016-6-2
+ =========================================================*/
+ 
+App.controller('payMsgController', ['$scope', '$http', '$state', 'ngDialog',
+  function($scope, $http, $state, ngDialog) {
+      
+      errorJump($state);
+      
+      $scope.payMsg = '';
+      $scope.sendPayMsg = function(o) {
+          
+          if($scope.payMsg.trim()) {
+            $http
+            .post(''+url+'/list/goods_order_edit', {
+                token: sessionStorage.token, order_id: o, status: 3, pay_msg: $scope.payMsg
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                    getUserCommodityOrderListData();
+                }
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+            });
+          }else {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>请填写发货信息！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+          }
+          
+      }
+
+}]);
+
+
+
+/**=========================================================
  * welcomeController
  * author: BGOnline
  * version 1.0 2016-6-21
  =========================================================*/
-App.controller('welcomeController', ['$scope', function ($scope) {
+App.controller('welcomeController', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
     $scope.welcome = sessionStorage.branch_name;
+    if(localStorage.v == 'undefined' || localStorage.v == undefined) {
+        $rootScope.v = "v16.7.11.0.1beta";
+    }else {
+        $rootScope.v = localStorage.v;
+    }
 
 }]);
 

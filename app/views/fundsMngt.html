@@ -1,0 +1,80 @@
+<h3>资金管理</h3>
+<div class="panel panel-default" style="padding: 15px;border: none;" ng-controller="fundsMngtController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    可用学习币
+    <p class="xxb" style="padding: 20px 0;">
+        <span style="font-size: 1.5em;vertical-align: bottom;">{{admin.xxb}}个</span>
+        <button type="button" class="btn btn-warning" style="padding: 4px 12px;margin-left: 20px;border-radius: 0;" ng-click="showWithdrawWin()">提现</button>
+    </p>
+    时间：
+    <input placeholder="点击开始时间" class="form-control" type="text" id="start" style="border-radius: 0px;display: inline-block;width: 150px;padding: 5px;height: 30px;" ng-click="showStartData()">
+    -
+    <input placeholder="点击结束时间" class="form-control" type="text" id="end" style="border-radius: 0px;display: inline-block;width: 150px;padding: 5px;height: 30px;" ng-click="showEndData();">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    最近：
+    <span class="label label-default packageRadio" ng-click="selectpRadio($index, p.attr_id)" style="padding:6px;margin-right:5px;cursor:pointer;">1星期</span>
+    <span class="label label-default packageRadio" ng-click="selectpRadio($index, p.attr_id)" style="padding:6px;margin-right:5px;cursor:pointer;">1个月</span>
+    <span class="label label-default packageRadio" ng-click="selectpRadio($index, p.attr_id)" style="padding:6px;margin-right:5px;cursor:pointer;">6个月</span>
+    <p style="padding: 6px 12px;margin-top: 20px;background-color: #F1F2F4;">交易记录</p>
+    <div class="table-responsive shoppingCartTable">
+        <table id="table-ext-1" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th style="width:15%;">流水号</th>
+                    <th style="width:15%;">日期</th>
+                    <th style="width:15%;">金额</th>
+                    <th style="width:15%;">备注</th>
+                    <th style="width:10%;">状态</th>
+                    <th style="width:15%;">详情</th>
+                    <th style="width:15%;position:relative">
+                        {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有'}}
+                        <i class="fa fa-angle-down downListIco"></i>
+                        <ul class="downList clearfix">
+                            <li ng-click="downSValue('')">所有</li>
+                            <li ng-click="downSValue(s.value, s.text)" name="{{s.value}}" ng-repeat="s in types" ng-bind="s.text"></li>
+                        </ul>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td ng-class="ONullType" colspan="7">暂无数据</td>
+                </tr>
+                <tr ng-repeat="o in reList">
+                    <td ng-bind="o.xxbwithdrawsn"></td>
+                    <td ng-bind="payTime(o)"></td>
+                    <td ng-bind='o.xxb'></td>
+                    <td ng-bind="o.msg"></td>
+                    <td><div class="label" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
+                    <td ng-bind="o.pay_msg"></td>
+                    <td>
+                        <p class="statusAction" ng-if="orderStatusText(o) == '已支付'">
+                            <a href="" ng-click="cancelOrder(o.orderid)">取消订单</a>
+                            <a href="" ng-click="sendCommodity(o.goods_name, o.orderid)">发货</a>
+                        </p>
+                        <p class="statusAction" ng-if="orderStatusText(o) == '已取消' || orderStatusText(o) == '已完成' || orderStatusText(o) == '未支付'">
+                            <span class="noAction">不可操作</span>
+                        </p>
+                        <p class="statusAction" ng-if="orderStatusText(o) == '配送中'">
+                            <span>等待确认收货</span>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="page-td" colspan="7">
+                        <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" first-text="首页" last-text="尾页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

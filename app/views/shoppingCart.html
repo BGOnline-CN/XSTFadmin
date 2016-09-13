@@ -35,7 +35,7 @@
                             </li>
                         </ul>
                         <p class="control">
-                            <span ng-click="showEditAddress()">修改</span>
+                            <!--<span ng-click="showEditAddress()">修改</span>-->
                         </p>
                     </div>
                 </div>
@@ -113,9 +113,9 @@
                                     </td>
                                     <td ng-bind='o.attr_price+"学习币"'></td>
                                     <td>
-                                        <button class='btn btn-default' ng-click='increaseQ(o.cart_id, o.attr_num, o.attr_price, isSelected(o.cart_id), $event)'><i class='fa fa-plus'></i></button>
+                                        <button type="button" class='btn btn-default' ng-click='increaseQ(o.cart_id, o.attr_num, o.attr_price, isSelected(o.cart_id), $event)'>+</button>
                                         <span style='width: 50px;display: inline-block;' ng-bind='o.attr_num'></span>
-                                        <button class='btn btn-default' ng-click='reduceQ(o.cart_id, o.attr_num, o.attr_price, isSelected(o.cart_id), $event)'><i class='fa fa-minus'></i></button>
+                                        <button type="button" class='btn btn-default' ng-click='reduceQ(o.cart_id, o.attr_num, o.attr_price, isSelected(o.cart_id), $event)'>-</button>
                                     </td>
                                     <td ng-bind='o.attr_price*o.attr_num+"学习币"'></td>
                                     <td>
@@ -134,7 +134,7 @@
                                         <!--<p>运费： <span>0学习币</span></p>
                                         <p>优惠： <span>0学习币</span></p>-->
                                         <p style="font-size: 1.1em;">实付： <span class="font-warning">{{priceCunt}}学习币</span></p>
-                                        <button class="btn btn-warning" style="margin: 15px 0;" ng-click="placeOrder($event)">提交订单</button>
+                                        <button type="button" class="btn btn-warning" style="margin: 15px 0;" ng-click="placeOrder($event)">提交订单</button>
                                     </td>
                                 </tr>
                             </tfoot>

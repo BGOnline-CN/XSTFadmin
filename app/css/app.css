@@ -8061,7 +8061,7 @@ ul[rn-carousel] {
 }
 .c-checkbox input[type=radio]:checked + span:before,
 .c-radio input[type=radio]:checked + span:before {
-  color: #5d9cec;
+  color: #FF881C;
 }
 .c-checkbox input[type=checkbox]:disabled + span,
 .c-radio input[type=checkbox]:disabled + span,
@@ -12049,4 +12049,36 @@ flatdoc .button .badge {
 }
 .shoppingCartTable > .table-bordered > tfoot > tr > td.right-area span.font-warning {
   color: #ff902b;
+}
+.orderScussBox {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #fff;
+}
+.orderScussBox > span.orderTypeText {
+  font-weight: bold;
+}
+.orderScussBox > span.orderTypeText > i {
+  margin-right: 5px;
+  font-size: 18px;
+}
+.orderScussBox > p.info-top-border {
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  margin-top: 15px;
+}
+.orderScussBox > p.info-top-border > a {
+  float: right;
+}
+.orderScussBox > p.info-bottom-border {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.orderScussBox > p.info-bottom-border > span{
+  color: #FF902B;
+}
+.orderScussBox > div.payment > div.radio {
+  margin: 15px 0;
 }
