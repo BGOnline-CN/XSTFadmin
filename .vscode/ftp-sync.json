@@ -1,6 +1,6 @@
 {
-    "remotePath": "/Fadmin/",
-    "host": "192.168.1.200",
+    "remotePath": "/home/workplace/www/201604xiaoshutong/",
+    "host": "http://testketangwai.thinktorch.cn/",
     "username": "liaobin",
     "password": "123456",
     "port": 21,
