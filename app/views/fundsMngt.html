@@ -15,15 +15,16 @@
         <span style="font-size: 1.5em;vertical-align: bottom;">{{admin.xxb}}个</span>
         <button type="button" class="btn btn-warning" style="padding: 4px 12px;margin-left: 20px;border-radius: 0;" ng-click="showWithdrawWin()">提现</button>
     </p>
-    时间：
+    <!--时间：
     <input placeholder="点击开始时间" class="form-control" type="text" id="start" style="border-radius: 0px;display: inline-block;width: 150px;padding: 5px;height: 30px;" ng-click="showStartData()">
     -
     <input placeholder="点击结束时间" class="form-control" type="text" id="end" style="border-radius: 0px;display: inline-block;width: 150px;padding: 5px;height: 30px;" ng-click="showEndData();">
-    &nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;-->
     最近：
-    <span class="label label-default packageRadio" ng-click="selectpRadio($index, p.attr_id)" style="padding:6px;margin-right:5px;cursor:pointer;">1星期</span>
-    <span class="label label-default packageRadio" ng-click="selectpRadio($index, p.attr_id)" style="padding:6px;margin-right:5px;cursor:pointer;">1个月</span>
-    <span class="label label-default packageRadio" ng-click="selectpRadio($index, p.attr_id)" style="padding:6px;margin-right:5px;cursor:pointer;">6个月</span>
+    <span class="label label-default packageRadio" ng-click="selectpRadio(0, '')" style="padding:6px;margin-right:5px;cursor:pointer;">全部</span>
+    <span class="label label-default packageRadio" ng-click="selectpRadio(1, 'a')" style="padding:6px;margin-right:5px;cursor:pointer;">1星期</span>
+    <span class="label label-default packageRadio" ng-click="selectpRadio(2, 'b')" style="padding:6px;margin-right:5px;cursor:pointer;">1个月</span>
+    <span class="label label-default packageRadio" ng-click="selectpRadio(3, 'c')" style="padding:6px;margin-right:5px;cursor:pointer;">3个月</span>
     <p style="padding: 6px 12px;margin-top: 20px;background-color: #F1F2F4;">交易记录</p>
     <div class="table-responsive shoppingCartTable">
         <table id="table-ext-1" class="table table-bordered table-hover">
@@ -57,15 +58,12 @@
                     <td><div class="label" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
                     <td ng-bind="o.pay_msg"></td>
                     <td>
-                        <p class="statusAction" ng-if="orderStatusText(o) == '已支付'">
-                            <a href="" ng-click="cancelOrder(o.orderid)">取消订单</a>
-                            <a href="" ng-click="sendCommodity(o.goods_name, o.orderid)">发货</a>
-                        </p>
-                        <p class="statusAction" ng-if="orderStatusText(o) == '已取消' || orderStatusText(o) == '已完成' || orderStatusText(o) == '未支付'">
+                        <p class="statusAction" ng-if="orderStatusText(o) == '待审核'">
                             <span class="noAction">不可操作</span>
+                            <!--<a href="" ng-click="cancelOrder(o.orderid)">取消提现</a>-->
                         </p>
-                        <p class="statusAction" ng-if="orderStatusText(o) == '配送中'">
-                            <span>等待确认收货</span>
+                        <p class="statusAction" ng-if="orderStatusText(o) == '提交失败' || orderStatusText(o) == '提现成功'">
+                            <span class="noAction">不可操作</span>
                         </p>
                     </td>
                 </tr>

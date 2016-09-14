@@ -10,12 +10,12 @@ if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript 
 
 
 // 全局
-// var url = 'http://xiaoshutong.thinktorch.cn/frontend/web'; // API
-// var rootUrl = 'http://xiaoshutong.thinktorch.cn';
+var url = 'http://xiaoshutong.thinktorch.cn/frontend/web'; // API
+var rootUrl = 'http://xiaoshutong.thinktorch.cn';
 // var url = 'http://192.168.1.200/xst/frontend/web'; // API
 // var rootUrl = 'http://192.168.1.200/xst';
-var url = 'http://testketangwai.thinktorch.cn/frontend/web'; // API
-var rootUrl = 'http://testketangwai.thinktorch.cn/';
+// var url = 'http://testketangwai.thinktorch.cn/frontend/web'; // API
+// var rootUrl = 'http://testketangwai.thinktorch.cn/';
 var noF5speed = 5; // 无刷新获取数据的速度 秒
 var noF5Timer; // 无刷新计时器下标
 var getDataSpeed = 1000 * noF5speed; // 无刷新获取数据的速度
@@ -5972,15 +5972,11 @@ App.controller('fundsMngtController', ['$scope', '$rootScope', '$http', '$filter
 
       $scope.selectValue = sessionStorage.orderText;
       $scope.downSValue = function(value, text) {
-          sessionStorage.setItem('orderState', value);
+          sessionStorage.setItem('XXBreState', value);
           sessionStorage.setItem('orderText', text);
           getXXBreData();
           $scope.selectValue = text;
           $('.downList').css({'visibility':'hidden'});
-      }
-
-      $scope.showRechargeTime = function(t) {
-          getXXBreData('', t, '');
       }
 
       $('.downListIco').click(function() {
@@ -5991,12 +5987,20 @@ App.controller('fundsMngtController', ['$scope', '$rootScope', '$http', '$filter
           }
       })
 
-      getXXBreData = function() {
+      $('.packageRadio').eq(0).addClass('label-warning');
+      $scope.selectpRadio = function(_index, selectTime) {
+        $('.packageRadio').removeClass('label-warning');
+        $('.packageRadio').eq(_index).addClass('label-warning');
+        getXXBreData(selectTime);
+      }
+
+      getXXBreData = function(selectTime) {
         
          $http // 获取提现记录
             .post(''+url+'/user/apply_list', {
                 token: sessionStorage.token,
-                status: sessionStorage.cOrderState
+                status: sessionStorage.XXBreState,
+                time: selectTime
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
@@ -6019,40 +6023,40 @@ App.controller('fundsMngtController', ['$scope', '$rootScope', '$http', '$filter
       
       getXXBreData();
 
-      var launchStartDatas,launchEndDatas;
-      var start = {
-        elem: '#start',
-        format: 'YYYY/MM/DD',
-        min: laydate.now(), //设定最小日期为当前日期
-        max: '2099-06-16', //最大日期
-        istime: true,
-        istoday: false,
-        choose: function(datas){
-            end.min = datas; //开始日选好后，重置结束日的最小日期
-            end.start = datas //将结束日的初始值设定为开始日
-            launchStartDatas = datas;
-        }
-      };
-      var end = {
-        elem: '#end',
-        format: 'YYYY/MM/DD',
-        min: laydate.now(),
-        max: '2099-06-16',
-        istime: true,
-        istoday: false,
-        choose: function(datas){
-            start.max = datas; //结束日选好后，重置开始日的最大日期
-            launchEndDatas = datas;
-        }
-      };
+    //   var launchStartDatas,launchEndDatas;
+    //   var start = {
+    //     elem: '#start',
+    //     format: 'YYYY/MM/DD',
+    //     min: laydate.now(), //设定最小日期为当前日期
+    //     max: '2099-06-16', //最大日期
+    //     istime: true,
+    //     istoday: false,
+    //     choose: function(datas){
+    //         end.min = datas; //开始日选好后，重置结束日的最小日期
+    //         end.start = datas //将结束日的初始值设定为开始日
+    //         launchStartDatas = datas;
+    //     }
+    //   };
+    //   var end = {
+    //     elem: '#end',
+    //     format: 'YYYY/MM/DD',
+    //     min: laydate.now(),
+    //     max: '2099-06-16',
+    //     istime: true,
+    //     istoday: false,
+    //     choose: function(datas){
+    //         start.max = datas; //结束日选好后，重置开始日的最大日期
+    //         launchEndDatas = datas;
+    //     }
+    //   };
     
-      $scope.showStartData = function() {
-        laydate(start);
-      }
+    //   $scope.showStartData = function() {
+    //     laydate(start);
+    //   }
 
-      $scope.showEndData = function() {
-        laydate(end);
-      }
+    //   $scope.showEndData = function() {
+    //     laydate(end);
+    //   }
 
       $scope.payTime = function(o) {
           return localData = new Date(parseInt(o.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
@@ -6898,7 +6902,7 @@ App.controller('userCommodityOrderController', ['$scope', '$sce', '$rootScope', 
                 p: cp, 
                 search: sessionStorage.CSOLValue != undefined && sessionStorage.CSOLValue != 'undefined' ? sessionStorage.CSOLValue : '', 
                 time: t, 
-                status: sessionStorage.cOrderState
+                status: sessionStorage.ucOrderState
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -6976,10 +6980,10 @@ App.controller('userCommodityOrderController', ['$scope', '$sce', '$rootScope', 
           getUserCommodityOrderListData();
       }
 
-      $scope.selectValue = sessionStorage.cOrderText;
+      $scope.selectValue = sessionStorage.ucOrderText;
       $scope.downSValue = function(value, text) {
-          sessionStorage.setItem('cOrderState', value);
-          sessionStorage.setItem('cOrderText', text);
+          sessionStorage.setItem('ucOrderState', value);
+          sessionStorage.setItem('ucOrderText', text);
           getUserCommodityOrderListData();
           $scope.selectValue = text;
           $('.downList').css({'visibility':'hidden'});

@@ -48,7 +48,8 @@
                 <tr>
                     <th style="width:15%;">订单号</th>
                     <th style="width:25%;">所购商品</th>
-                    <th style="width:15%;">订单金额</th>
+                    <th style="width:8%;">订单金额</th>
+                    <th style="width:12%;">备注</th>
                     <th style="width:15%;">下单时间</th>
                     <th style="width:15%;position:relative">
                         {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有'}}
@@ -58,12 +59,12 @@
                             <li ng-click="downSValue(s.value, s.text)" name="{{s.value}}" ng-repeat="s in types" ng-bind="s.text"></li>
                         </ul>
                     </th>
-                    <th style="width:15%;">操作</th>
+                    <th style="width:10%;">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td ng-class="ONullType" colspan="6">暂无数据</td>
+                    <td ng-class="ONullType" colspan="7">暂无数据</td>
                 </tr>
                 <tr ng-repeat="o in commodityOrderData">
                     <td ng-bind="o.orderid"></td>
@@ -74,7 +75,8 @@
                             <span ng-bind="x.attr_name+'：'+x.num+'*'+x.attr_price+'元'" style="font-size:12px;color:#555;"></span>
                         </p>
                     </td>
-                    <td ng-bind='o.total_price'></td>
+                    <td ng-bind=''></td>
+                    <td ng-bind='o.phone'></td>
                     <td ng-bind="payTime(o)"></td>
                     <td><div class="label status" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
                     <td>
@@ -83,18 +85,20 @@
                         </p>
                         <p class="statusAction" ng-if="orderStatusText(o) == '未支付'">
                             <a href="#">立即支付</a>
-                            <a href="#">取消订单</a>
+                        </p>
+                        <p class="statusAction" ng-if="orderStatusText(o) == '已支付'">
+                            <span>等待配送</span>
                         </p>
                         <p class="statusAction" ng-if="orderStatusText(o) == '已取消' || orderStatusText(o) == '已完成'">
                             <span class="noAction">不可操作</span>
                         </p>
                         <p class="statusAction" ng-if="orderStatusText(o) == '线下支付待审核'">
-                            <a href="#">取消订单</a>
+                            <span class="noAction">不可操作</span>
                         </p>
                     </td>
                 </tr>
                 <tr>
-                    <td class="page-td" colspan="6">
+                    <td class="page-td" colspan="7">
                         <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" first-text="首页" last-text="尾页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
                     </td>
                 </tr>

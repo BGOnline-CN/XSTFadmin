@@ -51,7 +51,7 @@
                     <th style="width:8%;">购买人</th>
                     <th style="width:10%;">电话</th>
                     <th style="width:5%;">单价</th>
-                    <th style="width:17%;">消费/支付方式</th>
+                    <th style="width:15%;">消费/支付方式</th>
                     <th style="width:13%;">下单时间</th>
                     <th style="width:7%;position:relative">
                         {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有'}}
@@ -61,7 +61,7 @@
                             <li ng-click="downSValue(s.value, s.text)" name="{{s.value}}" ng-repeat="s in types" ng-bind="s.text"></li>
                         </ul>
                     </th>
-                    <th style="width:10%;">操作</th>
+                    <th style="width:12%;">操作</th>
                 </tr>
             </thead>
             <tbody>

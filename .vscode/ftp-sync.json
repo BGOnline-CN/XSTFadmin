@@ -1,11 +1,11 @@
 {
-    "remotePath": "/home/workplace/www/201609testketangwai/Fadmin/",
+    "remotePath": "/home/workplace/www/201604xiaoshutong/Fadmin",
     "host": "211.149.218.116",
     "username": "liaobin",
     "password": "123456",
     "port": 21,
     "protocol": "ftp",
-    "uploadOnSave": true,
+    "uploadOnSave": false,
     "passive": false,
     "debug": false,
     "privateKeyPath": null,
