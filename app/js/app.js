@@ -6571,7 +6571,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                     //     }
                     // );           
                 })
-            })('v16.9.12.0.4beta');
+            })('v16.9.14.0.1beta');
       }catch (e){
           console.log('该浏览器不支持websql，无法使用版本说明功能！');
           return;
