@@ -2184,6 +2184,13 @@ App.controller('ZHCommodityController', ['$scope', '$rootScope', '$http', '$filt
           }
       })
 
+
+      $scope.showZHCDetails = function(goods_name, supplies_goods_id, sname) {
+          sessionStorage.setItem('goods_name', goods_name);
+          sessionStorage.setItem('supplies_goods_id', supplies_goods_id);
+          sessionStorage.setItem('sname', sname);
+      }
+
       var ZHCourseArr = new Array();
       $scope.addZHCourse = function() { // 添加总部课程
           $('.btn').addClass('disabled');
