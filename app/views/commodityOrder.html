@@ -83,10 +83,10 @@
                     <td><div class="label status" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
                     <td>
                         <p class="statusAction" ng-if="orderStatusText(o) == '配送中'">
-                            <span>商品配送中</span>
+                            <a ng-click="confirmReceipt(o.orderid)">确认收货</a>
                         </p>
                         <p class="statusAction" ng-if="orderStatusText(o) == '未支付'">
-                            <a ui-sref="app.payment" ng-click="pay(o.orderid)">立即支付</a>
+                            <a ui-sref="app.payment" ng-click="pay(o.orderid, o.total_price)">立即支付</a>
                         </p>
                         <p class="statusAction" ng-if="orderStatusText(o) == '已支付'">
                             <span>等待配送</span>

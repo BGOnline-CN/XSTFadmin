@@ -2594,6 +2594,7 @@ App.controller('shoppingCartController', ['$scope', '$rootScope', '$http', '$fil
                     if ( response.data.code != 200 ) {
                         requestError(response, $state, ngDialog);
                     }else { 
+                        sessionStorage.setItem('oPrice', $scope.priceCunt);
                         sessionStorage.setItem('order_id', response.data.data.orderid);
                         $state.go('app.payment');
                     }
@@ -2634,7 +2635,7 @@ App.controller('paymentController', ['$scope', '$http', '$filter', '$state', 'ng
       errorJump($state);
       $scope.payment = 2;
       $scope.address = sessionStorage.branch_area.split(',');
-      
+      $scope.oPrice = sessionStorage.oPrice;
       var getAddress = function() {
           $http
             .post(''+url+'/public/getareaall', {
@@ -6848,11 +6849,10 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
       $scope.confirmReceipt = function(orderid) { //确认收货
           if(confirm('请确认商品已经送达！')) {
             $http
-              .post(''+url+'/list/goods_order_edit', {
-                  token: sessionStorage.token, status: 4, order_id: orderid
+              .post(''+url+'/suppliesorder/confirm', {
+                  token: sessionStorage.token, order_id: orderid
               })
               .then(function(response) {
-                  listLoading.css({'display':'none'});
                   if ( response.data.code != 200 ) {
                       requestError(response, $state, ngDialog);
                   }
@@ -6865,7 +6865,6 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
                     getCommodityOrderListData();
                 }
               }, function(x) { 
-                  listLoading.css({'display':'none'});
                   ngDialog.open({
                     template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                     plain: true,
@@ -6883,8 +6882,9 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
           message: ''
       }
       
-      $scope.pay = function(oid) {
-          sessionStorage.setItem('order_id', oid);
+      $scope.pay = function(o, p) {
+          sessionStorage.setItem('order_id', o);
+          sessionStorage.setItem('oPrice', p);
       }
 
       
