@@ -12082,3 +12082,9 @@ flatdoc .button .badge {
 .orderScussBox > div.payment > div.radio {
   margin: 15px 0;
 }
+.orderBorderBottom {
+  border-bottom: 1px solid #eee;
+}
+.orderBorderBottom:last-child {
+  border: 0;
+}

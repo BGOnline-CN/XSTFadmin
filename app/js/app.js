@@ -5935,9 +5935,9 @@ App.controller('fundsMngtController', ['$scope', '$rootScope', '$http', '$filter
       
       $scope.types = [
         //   {value: 0, class: 'label-default', text: '已取消'},
-          {value: 1, class: 'label-danger', text: '待审核'},
-          {value: 2, class: 'label-success', text: '提交失败'},
-          {value: 3, class: 'label-success', text: '提现成功'},
+          {value: 1, class: 'label-warning', text: '待审核'},
+          {value: 3, class: 'label-danger', text: '提交失败'},
+          {value: 2, class: 'label-success', text: '提现成功'},
       ];
       
       $scope.pageChanged = function() {
@@ -6874,7 +6874,18 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
               });
           }
       }
+
+      $scope.envelope = {
+          send_area: sessionStorage.branch_area,
+          addressee: sessionStorage.branch_principal,
+          address: sessionStorage.branch_address,
+          phone: sessionStorage.branch_tel,
+          message: ''
+      }
       
+      $scope.pay = function(oid) {
+          sessionStorage.setItem('order_id', oid);
+      }
 
       
       //noRefreshGetData(getUserData, getDataSpeed);
