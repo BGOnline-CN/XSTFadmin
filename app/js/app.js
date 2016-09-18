@@ -1491,7 +1491,7 @@ App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filte
       errorJump($state);
       var listLoading = $('.list-loading');
       
-      getNoticeData = function(sortid, cp) { // 获取文章
+      getNoticeData = function(cp) { // 获取文章
         
           cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
           
@@ -1499,7 +1499,7 @@ App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filte
           $scope.sname = sessionStorage.sname;
           $http
             .post(''+url+'/faq/index', {
-                token: sessionStorage.token, p: cp, sortid: sortid
+                token: sessionStorage.token, p: cp, sortid: sessionStorage.sortid
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -1522,10 +1522,10 @@ App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filte
             });
       };
       
-      getNoticeData(sessionStorage.sortid);
+      getNoticeData();
       
       $scope.pageChanged = function() {
-          getNoticeData(sessionStorage.sortid, $scope.currentPage - 1);
+          getNoticeData($scope.currentPage - 1);
       };
       $scope.maxSize = 5; // 最多显示5页
       
@@ -1545,141 +1545,6 @@ App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filte
             $('.courseAction').eq(i).css({'visibility':'hidden'});
           }
       })
-      
-      // $scope.rClassName = function() {
-      //     $('.class-name').html("<input class='form-control ng-touched rcName' type='text' value='"+sessionStorage.sname+"'>");
-      //     $('.rcName').focus();
-      // }
-      
-      // $(document).on('blur', '.rcName', function() { // 修改分类名称
-      //     var changeSname = $(this).val();
-      //     $http
-      //       .post(''+url+'/sort/edit', {
-      //           token: sessionStorage.token, sortid: sessionStorage.sortid, sname: changeSname
-      //       })
-      //       .then(function(response) {
-      //           if ( response.data.code != 200 ) {
-      //               requestError(response, $state, ngDialog);
-      //           }
-      //           else{ 
-      //               ngDialog.open({
-      //                 template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-      //                 plain: true,
-      //                 className: 'ngdialog-theme-default'
-      //               });
-      //               $('.class-name').html(changeSname);
-      //               sessionStorage.setItem('sname', changeSname); 
-      //               getCourseClass();
-      //           }
-      //           ngDialog.close();
-      //       }, function(x) { 
-      //           ngDialog.open({
-      //             template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-      //             plain: true,
-      //             className: 'ngdialog-theme-default'
-      //           });
-      //           ngDialog.close();
-      //       });
-      // })
-      
-      
-      // var courseArr = new Array();
-      // $scope.goStartClass = function(sortid, sname) { // 移动课程
-      //     sessionStorage.setItem('sname', sname);
-      //     courseArr = [];
-      //     var ccbBg =  $('.ccb-bg');
-      //     for(var i = 0; i < $scope.showTotalItems; i++) {
-      //         if(ccbBg.eq(i).is(':checked')) {
-      //           courseArr.push(ccbBg.eq(i).attr('name'));
-      //         }
-      //     }
-          
-      //     if(courseArr.length > 0) {
-      //         listLoading.css({'display':'block'});
-      //         $http
-      //           .post(''+url+'/course/move_course', {
-      //               token: sessionStorage.token, sortid: sortid, courseid: courseArr.join(",")
-      //           })
-      //           .then(function(response) {
-      //               listLoading.css({'display':'none'});
-      //               if ( response.data.code != 200 ) {
-      //                   requestError(response, $state, ngDialog);
-      //               }
-      //               else{ 
-      //                   getNoticeData(sortid);
-      //                   getCourseClass();
-      //                   $('.class-name').html(sname);
-      //                   ngDialog.open({
-      //                     template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-      //                     plain: true,
-      //                     className: 'ngdialog-theme-default'
-      //                   });
-      //                   ngDialog.close();
-      //               }
-      //           }, function(x) { 
-      //               listLoading.css({'display':'none'});
-      //               ngDialog.open({
-      //                 template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-      //                 plain: true,
-      //                 className: 'ngdialog-theme-default'
-      //               });
-      //               ngDialog.close();
-      //           });
-      //     }else {
-      //         ngDialog.open({
-      //           template: "<p style='text-align:center;margin: 0;'>未选择课程！</p>",
-      //           plain: true,
-      //           className: 'ngdialog-theme-default'
-      //         });
-      //         ngDialog.close();
-      //     }
-          
-      // }
-      
-      // $scope.dClassName = function() { // 删除分类
-      //     if($scope.showTotalItems <= 0) {
-      //         if(confirm("确定要删除分类吗？")) {
-      //             listLoading.css({'display':'block'});
-      //             $http
-      //               .post(''+url+'/sort/del', {
-      //                   token: sessionStorage.token, sortid: sessionStorage.sortid
-      //               })
-      //               .then(function(response) {
-      //                   listLoading.css({'display':'none'});
-      //                   if ( response.data.code != 200 ) {
-      //                       requestError(response, $state, ngDialog);
-      //                       $('.rdClassNameBtn').removeClass('open');
-      //                   }
-      //                   else{ 
-      //                       sessionStorage.setItem('sortid', 0);
-      //                       sessionStorage.setItem('sname', undefined);
-      //                       $('.class-name').html('全部课程');
-      //                       getCourseData();
-      //                       getCourseClass();
-      //                       $('.rdClassNameBtn').removeClass('open');
-      //                       ngDialog.close();
-      //                   }
-      //               }, function(x) { 
-      //                   listLoading.css({'display':'none'});
-      //                   ngDialog.open({
-      //                     template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-      //                     plain: true,
-      //                     className: 'ngdialog-theme-default'
-      //                   });
-      //                   $('.rdClassNameBtn').removeClass('open');
-      //                   ngDialog.close();
-      //               });
-      //         }
-      //     }else {
-      //         ngDialog.open({
-      //           template: "<p style='text-align:center;margin: 0;'>分类下存在课程不允许删除！</p>",
-      //           plain: true,
-      //           className: 'ngdialog-theme-default'
-      //         });
-      //         ngDialog.close();
-      //     }
-      // }
-      
       
       $scope.removeCourse = function(i) { // 删除文章
           if(confirm("确定要删除文章吗？")) {
