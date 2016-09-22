@@ -6405,14 +6405,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                                 ngDialog.open({
                                     template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>版本更新说明</p>"+
                                                 "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                                                    "<p style='margin-bottom:20px;'>1：分校可以自营商品啦！</p>"+
-                                                    "<p style='margin-bottom:20px;'>2：新增分校能够购买总校物资的功能。</p>"+
-                                                    "<p style='margin-bottom:20px;'>3：新增物资订单功能。</p>"+
-                                                    "<p style='margin-bottom:20px;'>4：新增资金流向管理。</p>"+
-                                                    "<p style='margin-bottom:20px;'>5：分校资金可以提现啦！</p>"+
-                                                    "<p style='margin-bottom:20px;'>6：优化了若干影响用户体验的细节。</p>"+
-                                                    "<p style='margin-bottom:20px;'>7：新增了版本更新说明。</p>"+
-                                                    "<p style='margin-bottom:20px;'>8：修复了若干bug。</p>"+
+                                                    "<p style='margin-bottom:20px;'>1：修复课程管理切换分类无数据的bug！</p>"+
                                                 "</div>",
                                     plain: true,
                                     className: 'ngdialog-theme-default'
@@ -6437,7 +6430,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                     //     }
                     // );           
                 })
-            })('v16.9.17.0.1beta');
+            })('v16.9.22.0.1beta');
       }catch (e){
           console.log('该浏览器不支持websql，无法使用版本说明功能！');
           return;
