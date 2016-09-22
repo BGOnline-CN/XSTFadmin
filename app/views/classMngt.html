@@ -1,0 +1,62 @@
+<h3>班级管理</h3>
+<div class="clearfix" ng-controller="classMngtController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <h4 class="page-header courseTitle">
+        以下为所有班级列表
+    </h4>
+    <div class="courseDetails-div atTheDetails-div">
+        <tabset>
+            <tab heading="班级列表">
+                <!--<p class="cdd-title">
+                    班级列表
+                    <button class="btn btn-default addCourseBtn" type="button" ng-click="goAddBanji(0)"><i class="fa fa-plus addCourseFa"></i>添加</button>   
+                </p>-->
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width:13%;">班级</th>
+                                <th style="width:12%;">招收人数</th>
+                                <th style="width:10%;">当前学生</th>
+                                <th style="width:15%;">老师</th>
+                                <th style="width:15%;">开班日期</th>
+                                <th style="width:15%;">结班日期</th>
+                                <th style="width:10%;">状态</th>
+                                <th style="width:10%;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="x in classData" ng-if="x.class.length > 0">
+                            <tr>
+                                <td colspan="7" ng-bind="x.course_name" style="background-color:#eee;color:#aaa;font-size:0.9em;"></td>
+                                <td style="background-color:#eee;color:#aaa;font-size:0.9em;">
+                                    <a ui-sref="app.courseDetails" ng-click="showCDetails(x.course_name,x.courseid,x.sname)">进入课程</a>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="t in x.class">
+                                <td>{{t.class_name}}</td>
+                                <td>{{t.class_quantity}}</td>
+                                <td>
+                                    {{t.student_num+'人'}}
+                                </td>
+                                <td><span ng-repeat="o in t.teacher" style="margin-right: 5px;">{{o}}</span></td>
+                                <td>{{t.class_table.split(",")[0]}}</td>
+                                <td>{{t.class_table.split(",")[t.class_table.split(",").length-1]}}</td>
+                                <td><div class="label label-success">进行中</div></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

@@ -123,6 +123,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('courseMngt.html'),
         resolve: helper.resolveFor('spinkit')
     })
+    .state('app.classMngt', {
+        url: '/classMngt',
+        title: '班级管理',
+        templateUrl: helper.basepath('classMngt.html'),
+        resolve: helper.resolveFor('spinkit')
+    })
     .state('app.commodityMngt', {
         url: '/commodityMngt',
         title: '商品管理',
@@ -2922,6 +2928,59 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
       }
       
 }]);
+
+
+
+
+
+/**=========================================================
+ * classMngtController
+ * author: BGOnline
+ * version 1.0 2016-3-18
+ =========================================================*/
+ 
+App.controller('classMngtController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+
+      var getClassData = function() {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/courseclass/get_class_list', {
+                token: sessionStorage.token, search: ''
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    $scope.classData = response.data.data; 
+                    $scope.classData.length > 0 ? $scope.CNullType = 'isNullTypeHidden' : $scope.CNullType = 'isNullTypeShow';
+                }
+                ngDialog.close();
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+            });
+      };
+
+      getClassData();
+      
+      $scope.showCDetails = function(tcourse_name, tcourseid, sname) {
+          sessionStorage.setItem('tcourse_name', tcourse_name);
+          sessionStorage.setItem('tcourseid', tcourseid);
+          sessionStorage.setItem('sname', sname);
+      }
+
+}]);
+
 
 
 /**=========================================================

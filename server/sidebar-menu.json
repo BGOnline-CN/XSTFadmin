@@ -17,6 +17,12 @@
     "translate": "sidebar.nav.COURSEMNGT"
   },
   {
+    "text": "班级管理",
+    "sref": "app.classMngt",
+    "icon": "fa fa-home",
+    "translate": "sidebar.nav.CLASSMNGT"
+  },
+  {
     "text": "商品管理",
     "sref": "app.commodityMngt",
     "icon": "fa fa-gift",
