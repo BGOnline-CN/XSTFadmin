@@ -16,6 +16,7 @@ var rootUrl = 'http://xiaoshutong.thinktorch.cn';
 // var rootUrl = 'http://192.168.1.200/xst';
 // var url = 'http://testketangwai.thinktorch.cn/frontend/web'; // API
 // var rootUrl = 'http://testketangwai.thinktorch.cn/';
+
 var noF5speed = 5; // 无刷新获取数据的速度 秒
 var noF5Timer; // 无刷新计时器下标
 var getDataSpeed = 1000 * noF5speed; // 无刷新获取数据的速度
@@ -765,7 +766,6 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
                 else{ 
                     $rootScope.courseClass = response.data.data;
                     judgeClassName();
-                    nowClassName(i);
                     if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) { 
                         $('.course').eq(0).addClass('coureColor');
                     }
@@ -785,7 +785,6 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           }
       });
       
-      //nowClassName();
       
       $scope.showCourse = function(sortid, sname, i) { // 展示 现在所在的 分类
           
@@ -1895,7 +1894,7 @@ App.controller('ZHCourseController', ['$scope', '$rootScope', '$http', '$filter'
       //getCourseData(sessionStorage.delClassNameLastSortid);
       
       $scope.pageChanged = function() {
-          getZHCourseData(sessionStorage.ZHsortid, $scope.currentPage - 1);
+          getZHCourseData($scope.currentPage - 1);
       };
       $scope.maxSize = 5; // 最多显示5页
       
