@@ -792,7 +792,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           sessionStorage.setItem('sname', sname);
           sessionStorage.setItem('sortid', sortid);
           // $('.class-name').html(sname);
-          getCourseData(sortid);
+          getCourseData();
           nowClassName(i+1);
           judgeClassName();
       }
