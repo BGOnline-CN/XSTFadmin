@@ -3013,6 +3013,7 @@ App.controller('noticeDetailsController', ['$scope', '$sce', '$rootScope', '$htt
                     $scope.summary = $scope.courseDetailsData.summary;
                     $scope.content = $sce.trustAsHtml($scope.courseDetailsData.content);
                     $scope.tcourse_img = rootUrl + $scope.courseDetailsData.img;
+                    $scope.NoticeUrl = $scope.courseDetailsData.url;
                     sessionStorage.setItem('sortid', $scope.courseDetailsData.sortid);
                 }
                 ngDialog.close();
@@ -4296,6 +4297,7 @@ App.controller('addNoticeController', ['$scope', '$http', '$filter', '$state', '
                               sortid: sessionStorage.sortid,
                               summary: $scope.addCourse.abstract,
                               content: content,
+                              url: $scope.addCourse.url,
                               img: sessionStorage.uploadCourseImgUrl,
                         })
                         .then(function(response) {
@@ -4347,6 +4349,7 @@ App.controller('addNoticeController', ['$scope', '$http', '$filter', '$state', '
                         $scope.courseDetailsData = response.data.data;
                         $scope.addCourse.courseName = $scope.courseDetailsData.title;
                         $scope.addCourse.abstract = $scope.courseDetailsData.summary;
+                        $scope.addCourse.url = $scope.courseDetailsData.url;
                         ifrCon = $scope.courseDetailsData.content;
                         $scope.img = rootUrl + $scope.courseDetailsData.img;
                         sessionStorage.setItem('detailCourseImg', $scope.courseDetailsData.img);
@@ -4399,6 +4402,7 @@ App.controller('addNoticeController', ['$scope', '$http', '$filter', '$state', '
                         title: $scope.addCourse.courseName, 
                         sortid: sessionStorage.sortid,
                         summary: $scope.addCourse.abstract,
+                        url: $scope.addCourse.url,
                         content: content,
                         img: sessionStorage.uploadCourseImgUrl ? sessionStorage.uploadCourseImgUrl : sessionStorage.detailCourseImg,
                     })
@@ -5613,21 +5617,16 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
                                           "<table class='table' id='comboTable'>"+
                                               "<thead>"+
                                                   "<tr>"+
-                                                      "<th style='width:30%;'>姓名</th>"+
-                                                      "<th style='width:50%;'>就读学校</th>"+
-                                                      "<th style='width:20%;'>操作</th>"+
+                                                      "<th style='width:20%;'>姓名</th>"+
+                                                      "<th style='width:15%;'>姓别</th>"+
+                                                      "<th style='width:25%;'>生日</th>"+
+                                                      "<th style='width:30%;'>就读学校</th>"+
+                                                      "<th style='width:10%;'>操作</th>"+
                                                   "</tr>"+
                                               "</thead>"+                                        
                                               "<tbody>"+
-                                                  // "<tr class='packageRow'>"+
-                                                  //     "<td><input class='form-control ng-touched comboInput name-input' type='text'></td>"+
-                                                  //     "<td><input class='form-control ng-touched comboInput school-input' type='text'></td>"+
-                                                  //     "<td>"+
-                                                  //         "<button type='button' class='btn btn-sm btn-danger comboAction deleteRow'><em class='fa fa-trash-o'></em></button>"+
-                                                  //     "</td>"+
-                                                  // "</tr>"+
                                                   "<tr>"+
-                                                      "<td colspan='3' class='addRow'>"+
+                                                      "<td colspan='5' class='addRow'>"+
                                                           "<button class='btn btn-default addCourseBtn' type='button' ng-click='addCombo()'><i class='fa fa-plus addCourseFa'></i>添加</button>"+
                                                       "</td>"+
                                                   "</tr>"+
@@ -5637,7 +5636,8 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
                               '<button type="button" class="mb-sm btn btn-warning" ng-click="addUInfo(\''+1 +'\')" style="float:right;margin-top:30px;">确认添加</button>'+
                           "</div>",
                 plain: true,
-                className: 'ngdialog-theme-default',
+                // className: 'ngdialog-theme-default',
+                width: '40%',
                 controller: 'addUserController'
               });
               break;
@@ -5656,21 +5656,25 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
                                           "<table class='table' id='comboTable'>"+
                                               "<thead>"+
                                                   "<tr>"+
-                                                      "<th style='width:30%;'>姓名</th>"+
-                                                      "<th style='width:50%;'>就读学校</th>"+
-                                                      "<th style='width:20%;'>操作</th>"+
+                                                      "<th style='width:20%;'>姓名</th>"+
+                                                      "<th style='width:15%;'>姓别</th>"+
+                                                      "<th style='width:25%;'>生日</th>"+
+                                                      "<th style='width:30%;'>就读学校</th>"+
+                                                      "<th style='width:10%;'>操作</th>"+
                                                   "</tr>"+
                                               "</thead>"+                                        
                                               "<tbody>"+
                                                   "<tr class='packageRow'>"+
                                                       "<td><input class='form-control ng-touched comboInput name-input' type='text'></td>"+
+                                                      "<td><input class='form-control ng-touched comboInput sex-input' type='text'></td>"+
+                                                      "<td><input class='form-control ng-touched comboInput birth-input' type='text'></td>"+
                                                       "<td><input class='form-control ng-touched comboInput school-input' type='text'></td>"+
                                                       "<td>"+
                                                           "<button type='button' class='btn btn-sm btn-danger comboAction deleteRow'><em class='fa fa-trash-o'></em></button>"+
                                                       "</td>"+
                                                   "</tr>"+
                                                   "<tr>"+
-                                                      "<td colspan='3' class='addRow'>"+
+                                                      "<td colspan='5' class='addRow'>"+
                                                           "<button class='btn btn-default addCourseBtn' type='button' ng-click='addCombo()'><i class='fa fa-plus addCourseFa'></i>添加</button>"+
                                                       "</td>"+
                                                   "</tr>"+
@@ -5680,7 +5684,8 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
                               '<button type="button" class="mb-sm btn btn-warning" ng-click="addUInfo(\''+1 +'\')" style="float:right;margin-top:30px;">确认添加</button>'+
                           "</div>",
                 plain: true,
-                className: 'ngdialog-theme-default',
+                // className: 'ngdialog-theme-default',
+                width: '40%',
                 controller: 'addUserController'
               });
               break;
@@ -6082,9 +6087,13 @@ App.controller('addUserController', ['$scope', '$http', '$state', 'ngDialog',
           var t1 = r.insertCell(0);
           var t2 = r.insertCell(1);
           var t3 = r.insertCell(2);
+          var t4 = r.insertCell(3);
+          var t5 = r.insertCell(4);
           t1.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
           t2.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
-          t3.innerHTML="<button type='button' class='btn btn-sm btn-danger comboAction deleteRow'><em class='fa fa-trash-o'></em></button>";
+          t3.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
+          t4.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
+          t5.innerHTML="<button type='button' class='btn btn-sm btn-danger comboAction deleteRow'><em class='fa fa-trash-o'></em></button>";
       }
       
       $scope.addCombo = (function() { // 执行添加

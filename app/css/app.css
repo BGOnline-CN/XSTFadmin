@@ -11209,13 +11209,13 @@ flatdoc .button .badge {
     height: 49px !important;
 }
 .noticeList > a {
-    height: 160px;
+    height: 250px;
 }
 .noticeList > a.dashed > img{
     margin: 30px auto;
 }
 .courseDesc {
-    height: 80px;
+    height: 40%;
     padding: 13px;
     border-bottom: 2px solid #DADADA;
     border-left: 1px solid #DADADA;
@@ -11314,7 +11314,7 @@ flatdoc .button .badge {
     position: relative;
 }
 .changeNoticeImg {
-    height: 100px;
+    height: 145px;
 }
 .changeImg img {
     width: 100%;
@@ -11471,7 +11471,7 @@ flatdoc .button .badge {
 }
 .noticePre {
   width: 280px;
-  height: 98px;
+  height: 160px;
   line-height: 98px;
 }
 .coverPreview > img {
