@@ -744,6 +744,14 @@ var errorJump = (function($state) {
 });
  
  
+/**
+ * 清空sessionStorage.uploadCourseImgUrl
+ */
+var clearUploadCourseImgUrl = (function() {
+    sessionStorage.removeItem('uploadCourseImgUrl');
+});
+
+
 
 /**=========================================================
  * courseClassController
@@ -3250,6 +3258,7 @@ App.controller('payLogController', ['$scope', '$sce', '$rootScope', '$http', '$f
 App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
     
+      clearUploadCourseImgUrl();
       errorJump($state);
       var listLoading = $('.list-loading');
       parseInt(sessionStorage.sortid) ? $scope.isSortid = false : $scope.isSortid = true;
@@ -3581,6 +3590,7 @@ App.controller('commodityDetailController', ['$scope', '$sce', '$rootScope', '$h
 App.controller('addCommodityController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
     
+      clearUploadCourseImgUrl();
       errorJump($state);
       var listLoading = $('.list-loading');
       parseInt(sessionStorage.sortid) ? $scope.isSortid = false : $scope.isSortid = true;
@@ -4171,6 +4181,7 @@ App.controller('addExplainController', ['$rootScope', '$sce', '$scope', '$http',
 App.controller('addNoticeController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
     
+      clearUploadCourseImgUrl();
       errorJump($state);
       var listLoading = $('.list-loading');
       parseInt(sessionStorage.sortid) ? $scope.isSortid = false : $scope.isSortid = true;
@@ -4567,6 +4578,7 @@ App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state',
 App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
       
+      clearUploadCourseImgUrl();
       errorJump($state);
 
       var uploader = $scope.uploader = new FileUploader({
