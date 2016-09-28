@@ -12088,3 +12088,9 @@ flatdoc .button .badge {
 .orderBorderBottom:last-child {
   border: 0;
 }
+.ngdialog.ngdialog-theme-default.ngdialog-content-45 .ngdialog-content {
+  width: 45%;
+}
+.laydate_body .laydate_y .laydate_yms ul li {
+  width: 59px !important;
+}

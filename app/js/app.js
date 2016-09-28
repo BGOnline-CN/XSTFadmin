@@ -5541,9 +5541,10 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
       
       errorJump($state);
       var listLoading = $('.list-loading');
-      
+
       getUsersData = function(cp, s) {
           listLoading.css({'display':'block'});
+          sessionStorage.setItem('cp', cp);
           $http // 用户列表
             .post(''+url+'/user/index', {
                 token: sessionStorage.token, p: cp, search: s
@@ -5580,6 +5581,7 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
       $scope.pageChanged = function() {
           getUsersData($scope.currentPage - 1);
       };
+
       $scope.maxSize = 5; // 最多显示5页
       
       $scope.showRechargeWin = function(uid, name, phone) {
@@ -5636,22 +5638,21 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
                               '<button type="button" class="mb-sm btn btn-warning" ng-click="addUInfo(\''+1 +'\')" style="float:right;margin-top:30px;">确认添加</button>'+
                           "</div>",
                 plain: true,
-                // className: 'ngdialog-theme-default',
-                width: '40%',
+                className: 'ngdialog-theme-default ngdialog-content-45',
                 controller: 'addUserController'
               });
               break;
-            case 2:
-              sessionStorage.setItem('addUserType', type);
+        }
+        
+      }
+
+
+      $scope.addUserStudent = function(type, userid, studentid, tname, sex, birthday, real_school) {
+        switch(type) {
+            case 1:
               ngDialog.open({
-                template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>添加用户</p>"+
+                template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>添加孩子</p>"+
                           "<div style='padding:10px 20px;width:100%;' class='clearfix'>"+
-                              "<p style='margin-bottom:20px;'><span>家长信息</span></p>"+
-                              "<p style='margin-bottom:20px;'>"+
-                                  "<span>手机号：<input class='form-control phone-input' style='display: inline-block;width: 120px;' type='text' maxlength='11'></span>"+
-                                  "<span style='margin-left:15px;'>密码：<input class='form-control password-input' style='display: inline-block;width: 120px;' type='text'></span>"+
-                              "</p>"+
-                              "<p style='margin-bottom:20px;'><span>孩子信息</span></p>"+
                               "<div class='table-responsive addCombo'>"+
                                           "<table class='table' id='comboTable'>"+
                                               "<thead>"+
@@ -5664,15 +5665,6 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
                                                   "</tr>"+
                                               "</thead>"+                                        
                                               "<tbody>"+
-                                                  "<tr class='packageRow'>"+
-                                                      "<td><input class='form-control ng-touched comboInput name-input' type='text'></td>"+
-                                                      "<td><input class='form-control ng-touched comboInput sex-input' type='text'></td>"+
-                                                      "<td><input class='form-control ng-touched comboInput birth-input' type='text'></td>"+
-                                                      "<td><input class='form-control ng-touched comboInput school-input' type='text'></td>"+
-                                                      "<td>"+
-                                                          "<button type='button' class='btn btn-sm btn-danger comboAction deleteRow'><em class='fa fa-trash-o'></em></button>"+
-                                                      "</td>"+
-                                                  "</tr>"+
                                                   "<tr>"+
                                                       "<td colspan='5' class='addRow'>"+
                                                           "<button class='btn btn-default addCourseBtn' type='button' ng-click='addCombo()'><i class='fa fa-plus addCourseFa'></i>添加</button>"+
@@ -5681,11 +5673,49 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
                                               "</tbody>"+
                                           "</table>"+
                                       "</div>"+
-                              '<button type="button" class="mb-sm btn btn-warning" ng-click="addUInfo(\''+1 +'\')" style="float:right;margin-top:30px;">确认添加</button>'+
+                              '<button type="button" class="mb-sm btn btn-warning" ng-click="addStudent(\''+1+'\',\''+userid+'\')" style="float:right;margin-top:30px;">确认添加</button>'+
                           "</div>",
                 plain: true,
-                // className: 'ngdialog-theme-default',
-                width: '40%',
+                className: 'ngdialog-theme-default ngdialog-content-45',
+                controller: 'addUserController'
+              });
+              break;
+            case 2:
+              ngDialog.open({
+                template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>修改孩子</p>"+
+                          "<div style='padding:10px 20px;width:100%;' class='clearfix'>"+
+                              "<div class='table-responsive addCombo'>"+
+                                          "<table class='table' id='comboTable'>"+
+                                              "<thead>"+
+                                                  "<tr>"+
+                                                      "<th style='width:20%;'>姓名</th>"+
+                                                      "<th style='width:20%;'>姓别</th>"+
+                                                      "<th style='width:30%;'>生日</th>"+
+                                                      "<th style='width:30%;'>就读学校</th>"+
+                                                  "</tr>"+
+                                              "</thead>"+                                        
+                                              "<tbody>"+
+                                                  "<tr class='packageRow'>"+
+                                                      "<td><input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' value="+tname+" maxlength='20'></td>"+
+                                                      "<td>"+
+                                                        "<select id='selectSex' class='comboInput'>"+
+                                                            "<option value='1'>男</option>"+
+                                                            "<option value='2'>女</option>"+
+                                                        "</select>"+
+                                                        "<script>"+
+                                                            "$('#selectSex option[value="+sex+"]').attr('selected',true)"+
+                                                        "</script>"+
+                                                      "</td>"+
+                                                      "<td><input class='form-control ng-touched comboInput' id='start' ng-click='showStartData()' style='padding: 2px 6px;' type='text' value="+birthday+" maxlength='20'></td>"+
+                                                      "<td><input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' value="+real_school+" maxlength='20'></td>"+
+                                                  "</tr>"+
+                                              "</tbody>"+
+                                          "</table>"+
+                                      "</div>"+
+                              '<button type="button" class="mb-sm btn btn-warning" ng-click="addStudent(\''+2+'\',\''+studentid+'\')" style="float:right;margin-top:30px;">确认修改</button>'+
+                          "</div>",
+                plain: true,
+                className: 'ngdialog-theme-default',
                 controller: 'addUserController'
               });
               break;
@@ -5703,6 +5733,179 @@ App.controller('usersCenterController', ['$scope', '$http', '$filter', '$state',
       // noRefreshGetData(getUsersData, getDataSpeed);
       
       //timeoutLock($state);
+}]);
+
+
+/**=========================================================
+ * addUserController
+ * author: BGOnline
+ * version 1.0 2016-6-2
+ =========================================================*/
+ 
+App.controller('addUserController', ['$scope', '$http', '$state', 'ngDialog',
+  function($scope, $http, $state, ngDialog) {
+      
+      errorJump($state);
+      
+      var addTableRow = function() { // 添加一行
+          var r = document.getElementById('comboTable').insertRow(1);
+          r.setAttribute("class", "packageRow");
+          var t1 = r.insertCell(0);
+          var t2 = r.insertCell(1);
+          var t3 = r.insertCell(2);
+          var t4 = r.insertCell(3);
+          var t5 = r.insertCell(4);
+          t1.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
+          t2.innerHTML="<select class='comboInput'>"+
+                            "<option value='1'>男</option>"+
+                            "<option value='2'>女</option>"+
+                        "</select>";
+          t3.innerHTML="<input class='form-control ng-touched comboInput' id='start' style='padding: 2px 6px;' type='text' maxlength='20'>";
+          t4.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
+          t5.innerHTML="<button type='button' class='btn btn-sm btn-danger comboAction deleteRow'><em class='fa fa-trash-o'></em></button>";
+      }
+      
+      $scope.addCombo = (function() { // 执行添加
+          addTableRow();
+      });
+      
+      $(document).on('click', '.deleteRow', function() {
+          $(this).parent().parent().remove();
+      })
+
+
+      var addChild = function(uid) {
+          var packageRow = $('.packageRow');
+          var comboInput = $('.comboInput');
+          var comboArr = new Array();
+          var attributeName = ['tname', 'sex', 'birthday', 'real_school'];
+          for(var r = 0; r < packageRow.length; r++) {
+              var packages = {};
+              for(var c = 0; c < packageRow.eq(r).children().length-1; c++) {
+                  packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val();
+              }
+              comboArr.push(packages);
+          }
+
+          $http
+            .post(''+url+'/user/addstudent', {
+                  token: sessionStorage.token, 
+                  userid: uid,
+                  student: JSON.stringify(comboArr)
+            })
+            .then(function(response) {
+                if( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else {
+                    getUsersData(sessionStorage.cp);
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>添加用户信息成功！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                }
+                ngDialog.close();
+            }, function(x) { 
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                }); 
+                ngDialog.close();
+            });
+      }
+
+      $scope.addUInfo = function(type) {
+          switch(type) {
+              case "1": // 添加
+                var phoneVal = $('.phone-input').val();
+                var passwordVal = $('.password-input').val();
+                $http
+                  .post(''+url+'/user/adduser', {
+                      token: sessionStorage.token, phone: phoneVal, password: passwordVal
+                  })
+                  .then(function(response) {
+                      if ( response.data.code != 200 ) {
+                          requestError(response, $state, ngDialog);
+                      }else { 
+                          addChild(response.data.data.userid);
+                      }
+                  }, function(x) {
+                      ngDialog.open({
+                        template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                        plain: true,
+                        className: 'ngdialog-theme-default'
+                      });
+                      ngDialog.close();
+                  });
+                break;
+          }
+      }
+
+      var start = {
+        elem: '#start',
+        format: 'YYYY-MM-DD',
+        max: '2099-06-16', //最大日期
+        istoday: false
+      };
+    
+      $scope.showStartData = function() {
+        laydate(start);
+      }
+
+      $(document).on('click', '#start', function() {
+          laydate(start);
+      })
+
+      $scope.addStudent = function(type, uid) {
+          switch(type) {
+              case "1": // 添加
+                addChild(uid);
+                break;
+              case "2": // 修改
+                var packageRow = $('.packageRow');
+                var comboInput = $('.comboInput');
+                var comboArr = new Array();
+                var attributeName = ['tname', 'sex', 'birthday', 'real_school'];
+                for(var r = 0; r < packageRow.length; r++) {
+                    var packages = {};
+                    for(var c = 0; c < packageRow.eq(r).children().length; c++) {
+                        packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val();
+                    }
+                    comboArr.push(packages);
+                }
+
+                $http
+                    .post(''+url+'/user/editstudent', {
+                        token: sessionStorage.token, 
+                        studentid: uid,
+                        student: JSON.stringify(comboArr)
+                    })
+                    .then(function(response) {
+                        if( response.data.code != 200 ) {
+                            requestError(response, $state, ngDialog);
+                        }else {
+                            getUsersData(sessionStorage.cp);
+                            ngDialog.open({
+                            template: "<p style='text-align:center;margin: 0;'>添加用户信息成功！</p>",
+                            plain: true,
+                            className: 'ngdialog-theme-default'
+                            });
+                        }
+                        ngDialog.close();
+                    }, function(x) { 
+                        ngDialog.open({
+                            template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                            plain: true,
+                            className: 'ngdialog-theme-default'
+                        }); 
+                        ngDialog.close();
+                    });
+                break;
+          }
+      }
+
+      
 }]);
 
 
@@ -6066,203 +6269,6 @@ App.controller('withdrawXXBController', ['$scope', '$http', '$state', 'ngDialog'
       }
 
 }]);
-
-
-
-
-/**=========================================================
- * addUserController
- * author: BGOnline
- * version 1.0 2016-6-2
- =========================================================*/
- 
-App.controller('addUserController', ['$scope', '$http', '$state', 'ngDialog',
-  function($scope, $http, $state, ngDialog) {
-      
-      errorJump($state);
-      
-      var addTableRow = function() { // 添加一行
-          var r = document.getElementById('comboTable').insertRow(1);
-          r.setAttribute("class", "packageRow");
-          var t1 = r.insertCell(0);
-          var t2 = r.insertCell(1);
-          var t3 = r.insertCell(2);
-          var t4 = r.insertCell(3);
-          var t5 = r.insertCell(4);
-          t1.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
-          t2.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
-          t3.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
-          t4.innerHTML="<input class='form-control ng-touched comboInput' style='padding: 2px 6px;' type='text' maxlength='20'>";
-          t5.innerHTML="<button type='button' class='btn btn-sm btn-danger comboAction deleteRow'><em class='fa fa-trash-o'></em></button>";
-      }
-      
-      $scope.addCombo = (function() { // 执行添加
-          addTableRow();
-      });
-      
-      $(document).on('click', '.deleteRow', function() {
-          $(this).parent().parent().remove();
-      })
-
-      var addChild = function(uid) {
-        
-          var nameVal = $('.name-input').val();
-          var schoolVal = $('.school-input').val();
-          var packageRow = $('.packageRow');
-          var comboInput = $('.comboInput');
-          var comboArr = new Array();
-          var attributeName = ['tname', 'real_school'];
-          for(var r = 0; r < packageRow.length; r++) {
-              var packages = {};
-              for(var c = 0; c < packageRow.eq(r).children().length-1; c++) {
-                  packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val();
-              }
-              comboArr.push(packages);
-          }
-
-          $http
-            .post(''+url+'/user/addstudent', {
-                  token: sessionStorage.token, 
-                  userid: uid,
-                  student: JSON.stringify(comboArr)
-            })
-            .then(function(response) {
-                if( response.data.code != 200 ) {
-                    requestError(response, $state, ngDialog);
-                }else {
-                    getUsersData();
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>添加用户信息成功！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
-                }
-                ngDialog.close();
-            }, function(x) { 
-                ngDialog.open({
-                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                  plain: true,
-                  className: 'ngdialog-theme-default'
-                }); 
-                ngDialog.close();
-            });
-      }
-
-      $scope.addUInfo = function() {
-          switch(sessionStorage.addUserType) {
-              case "1": // 添加
-                var phoneVal = $('.phone-input').val();
-                var passwordVal = $('.password-input').val();
-                $http
-                  .post(''+url+'/user/adduser', {
-                      token: sessionStorage.token, phone: phoneVal, password: passwordVal
-                  })
-                  .then(function(response) {
-                      if ( response.data.code != 200 ) {
-                          requestError(response, $state, ngDialog);
-                      }else { 
-                          addChild(response.data.data.userid);
-                      }
-                  }, function(x) {
-                      ngDialog.open({
-                        template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                        plain: true,
-                        className: 'ngdialog-theme-default'
-                      });
-                      ngDialog.close();
-                  });
-                      
-                break;
-              case "2": // 修改
-                  listLoading.css({'display':'block'});
-                  $http
-                    .post(''+url+'/course/getcourse', {
-                        token: sessionStorage.token, courseid: sessionStorage.tcourseid
-                    })
-                    .then(function(response) {
-                        listLoading.css({'display':'none'});
-                        if ( response.data.code != 200 ) {
-                            requestError(response, $state, ngDialog);
-                        }
-                        else{ 
-                            $scope.courseDetailsData = response.data.data;
-                            $scope.addCourse.courseName = $scope.courseDetailsData.course_name;
-                            $scope.addCourse.abstract = $scope.courseDetailsData.summary;
-                            ifrCon = $scope.courseDetailsData.content;
-                            $scope.addCourse.packages = $scope.courseDetailsData.packages;
-                            $scope.img = rootUrl + $scope.courseDetailsData.course_img;
-                            sessionStorage.setItem('detailCourseImg', $scope.courseDetailsData.course_img);
-                        }
-                    }, function(x) { 
-                        listLoading.css({'display':'none'});
-                        ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                          plain: true,
-                          className: 'ngdialog-theme-default'
-                        });
-                        ngDialog.close();
-                    });
-                  
-                  $scope.addSubmit = function() {
-                      
-                      var packageRow = $('.packageRow');
-                      var comboInput = $('.comboInput');
-                      var comboArr = new Array();
-                      var attributeName = ['package_name', 'package_price', 'package_content'];
-                      for(var r = 0; r < packageRow.length; r++) {
-                          var packages = {};
-                          for(var c = 0; c < packageRow.eq(r).children().length-1; c++) {
-                              packages[attributeName[c]] = packageRow.eq(r).children().eq(c).children().val();
-                              packages['packageid'] = packageRow.eq(r).attr('name');
-                          }
-                          comboArr.push(packages);
-                      }
-
-                      listLoading.css({'display':'block'});
-                      
-                      $http
-                        .post(''+url+'/course/edit', {
-                            token: sessionStorage.token, 
-                            courseid: sessionStorage.tcourseid,
-                            course_name: $scope.addCourse.courseName, 
-                            sortid: sessionStorage.sortid,
-                            summary: $scope.addCourse.abstract,
-                            content: content,
-                            course_img: sessionStorage.uploadCourseImgUrl ? sessionStorage.uploadCourseImgUrl : sessionStorage.detailCourseImg,
-                            package: JSON.stringify(comboArr)
-                        })
-                        .then(function(response) {
-                            listLoading.css({'display':'none'});
-                            if ( response.data.code != 200 ) {
-                                requestError(response, $state, ngDialog);
-                            }
-                            else{ 
-                                ngDialog.open({
-                                  template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                                  plain: true,
-                                  className: 'ngdialog-theme-default'
-                                });
-                                $state.go('app.courseMngt');
-                            }
-                            ngDialog.close();
-                        }, function(x) { 
-                            listLoading.css({'display':'none'});
-                            ngDialog.open({
-                              template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                              plain: true,
-                              className: 'ngdialog-theme-default'
-                            });
-                            ngDialog.close();
-                        });
-                  };
-                  
-                break;
-          }
-
-      }
-      
-}]);
-
 
 /**=========================================================
  * adminInfoController
