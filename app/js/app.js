@@ -979,7 +979,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
       
       errorJump($state);
       var listLoading = $('.list-loading');
-      getCourseData = function(cp) { // 获取课程
+      getCourseData = function(cp, sortid) { // 获取课程
         
           cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
           
@@ -987,7 +987,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
           $scope.sname = sessionStorage.sname;
           $http
             .post(''+url+'/course/index', {
-                token: sessionStorage.token, p: cp, sortid: sessionStorage.sortid, order: sessionStorage.order_num
+                token: sessionStorage.token, p: cp, sortid: sortid, order: sessionStorage.order_num
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -1055,7 +1055,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
         $('.packageRadio').removeClass('label-warning');
         $('.packageRadio').eq(_index).addClass('label-warning');
         sessionStorage.setItem('order_num', oNum);
-        getCourseData(sessionStorage.sortid);
+        getCourseData('', sessionStorage.sortid);
       }
 
       $(document).on('blur', '.rcName', function() { // 修改分类名称
@@ -1113,7 +1113,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                         requestError(response, $state, ngDialog);
                     }
                     else{ 
-                        getCourseData(sortid);
+                        getCourseData('', sortid);
                         getCourseClass();
                         $('.class-name').html(sname);
                         ngDialog.open({
@@ -1201,7 +1201,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                         requestError(response, $state, ngDialog);
                     }
                     else{ 
-                        getCourseData(sessionStorage.sortid, $scope.currentPage - 1);
+                        getCourseData($scope.currentPage - 1, sessionStorage.sortid);
                     }
                 }, function(x) { 
                     listLoading.css({'display':'none'});
