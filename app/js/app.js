@@ -4639,9 +4639,9 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
                         requestError(response, $state, ngDialog);
-                    }
-                    else{ 
+                    }else { 
                         $scope.teacher = response.data.data; 
+                        sessionStorage.setItem('teacherPassword', $scope.teacher.password);
                         $scope.img = rootUrl + $scope.teacher.header;
                         sessionStorage.setItem('detailTeacherImg', $scope.teacher.header);
                     }
@@ -4659,7 +4659,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                       userid: sessionStorage.TUid,
                       tname: $scope.teacher.tname,
                       phone: $scope.teacher.phone,
-                      password: $scope.teacher.password,
+                      password: $scope.teacher.password == sessionStorage.teacherPassword ? '' : $scope.teacher.password,
                       email: $scope.teacher.email,
                       header: sessionStorage.uploadTeacherImgUrl ? sessionStorage.uploadTeacherImgUrl : sessionStorage.detailTeacherImg
                   })
