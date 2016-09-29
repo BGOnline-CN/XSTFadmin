@@ -11627,6 +11627,7 @@ flatdoc .button .badge {
   top: 280px !important;
   left: 50% !important;
   display: none;
+  z-index: 9999;
 }
 
 .bg-shield {
