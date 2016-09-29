@@ -767,7 +767,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           $scope.activeSname = sessionStorage.sname;
           $http
             .post(''+url+'/sort/getsort', {
-                token: sessionStorage.token, type: 1 
+                token: sessionStorage.token, type: 1
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
@@ -776,8 +776,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
                       plain: true,
                       className: 'ngdialog-theme-default'
                     });
-                }
-                else{ 
+                }else { 
                     $rootScope.courseClass = response.data.data;
                     judgeClassName();
                     if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) { 
@@ -987,7 +986,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
           $scope.sname = sessionStorage.sname;
           $http
             .post(''+url+'/course/index', {
-                token: sessionStorage.token, p: cp, sortid: sortid, order: sessionStorage.order_num
+                token: sessionStorage.token, p: cp, sortid: sessionStorage.sortid, order: sessionStorage.order_num
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -1055,7 +1054,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
         $('.packageRadio').removeClass('label-warning');
         $('.packageRadio').eq(_index).addClass('label-warning');
         sessionStorage.setItem('order_num', oNum);
-        getCourseData('', sessionStorage.sortid);
+        getCourseData();
       }
 
       $(document).on('blur', '.rcName', function() { // 修改分类名称
@@ -1067,8 +1066,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
             .then(function(response) {
                 if ( response.data.code != 200 ) {
                     requestError(response, $state, ngDialog);
-                }
-                else{ 
+                }else { 
                     ngDialog.open({
                       template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                       plain: true,
@@ -1093,6 +1091,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
       var courseArr = new Array();
       $scope.goStartClass = function(sortid, sname) { // 移动课程
           sessionStorage.setItem('sname', sname);
+          sessionStorage.setItem('sortid', sortid);
           courseArr = [];
           var ccbBg =  $('.ccb-bg');
           for(var i = 0; i < $scope.showTotalItems; i++) {
@@ -1111,9 +1110,8 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                     listLoading.css({'display':'none'});
                     if ( response.data.code != 200 ) {
                         requestError(response, $state, ngDialog);
-                    }
-                    else{ 
-                        getCourseData('', sortid);
+                    }else { 
+                        getCourseData();
                         getCourseClass();
                         $('.class-name').html(sname);
                         ngDialog.open({
@@ -1199,9 +1197,8 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                     listLoading.css({'display':'none'});
                     if ( response.data.code != 200 ) {
                         requestError(response, $state, ngDialog);
-                    }
-                    else{ 
-                        getCourseData($scope.currentPage - 1, sessionStorage.sortid);
+                    }else { 
+                        getCourseData($scope.currentPage - 1);
                     }
                 }, function(x) { 
                     listLoading.css({'display':'none'});
@@ -3078,7 +3075,6 @@ App.controller('lineOrderController', ['$scope', '$sce', '$rootScope', '$http', 
       $scope.selectpRadio = function(_index, pid) {
         $('.packageRadio').removeClass('label-warning');
         $('.packageRadio').eq(_index).addClass('label-warning');
-        alert(pid)
         $scope.packageid = pid;
       }
 
