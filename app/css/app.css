@@ -11441,11 +11441,11 @@ flatdoc .button .badge {
 }
 .bg-edit {
   background: url("../img/iphone.png") no-repeat;
-  background-size: 355px 710px;
+  background-size: 355px 743px;
   height: 710px;
 }
 .bg-edit > iframe {
- margin-top: 102px;
+ margin-top: 108px;
  margin-left: 28px;
 }
 .comboAction {
