@@ -5895,9 +5895,9 @@ App.controller('addUserController', ['$scope', '$http', '$state', 'ngDialog',
                         }else {
                             getUsersData(sessionStorage.cp);
                             ngDialog.open({
-                            template: "<p style='text-align:center;margin: 0;'>添加用户信息成功！</p>",
-                            plain: true,
-                            className: 'ngdialog-theme-default'
+                                template: "<p style='text-align:center;margin: 0;'>修改用户信息成功！</p>",
+                                plain: true,
+                                className: 'ngdialog-theme-default'
                             });
                         }
                         ngDialog.close();
