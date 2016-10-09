@@ -6486,9 +6486,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                                 ngDialog.open({
                                     template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>版本更新说明</p>"+
                                                 "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                                                    "<p style='margin-bottom:20px;'>1：修改添加用户的逻辑</p>"+
-                                                    "<p style='margin-bottom:20px;'>2：新增添加孩子时的生日和性别操作</p>"+
-                                                    "<p style='margin-bottom:20px;'>3：修复了特殊情况下上传图片数据无故被篡改的bug</p>"+
+                                                    "<p style='margin-bottom:20px;'>1：自定义文章中可以多图上传啦</p>"+
                                                 "</div>",
                                     plain: true,
                                     className: 'ngdialog-theme-default'
@@ -6513,7 +6511,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                     //     }
                     // );           
                 })
-            })('v16.9.28.0.1beta');
+            })('v16.10.09.0.1beta');
       }catch (e){
           console.log('该浏览器不支持websql，无法使用版本说明功能！');
           return;
