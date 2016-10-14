@@ -1211,6 +1211,35 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                 });
           }
       }
+
+      var stick = function(i, isTop) {
+            listLoading.css({'display':'block'});
+            var tcourseid = $('.ccb-bg').eq(i).attr('name');
+            $http
+            .post(''+url+'/course/edit', {
+                token: sessionStorage.token, courseid: tcourseid, is_top: isTop
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    getCourseData($scope.currentPage - 1);
+                }
+            }, function(x) { 
+                listLoading.css({'display':'none'});
+                ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+            });
+      }
+
+      $scope.stickCourse = function(i, isTop) { // 置顶课程
+          parseInt(isTop) ? stick(i, 0) : stick(i, 1);
+      }
       
       $scope.addCourseType = function() {
           if($rootScope.courseClass == undefined) {
@@ -6486,7 +6515,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                                 ngDialog.open({
                                     template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>版本更新说明</p>"+
                                                 "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                                                    "<p style='margin-bottom:20px;'>1：自定义文章中可以多图上传啦</p>"+
+                                                    "<p style='margin-bottom:20px;'>1：新增课程置顶的功能</p>"+
                                                 "</div>",
                                     plain: true,
                                     className: 'ngdialog-theme-default'
@@ -6511,7 +6540,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                     //     }
                     // );           
                 })
-            })('v16.10.09.0.1beta');
+            })('v16.10.14.0.1beta');
       }catch (e){
           console.log('该浏览器不支持websql，无法使用版本说明功能！');
           return;

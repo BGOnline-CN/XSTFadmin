@@ -54,6 +54,7 @@
         <div class="col-xs-4 col-md-2 courseList" ng-repeat="c in course" ng-mouseleave="closeCourseAct($index)">
             <p class="courseAction">
                 <i class="fa fa-trash-o c-btn removeIco" ng-click="removeCourse($index)"></i>
+                <i class="fa fa-sort-amount-asc" title="{{c.is_top == '1' ? '取消置顶' : '置顶'}}" ng-class="{true:'normal c-btn removeIco', false:'fa-flip-vertical c-btn removeIco'}[c.is_top == '1']" ng-click="stickCourse($index, c.is_top)"></i>
                 <label class="checkbox-inline c-checkbox c-btn">
                     <input id="inlinecheckbox10" class="ccb-bg" type="checkbox" ng-checked="" name="{{c.courseid}}">
                     <span class="fa fa-check"></span>
