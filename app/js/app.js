@@ -1212,12 +1212,12 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
           }
       }
 
-      var stick = function(i, isTop) {
-            listLoading.css({'display':'block'});
+      $scope.stickCourse = function(i) { // 置顶课程
+          listLoading.css({'display':'block'});
             var tcourseid = $('.ccb-bg').eq(i).attr('name');
             $http
-            .post(''+url+'/course/edit', {
-                token: sessionStorage.token, courseid: tcourseid, is_top: isTop
+            .post(''+url+'/course/top', {
+                token: sessionStorage.token, courseid: tcourseid
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -1235,10 +1235,6 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                 });
                 ngDialog.close();
             });
-      }
-
-      $scope.stickCourse = function(i, isTop) { // 置顶课程
-          parseInt(isTop) ? stick(i, 0) : stick(i, 1);
       }
       
       $scope.addCourseType = function() {
