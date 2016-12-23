@@ -1581,10 +1581,10 @@ App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filte
           }
       })
       
-      $scope.removeCourse = function(i) { // 删除文章
+      $scope.removeCourse = function($event) { // 删除文章
           if(confirm("确定要删除文章吗？")) {
               listLoading.css({'display':'block'});
-              var tcourseid = $('.courseAction').attr('name');
+              var tcourseid = $($event.target).parent().attr('name');
               $http
                 .post(''+url+'/faq/del', {
                     token: sessionStorage.token, faq_id: tcourseid

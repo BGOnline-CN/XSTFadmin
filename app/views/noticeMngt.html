@@ -48,7 +48,7 @@
         </div>
         <div class="col-xs-4 col-md-3 courseList noticeList" ng-repeat="c in course" ng-mouseleave="closeCourseAct($index)">
             <p class="courseAction" name="{{c.faq_id}}">
-                <i class="fa fa-trash-o c-btn removeIco" ng-click="removeCourse($index)"></i>
+                <i class="fa fa-trash-o c-btn removeIco" ng-click="removeCourse($event)"></i>
                 <!--<label class="checkbox-inline c-checkbox c-btn">
                     <input id="inlinecheckbox10" class="ccb-bg" type="checkbox" ng-checked="">
                     <span class="fa fa-check"></span>
