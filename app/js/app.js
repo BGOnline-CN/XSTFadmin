@@ -12,10 +12,8 @@ if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript 
 // 全局
 var url = 'http://xiaoshutong.thinktorch.cn/frontend/web'; // API
 var rootUrl = 'http://xiaoshutong.thinktorch.cn';
-// var url = 'http://192.168.1.200/xst/frontend/web'; // API
+// var url = 'http://192.168.1.200/xst/frontend/web/index.php'; // API
 // var rootUrl = 'http://192.168.1.200/xst';
-// var url = 'http://testketangwai.thinktorch.cn/frontend/web'; // API
-// var rootUrl = 'http://testketangwai.thinktorch.cn/';
 
 var noF5speed = 5; // 无刷新获取数据的速度 秒
 var noF5Timer; // 无刷新计时器下标
@@ -416,7 +414,58 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
     $tooltipProvider.options({appendToBody: true});
 
-}])
+}]).config(function($httpProvider) { // CORS post跨域配置
+    $httpProvider.defaults.useXDomain = true;  
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+
+    /**
+     * 
+     * @param {Object} obj
+     * @return {String}
+     * 
+     * $http.post 传参方式模拟 $.post
+     */ 
+    var param = function(obj) {
+        var query = '', name, value, fullSubName, subName, subValue, innerObj, i;
+        
+        for(name in obj) {
+        value = obj[name];
+            
+        if(value instanceof Array) {
+            for(i = 0; i < value.length; ++i) {
+                subValue = value[i];
+                fullSubName = name + '[' + i + ']';
+                innerObj = {};
+                innerObj[fullSubName] = subValue;
+                query += param(innerObj) + '&';
+            }
+        }
+        else if(value instanceof Object) {
+            for(subName in value) {
+                subValue = value[subName];
+                fullSubName = name + '[' + subName + ']';
+                innerObj = {};
+                innerObj[fullSubName] = subValue;
+                query += param(innerObj) + '&';
+            }
+        }
+        else if(value !== undefined && value !== null)
+            query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
+        }
+        
+        return query.length ? query.substr(0, query.length - 1) : query;
+    };
+
+    $httpProvider.defaults.transformRequest = [function(data) {
+        return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
+    }];
+
+    delete $httpProvider.defaults.headers.common['X-Requested-With']; 
+}).config( ['$compileProvider', function( $compileProvider ) {   
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+        // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
+    }
+]);
 ;
 
 /**=========================================================
@@ -579,6 +628,8 @@ App
     ]
   })
 ;
+
+
 
 /**=========================================================
  * login
@@ -1595,7 +1646,7 @@ App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filte
                         requestError(response, $state, ngDialog);
                     }
                     else{ 
-                        getNoticeData(sessionStorage.sortid, $scope.currentPage - 1);
+                        getNoticeData($scope.currentPage - 1);
                     }
                 }, function(x) { 
                     listLoading.css({'display':'none'});
@@ -1614,6 +1665,30 @@ App.controller('noticeMngtController', ['$scope', '$rootScope', '$http', '$filte
           $state.go("app.addNotice");
       }
       
+      $scope.stickCourse = function($event) { // 置顶课程
+          listLoading.css({'display':'block'});
+            var tcourseid = $($event.target).parent().attr('name');
+            $http
+            .post(''+url+'/faq/top', {
+                token: sessionStorage.token, faq_id: tcourseid
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    getNoticeData($scope.currentPage - 1);
+                }
+            }, function(x) { 
+                listLoading.css({'display':'none'});
+                ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+            });
+      }
       // clearInterval(noF5Timer);
       // timeoutLock($state);
 }]);
@@ -2626,12 +2701,14 @@ App.controller('paymentController', ['$scope', '$http', '$filter', '$state', 'ng
                     requestError(response, $state, ngDialog);
                 }
                 else{ 
-                    ngDialog.open({
-                        template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                        plain: true,
-                        className: 'ngdialog-theme-default'
-                    });
-                    $state.go('app.commodityOrder');
+                    if(response.data.data.payUrl != '') {
+                        var url = response.data.data.payUrl;
+                        var triggerDownload = angular.element("<a>").attr("href", url).appendTo("body");
+                        triggerDownload[0].click();
+                        triggerDownload.remove();
+                    }else {
+                        $state.go('app.commodityOrder');
+                    }
                 }
                 $('.btn').removeClass('disabled');
             }, function(x) { 
@@ -3405,6 +3482,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                               course_name: $scope.addCourse.courseName, 
                               sortid: sessionStorage.sortid,
                               summary: $scope.addCourse.abstract,
+                              url: $scope.addCourse.url,
                               content: content,
                               course_img: sessionStorage.uploadCourseImgUrl,
                               package: JSON.stringify(comboArr)
@@ -3458,6 +3536,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         $scope.courseDetailsData = response.data.data;
                         $scope.addCourse.courseName = $scope.courseDetailsData.course_name;
                         $scope.addCourse.abstract = $scope.courseDetailsData.summary;
+                        $scope.addCourse.url =  $scope.courseDetailsData.url,
                         ifrCon = $scope.courseDetailsData.content;
                         $scope.addCourse.packages = $scope.courseDetailsData.packages;
                         $scope.img = rootUrl + $scope.courseDetailsData.course_img;
@@ -3511,6 +3590,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         course_name: $scope.addCourse.courseName, 
                         sortid: sessionStorage.sortid,
                         summary: $scope.addCourse.abstract,
+                        url: $scope.addCourse.url,
                         content: content,
                         course_img: sessionStorage.uploadCourseImgUrl ? sessionStorage.uploadCourseImgUrl : sessionStorage.detailCourseImg,
                         package: JSON.stringify(comboArr)
@@ -4287,6 +4367,31 @@ App.controller('addNoticeController', ['$scope', '$http', '$filter', '$state', '
       $scope.sname = sessionStorage.sname;
       $scope.addCourse = {};
       
+
+      $http
+      .post(''+url+'/course/index', { // 获取课程列表
+          token: sessionStorage.token, get_type: 'all'
+      })
+      .then(function(response) {
+          if( response.data.code != 200 ) {
+              requestError(response, $state, ngDialog);
+          }else { 
+              $scope.course = response.data.data;
+          }
+      }, function(x) { 
+        ngDialog.open({
+          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+          plain: true,
+          className: 'ngdialog-theme-default'
+        });
+    });
+
+   $scope.getCourseId = function(courseid) {
+        $scope.jumpCourseid = courseid;
+    }
+
+    
+
       switch(sessionStorage.actionCourseType) {
           
           case "1": // 添加
@@ -4329,6 +4434,7 @@ App.controller('addNoticeController', ['$scope', '$http', '$filter', '$state', '
                               sortid: sessionStorage.sortid,
                               summary: $scope.addCourse.abstract,
                               content: content,
+                              courseid: $scope.jumpCourseid,
                               url: $scope.addCourse.url,
                               img: sessionStorage.uploadCourseImgUrl,
                         })
@@ -4382,6 +4488,7 @@ App.controller('addNoticeController', ['$scope', '$http', '$filter', '$state', '
                         $scope.addCourse.courseName = $scope.courseDetailsData.title;
                         $scope.addCourse.abstract = $scope.courseDetailsData.summary;
                         $scope.addCourse.url = $scope.courseDetailsData.url;
+                        $scope.jumpCourseid = $scope.courseDetailsData.jumpCourseid;
                         ifrCon = $scope.courseDetailsData.content;
                         $scope.img = rootUrl + $scope.courseDetailsData.img;
                         sessionStorage.setItem('detailCourseImg', $scope.courseDetailsData.img);
@@ -4434,6 +4541,7 @@ App.controller('addNoticeController', ['$scope', '$http', '$filter', '$state', '
                         title: $scope.addCourse.courseName, 
                         sortid: sessionStorage.sortid,
                         summary: $scope.addCourse.abstract,
+                        courseid: $scope.jumpCourseid,
                         url: $scope.addCourse.url,
                         content: content,
                         img: sessionStorage.uploadCourseImgUrl ? sessionStorage.uploadCourseImgUrl : sessionStorage.detailCourseImg,
@@ -6477,7 +6585,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
 
                     //增加数据
                     tx.executeSql(
-                        'INSERT INTO version (id, versionNumber) VALUES (?, ?)', [1, "v16.9.12.0.1beta"],
+                        'INSERT INTO version (id, versionNumber) VALUES (?, ?)', [1, "v17.1.8.0.1beta"],
                         function () {
                             // alert("数据增加成功");
                         },
@@ -6511,7 +6619,9 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                                 ngDialog.open({
                                     template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>版本更新说明</p>"+
                                                 "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                                                    "<p style='margin-bottom:20px;'>1：新增课程置顶的功能</p>"+
+                                                    "<p style='margin-bottom:20px;'>1：新增文章置顶功能</p>"+
+                                                    "<p style='margin-bottom:20px;'>2：文章可以调整到对应课程</p>"+
+                                                    "<p style='margin-bottom:20px;'>3：课程可以引用外部链接啦</p>"+
                                                 "</div>",
                                     plain: true,
                                     className: 'ngdialog-theme-default'
@@ -6536,7 +6646,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                     //     }
                     // );           
                 })
-            })('v16.10.14.0.1beta');
+            })('v17.1.9.0.1beta');
       }catch (e){
           console.log('该浏览器不支持websql，无法使用版本说明功能！');
           return;
@@ -6705,7 +6815,7 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
 App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
   function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
       
-      errorJump($state);
+    //   errorJump($state);
       var listLoading = $('.list-loading');
       var getCommodityOrderListData = function(cp, t, st) {
           listLoading.css({'display':'block'});
@@ -9071,149 +9181,108 @@ App.controller('lockScreenController',['$scope', '$state', function($scope, $sta
 App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDialog', function($scope, $http, FileUploader, $state, ngDialog) {
     
     errorJump($state);
-    $http
-      .post(''+url+'/course/index', { // 获取课程列表
-          token: sessionStorage.token, get_type: 'all'
-      })
-      .then(function(response) {
-          if ( response.data.code != 200 ) {
-              requestError(response, $state, ngDialog);
-          }
-          else{ 
-              $scope.course = response.data.data;
-          }
-      }, function(x) { 
-        ngDialog.open({
-          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-          plain: true,
-          className: 'ngdialog-theme-default'
-        });
-    });
-    
+    var listLoading = $('.list-loading');
+
+    $scope.param = {};
+    $scope.param.token = sessionStorage.token;
+    $scope.param.title = '';
+    $scope.param.summary = '';
+    $scope.param.val = '';
+
     var uploader = $scope.uploader = new FileUploader({
         url: ''+url+'/gd/upload'
     })
 
-    var bannerUrl = function(_index) { // 生成图片地址
-        uploader.onSuccessItem = function(response) {
-            $('.bannerTr').eq(_index).children().eq(0).attr('name', jQuery.parseJSON(response._xhr.response).url);
-        };
-    }
+    uploader.onSuccessItem = function(response) {
+        sessionStorage.setItem('uploadCourseImgUrl', jQuery.parseJSON(response._xhr.response).url);
+        $scope.img = rootUrl + sessionStorage.uploadCourseImgUrl;
+    };
 
-    $('.bannerTypeSetHide12').css({'display':'block'});
-    $('.bannerTypeSetHide22').css({'display':'block'});
-    $('.bannerTypeSetHide32').css({'display':'block'});
-    $('.bannerTypeSetHide42').css({'display':'block'});
-    
-    var jumpType = function(_index) { // 生成跳转方式
-        if(!($('.bannerTr').eq(_index).children().eq(1).attr('name'))) {
-            $('.bannerTr').eq(_index).children().eq(1).attr('name', 2);
-        }
-        $scope.selectbRadio = function(type) {
-            switch(type) {
-                case 1:
-                  $('.bannerTypeSetHide'+(_index+1)+'2').css({'display':'none'});
-                  $('.bannerTypeSetHide'+(_index+1)+'1').css({'display':'block'});
-                  $('.bannerTr').eq(_index).children().eq(1).attr('name', type);
-                  break;
-                case 2:
-                  $('.bannerTypeSetHide'+(_index+1)+'1').css({'display':'none'});
-                  $('.bannerTypeSetHide'+(_index+1)+'2').css({'display':'block'});
-                  $('.bannerTr').eq(_index).children().eq(1).attr('name', type);
-                  break;
-            }
-        }
-    }
-    
-    var jumpCourseId = function(_index) { // 生成课程id
-        $scope.getCourseId = function(courseid) {
-            $('.bannerTr').eq(_index).children().eq(2).attr('name', courseid);
-        }
-    }
+    $scope.selectList = [
+        {val: 1, name: 'http模块'},
+        {val: 2, name: '课程列表模块'},
+        {val: 3, name: '课程详情模块'},
+        {val: 4, name: '活动列表模块'},
+        {val: 5, name: '活动详情模块'},
+        {val: 6, name: '教师列表模块'},
+        {val: 7, name: '商品列表模块'},
+        {val: 8, name: '商品详情模块'}
+    ];
 
-    var jumpUrl = function(_index) {
-        $scope.getJumpUrl = function(url) { // 生成跳转链接
-            $('.bannerTr').eq(_index).children().eq(2).attr('name', url);
-        }
-    }
+    $scope.posList = [
+        {pos: 1, name: '上'},
+        {pos: 2, name: '中'},
+        {pos: 3, name: '下'}
+    ];
 
-    var startCreate = function(_index) { // 开始生成name
-        bannerUrl(_index);
-        jumpType(_index);
-        jumpCourseId(_index);
-        jumpUrl(_index);
-    }
-
-    $scope.setImgUrl = function(_index) {
-        switch(_index) {
-            case 0:
-              startCreate(_index);
-              break; 
-            case 1:
-              startCreate(_index);
-              break; 
-            case 2:
-              startCreate(_index);
-              break; 
-            case 3:
-              startCreate(_index);
-              break; 
-        }
-    }
-
-    
-    $scope.createBanner = function() { // 生成预览
-
-        bannerArr = new Array();
-        var bannerTr = $('.bannerTr');
-        var attributeName = ['img', 'type', 'link'];
-        for(var i = 0; i < bannerTr.length; i++) {
-            var banners = {};
-            for(var c = 0; c < bannerTr.eq(i).children().length; c++) {
-                banners[attributeName[c]] = bannerTr.eq(i).children().eq(c).attr('name');
-            }
-            bannerArr.push(banners);
-        }
-        console.log(bannerArr);
-    }
-    
-    $scope.saveBanner = function() { // 确认保存
-
-        bannerArr = new Array();
-        var bannerTr = $('.bannerTr');
-        var attributeName = ['img', 'type', 'link'];
-        for(var i = 0; i < bannerTr.length; i++) {
-            var banners = {};
-            for(var c = 0; c < bannerTr.eq(i).children().length; c++) {
-                banners[attributeName[c]] = bannerTr.eq(i).children().eq(c).attr('name');
-            }
-            bannerArr.push(banners);
-        }
-
-        $http
-          .post(''+url+'/setting/setbanner', { // 设置启动图
-              token: sessionStorage.token, banner: bannerArr
-          })
-          .then(function(response) {
-              if ( response.data.code != 200 ) {
-                  requestError(response, $state, ngDialog);
-              }
-              else{ 
-                  ngDialog.open({
-                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
-                    plain: true,
-                    className: 'ngdialog-theme-default'
-                  });
-              }
-          }, function(x) { 
+    $scope.getSelect = function() {
+        
+        $http.post(''+url+'setting/getappnavparamsselect', $scope.param)
+        .then(function(response) {
+            $scope.remoteSel = response.data.data;
+        }, function(x) { 
             ngDialog.open({
-              template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-              plain: true,
-              className: 'ngdialog-theme-default'
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
             });
         });
     }
-      
+    
+
+    // 获取模块
+    var getData = function() {
+        listLoading.css({'display':'block'});
+        $http.post(''+url+'setting/getappnav', $scope.param)
+        .then(function(response) {
+            $scope.data = response.data;
+            listLoading.css({'display':'none'});
+        }, function(x) { 
+            listLoading.css({'display':'none'});
+            ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+            });
+        });
+    }
+    getData();
+
+    // 设置模块
+    $scope.addModules = function() {
+        $scope.param.img = '1';
+        listLoading.css({'display':'block'});
+        $http.post(''+url+'setting/createappnav', $scope.param)
+        .then(function(response) {
+            listLoading.css({'display':'none'});
+            getData();
+        }, function(x) { 
+            listLoading.css({'display':'none'});
+            ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+            });
+        });
+    }
+
+    // 删除 
+    $scope.removeModules = function(id) {
+        $scope.param.nav_id = id; 
+        listLoading.css({'display':'block'});
+        $http.post(''+url+'setting/delappnav', $scope.param)
+        .then(function(response) {
+            listLoading.css({'display':'none'});
+            getData();
+        }, function(x) { 
+            listLoading.css({'display':'none'});
+            ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+            });
+        });
+    }
 
 }])
 

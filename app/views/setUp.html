@@ -1,23 +1,154 @@
-<h3>设置中心</h3>
-<!-- START panel-->
-<div class="panel panel-default">
-   <div class="panel-heading">常规设置</div>
-   <div class="panel-body">
-      <form ng-controller="setUpCtrl" novalidate="" class="form-validate form-horizontal" >
-          暂未开放
-         <!--<fieldset>
-            <div class="form-group">
-               <label class="col-sm-2 control-label" title="无操作分钟数后自动锁定屏幕，0不锁定">自动锁屏时间</label>
-               <div class="col-sm-10">
-                  <div class="row">
-                     <div class="col-xs-6">
-                        <slider ng-change="change()" ng-model="slider1" min="0" max="30" step="1" orientation="horizontal" class="bs-slider slider-horizontal"></slider>
-                     </div>
-                  </div>
-               </div>
+<div ng-controller="setUpCtrl">
+    <p class="bgo-panel-title">
+        APP模块配置
+    </p>
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="bgo-panel">
+        <div class="bgo-panel-title">
+            <span>首页模块</span>
+        </div>
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-xs-6">
+                <form name="form" class="bgo-form" novalidate style="background-color: #F5F5F5;">
+                    <table>
+                        <tbody>
+                            <tr ng-if="param.position == 1 || param.position == 3">
+                                <td class="form-title">标题：</td>
+                                <td>
+                                    <input type="text" class="bgo-input" placeholder="请输入模块标题" ng-model="param.title">
+                                </td>
+                            </tr>
+                            <tr ng-if="param.position == 3">
+                                <td class="form-title">摘要：</td>
+                                <td>
+                                    <input type="text" class="bgo-input" placeholder="请输入模块摘要" ng-model="param.summary">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-title">图片：</td>
+                                <td>
+                                    <input filestyle="" 
+                                           type="file" 
+                                           data-button-text="图片" 
+                                           data-class-button="btn btn-default" 
+                                           data-classinput="form-control inline" 
+                                           nv-file-select="" 
+                                           uploader="uploader" 
+                                           class="form-control"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-title">位置：</td>
+                                <td>
+                                    <select class="bgo-select"
+                                            ng-init="param.position = 1"
+                                            ng-model="param.position"
+                                            ng-options="x.pos as x.name for x in posList">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-title">类型：</td>
+                                <td>
+                                    <select class="bgo-select"
+                                            ng-init="param.type = 1"
+                                            ng-model="param.type" 
+                                            ng-change="getSelect()"
+                                            ng-options="x.val as x.name for x in selectList">
+                                            <option value="">----- 请选择 -----</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr ng-if="param.type == 1">
+                                <td class="form-title">跳转：</td>
+                                <td>
+                                    <input type="url" class="bgo-input" placeholder="如：http://www.baidu.com" ng-model="param.val">
+                                </td>
+                            </tr>
+                            <tr ng-if="param.type == 3 || param.type == 5 || param.type == 8">
+                                <td class="form-title">跳转：</td>
+                                <td>
+                                    <select class="bgo-select"
+                                            ng-model="param.val"
+                                            ng-options="x.val as x.name for x in remoteSel">
+                                            <option value="">----- 请选择 -----</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-title"></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary bgo-button" ng-click="addModules()">添加</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
             </div>
-         </fieldset>-->
-      </form>
-   </div>
+            <div class="col-xs-6">
+                <form name="form" class="bgo-form clearfix" novalidate style="background-color: #f5f5f5;padding-bottom: 0">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="form-title">上部模块</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-xs-3" ng-repeat="d in data.data.top">
+                        <div style="height: 63px;padding: 5px;margin-bottom: 15px;position: relative;">
+                            <img class="bgo-header-circle" ng-src="{{ d.img }}">
+                            <p style="color: #ccc;" ng-bind="d.title"></p>
+                            <a href="" ng-click="removeModules(d.nav_id)" class="fa fa-remove" style="color: #C60000;position: absolute;top: 0;right: 0;"></a>
+                        </div>
+                    </div>
+                </form>
+                <form name="form" class="bgo-form clearfix" novalidate style="background-color: #f5f5f5; padding-top: 0;padding-bottom: 0;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="form-title">中部模块</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-xs-6" ng-repeat="d in data.data.middle">
+                        <div style="height: 63px;padding: 5px;margin-bottom: 15px;position: relative;">
+                            <img ng-src="{{ d.img }}" style="width: 100%; height:100%;">
+                            <a href="" ng-click="removeModules(d.nav_id)" class="fa fa-remove" style="color: #C60000;position: absolute;top: 0;right: 0;"></a>
+                        </div>
+                    </div>
+                </form>
+                <form name="form" class="bgo-form clearfix" novalidate style="background-color: #f5f5f5;padding-top: 0;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="form-title">底部模块</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-xs-6" ng-repeat="d in data.data.bottom">
+                        <div style="height: 63px;padding: 5px;border: 1px solid #ccc;margin-bottom: 15px;position: relative;">
+                            <div style="width: 60%;height:100%; display: inline-block;">
+                                <p style="font-size: 1.2em;color: #000;" ng-bind="d.title"></p>
+                                <p style="color: #ccc;" ng-bind="d.summary"></p>
+                            </div>
+                            <img ng-src="{{ d.img }}" style="width: 35%; height:100%;display: inline-block;vertical-align: top;" alt="">
+                            <a href="" ng-click="removeModules(d.nav_id)" class="fa fa-remove" style="color: #C60000;position: absolute;top: 0;right: 0;"></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-<!-- END panel-->

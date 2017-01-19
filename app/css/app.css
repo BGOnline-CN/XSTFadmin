@@ -12095,3 +12095,789 @@ flatdoc .button .badge {
 .laydate_body .laydate_y .laydate_yms ul li {
   width: 59px !important;
 }
+
+
+/* 初始化 */
+html, body, header, section, aside, article, footer, iframe, textarea, table, tbody, thead, tfoot, input, select, option, button, form,
+div, ul, li, nav, span, img, tr, th, td, h1, h2, h3, dl, dt, dd, em, a, i, p {
+  font: 14px / 1.5 "Helvetica Neue", Helvetica,Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+a:hover { text-decoration: none; }
+a:link { text-decoration: none; }
+a:focus { outline: none; }
+
+
+/* input select */
+.bgo-input, .bgo-select {
+    display: inline-block;
+    width: 200px;
+    border: 1px solid #DDDDDD;
+    padding: 6px 12px;
+}
+.bgo-select {
+    width: 150px;
+    vertical-align: middle;
+}
+
+/* radio */
+.bgo-radio {
+    vertical-align: middle;
+    display: inline-block;
+}
+.bgo-radio input {
+    margin-right: 5px;
+}
+.bgo-radio span {
+    vertical-align: top;
+}
+
+
+/* button */
+.bgo-button {
+    display: inline-block;
+    border-radius: 0;
+    padding: 3px 20px;
+}
+.bgo-button-right {
+    display: block;
+    border-radius: 0;
+    padding: 3px 20px;
+    float: right;
+}
+
+/* panel */
+.bgo-panel {
+    width: 100%;
+    border-radius: 2px;
+    background-color: #fff;
+    border: 2px solid #EDF1F6;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* header-img */
+.bgo-header-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+/* table */
+.bgo-table {
+    width: 100%;
+    border: solid #E2E2E2; 
+    border-width: 1px 0px 0px 1px;
+}
+.bgo-table > thead {
+    background-color: #EAEEF1;
+    color: #7895AF;
+}
+.bgo-table > tbody > tr:hover {
+    background-color: #F8F9FB;
+}
+.bgo-table td, .bgo-table th {
+    font-weight: 500;
+    border: solid #E2E2E2; 
+    border-width: 0px 1px 1px 0px; 
+    padding: 10px 15px;
+    word-break: keep-all;
+}
+.bgo-table input, .bgo-table select {
+    min-width: 0;
+    margin: 0 auto;
+}
+
+/* 大数据表格 */
+/*.bgo-table-large {
+    height: 500px;
+}
+.bgo-table-large table {
+    min-width: 1200px;
+    border-left: none;
+}*/
+
+/* inner-table */
+.bgo-inner-table {
+    width: 100%;
+    border: solid #F7F7F7; 
+    border-width: 2px 0px 2px 0px;
+}
+.bgo-inner-table td, .bgo-inner-table th {
+    font-weight: 500;
+    border: solid #F1F1F1; 
+    border-width: 1px 0px 1px 0px; 
+    padding: 10px;
+}
+
+/* 自动表头表格 */
+.bgo-auto-table > thead > tr th{
+    text-align: center;
+    padding: 5px 15px;
+}
+.bgo-auto-table > tbody td{
+    line-height: 30px;
+    height: 30px;
+    padding: 0px 15px;
+}
+
+
+/* select */
+
+/* search */
+.bgo-search {
+    display: inline-block;
+}
+.bgo-search input {
+    min-width: 0;
+}
+.bgo-search button {
+    vertical-align: top;
+    padding: 6px 12px; 
+    font-size: inherit;
+}
+
+
+/* form */
+.bgo-form {
+    padding: 30px 20px;
+}
+.bgo-form > table {
+    border: none;
+    display: block;
+}
+.bgo-form > table .form-title {
+    text-align: right;
+    padding-right: 10px;
+}
+.bgo-form > table > tbody > tr > td {
+    padding: 15px 0;
+}
+.input-80 > table > tbody > tr > td > input {
+    width: 80px;
+    margin-right: 15px;
+}
+
+/* 树形分割线 */
+.v-cut-off {
+    display: block;
+    height: 20px;
+    border-right: 1px solid #B9C9D8;
+    margin: 0 15px;
+    margin-top: 18px;
+}
+
+/* 列表功能区 */
+.bgo-control > li {
+    float: left;
+    margin-right: 15px;
+    height: 50px;
+}
+.bgo-control > li span {
+    vertical-align: middle;
+}
+.bgo-control > li select {
+    padding: 3px 12px;
+    vertical-align: middle;
+}
+
+
+
+/* 学校列表页 */
+.bgo-panel .bgo-panel-title {
+    padding: 0 15px 15px 15px;
+    margin: 0 -15px;
+    border-bottom: 1px solid #F5F6F7;
+}
+.bgo-panel .bgo-panel-title > .big-title {
+    letter-spacing: .2em;
+    font-size: 1.2em;
+    text-decoration: none;
+    color: inherit;
+}
+.bgo-panel .bgo-panel-con {
+    padding: 20px 30px;
+}
+.bgo-panel .bgo-panel-con > p.school {
+    padding-top: 20px;
+}
+.bgo-panel .bgo-panel-con > p.school > a {
+    color: #FDA07A;
+}
+.bgo-panel > .list {
+    padding: 0 30px;
+}
+
+/* 列表无数据样式 */
+.noData {
+    text-align: center;
+    color: #96A7B0;
+}
+
+
+/* 页面弹层样式 */
+.bgo-layer {
+    position: fixed;
+    width: 98%;
+    top: -1000px;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    transition: all 1s;
+    z-index: 999;
+}
+.show-bgo-layer {
+    top: 100px;
+}
+.close-bgo-layer {
+    top: -1000px;
+}
+
+
+/* 数量选择器 */
+.bgo-num-select {
+    display: inline-block;
+}
+.bgo-num-select > li {
+    float: left;
+}
+.bgo-num-select > li > input {
+    width: 50px;
+    padding: 6px 12px;
+    height: 35px;
+    border: 1px solid #EAEAEA;
+    border-left: 0;
+    border-right: 0;
+}
+.bgo-num-select > li > button {
+    border-radius: 0;
+    width: 35px;
+    height: 35px;
+    padding: 6px 12px;
+    border: 1px solid #DDDDDD;
+}
+
+
+
+
+/* 分值区间 */
+.score > li {
+    margin-bottom: 5px;
+}
+.score > li > input {
+    width: 50px;
+    min-width: 50px;
+}
+.score > li > span {
+    margin-left: 5px;
+    display: inline-block;
+    padding: 12px 0px;
+    width: 50px;
+    border-radius: 0;
+    vertical-align: top;
+}
+.editScore {
+    position: absolute;
+    background-color: #fff;
+    bottom: 0;
+    right: 0;
+    width: 217px;
+    padding: 0;
+    height: 0;
+    overflow: hidden;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    transition: all 1s;
+    -webkit-box-shadow: 0px 0px 10px 5px rgba(219,215,219,0.75);
+    -moz-box-shadow: 0px 0px 10px 5px rgba(219,215,219,0.75);
+    box-shadow: 0px 0px 10px 5px rgba(219,215,219,0.75);
+}
+
+.showEditScore {
+    height: 200px;
+    padding: 15px;
+}
+
+
+
+/* 多选项弹层选择器 */
+.mult-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    display: inline-block;
+    z-index: 1000;
+    -webkit-box-shadow: 0px 0px 10px 5px rgba(219,215,219,0.75);
+    -moz-box-shadow: 0px 0px 10px 5px rgba(219,215,219,0.75);
+    box-shadow: 0px 0px 10px 5px rgba(219,215,219,0.75);
+}
+.mult-input > ul {
+    padding: 10px;
+}
+.mult-input > ul > li {
+    float: left;
+    padding: 2px 12px;
+    margin: 5px;
+    font-size: .8em;
+    border: 1px solid #DDDDDD;
+    cursor: pointer;
+}
+.mult-input > div {
+    border-top: 1px solid #DDDDDD;
+    padding: 10px 5px;
+}
+.mult-input > ul > li.mSelected {
+    background-color: #627882;
+    color: #fff;
+}
+
+
+/* 个人信息 tab */
+.bgo-panel-con > ul.bgo-tab {
+    border-bottom: 1px solid #F3F4F5;
+    margin-bottom: 20px;
+}
+.bgo-panel-con > ul.bgo-tab > li {
+    float: left;
+    width: 20%;
+    color: #B7B7B7;
+}
+.bgo-panel-con > ul.bgo-tab > li > span {
+    display: inline-block;
+    cursor: pointer;
+    padding: 5px 10px;
+    position: relative;
+    bottom: -2px;
+}
+.bgo-panel-con > ul.bgo-tab > li > span.select {
+    color: #77CAF9;
+    border-bottom: 3px solid #22A7F1;
+}
+.bgo-panel-con > div > div.bgo-tab-con {
+    padding: 25px 10px;
+}
+.bgo-panel-con > div > div.bgo-tab-con > p.bgo-tab-con-title {
+    color: #000;
+    margin-bottom: 20px;
+}
+.bgo-panel-con > div > div.bgo-tab-con > .bgo-tab-con-list {
+    margin-bottom: 10px;
+}
+.bgo-panel-con > div > div.bgo-tab-con > p.bgo-tab-con-tip {
+    margin-top: 30px;
+    padding: 5px 0;
+    border-bottom: 1px solid #F3F4F5;
+}
+.bgo-panel-con > div > div.bgo-tab-con > div {
+    padding: 20px 0;
+}
+
+
+/* 盒子阴影 */
+.bgo-box-shadow {
+    -webkit-box-shadow: 0px 0px 80px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 0px 80px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 80px 0px rgba(0,0,0,0.5); 
+}
+
+/* 文件上传input */
+.file-input {
+    width: 100%;
+    height: 100%;
+    outline: medium none;
+    position: absolute;
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    opacity: 0; 
+    left: 0px;
+    top: 0px;
+    z-index: 999;
+    cursor: pointer;
+}
+.file-upload-div {
+    position: relative;
+    min-width: 100px;
+    padding: 3px 20px 4px 20px;
+    display: inline-block;
+    vertical-align: inherit;
+    background-color: #ff902b;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+}
+.file-upload-div:hover {
+    background-color: #ff8517;
+    border-color: #fc7800;
+}
+
+/* div可编辑区域 锁定状态 */
+.contenteditable-disabled {
+    background-color: seashell;
+}
+
+/* div透明 */
+.bgo-div-glass {
+    /*background-color: rgba(255,255,255,0.9);
+    opacity: 90;*/
+    background: rgba(226,226,226,1);
+    background: -moz-linear-gradient(-45deg, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 0%, rgba(254,254,254,0.95) 50%, rgba(209,209,209,0.9) 100%);
+    background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(226,226,226,1)), color-stop(0%, rgba(219,219,219,1)), color-stop(50%, rgba(254,254,254,0.95)), color-stop(100%, rgba(209,209,209,0.9)));
+    background: -webkit-linear-gradient(-45deg, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 0%, rgba(254,254,254,0.95) 50%, rgba(209,209,209,0.9) 100%);
+    background: -o-linear-gradient(-45deg, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 0%, rgba(254,254,254,0.95) 50%, rgba(209,209,209,0.9) 100%);
+    background: -ms-linear-gradient(-45deg, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 0%, rgba(254,254,254,0.95) 50%, rgba(209,209,209,0.9) 100%);
+    background: linear-gradient(135deg, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 0%, rgba(254,254,254,0.95) 50%, rgba(209,209,209,0.9) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#d1d1d1', GradientType=1 );
+}
+@media \0screen\,screen\9 {
+  .bgo-div-glass {
+    background-color:#ffffff;
+    filter:Alpha(opacity=90);
+    position:static; 
+    *zoom:1; 
+  }
+  .bgo-div-glass > div, 
+  .bgo-div-glass > textarea, 
+  .bgo-div-glass > table, 
+  .bgo-div-glass > input, 
+  .bgo-div-glass > select, 
+  .bgo-div-glass > option, 
+  .bgo-div-glass > button, 
+  .bgo-div-glass > form,
+  .bgo-div-glass > ul, 
+  .bgo-div-glass > nav, 
+  .bgo-div-glass > span, 
+  .bgo-div-glass > img, 
+  .bgo-div-glass > a, 
+  .bgo-div-glass > i, 
+  .bgo-div-glass > p {
+    position: relative;
+  }  
+}
+
+
+/* 权限分配 */
+.bgo-panel header {
+    padding: 20px 30px;
+    font-size: 1.2em;
+    color: #fff;
+    border-bottom: 1px solid #B8C7CE;
+}
+.bgo-panel .left-ul {
+    color: #6A8391;
+}
+.bgo-panel .left-ul > li {
+    padding: 15px 30px;
+}
+.bgo-panel .left-ul > li.select {
+    color: #10B3F6;
+    background-color: #fff;
+}
+.bgo-panel .right-ul {
+    background-color: #fff;
+}
+.bgo-panel .right-ul > li {
+    border-bottom: 1px solid #F7F7F7;
+    min-height: 100px;
+    padding: 10px 30px;
+}
+
+.bgo-panel .right-ul > li > div.big-class {
+    display: inline-block;
+    width: 120px;
+    height: 100%;
+    padding: 2px;
+}
+.bgo-panel .right-ul > li > div.big-class > span {
+    font-weight: bold;
+}
+.bgo-panel .right-ul > li > div.big-class > span,
+.bgo-panel .right-ul > li > ul.small-class > li > span {
+    vertical-align: top;
+}
+
+.bgo-panel .right-ul > li > ul.small-class {
+    display: inline-block;
+    height: 100%;
+    max-width: 80%;
+    vertical-align: top;
+}
+.bgo-panel .right-ul > li > ul.small-class > li {
+    min-width: 150px;
+    float: left;
+    padding: 2px;
+}
+
+/* 角色管理 */
+.roleList {
+    padding-top: 20px;
+    margin-top: 30px;
+    position: relative;
+}
+.roleList > li {
+    padding: 3px 12px;
+    border-radius: 30px;
+    position: absolute;
+    top: 0;
+    text-align: center;
+    cursor: pointer;
+    z-index: 2;
+}
+.roleList > li.select {
+    color: #fff;
+    background-color: #5d9cec;
+}
+.roleList > .hover-li {
+    position: absolute;
+    left: 0;
+    display: block;
+    background-color: #C1D3ED;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    transition: all .3s;
+    padding: 0;
+    z-index: 1;
+}
+
+/* 教研组 */ 
+.role-div > p.role-large-title {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+.role-div > ul {
+    margin: 10px 0;
+}
+.role-div > ul > li {
+    float: left;
+    padding: 6px 12px;
+    margin-right: 5px;
+    position: relative;
+}
+.role-div > ul > li.role-first {
+    color: #000;
+    min-width: 80px;
+    max-width: 100px;
+    min-height: 80px;
+}
+.role-div > ul > li.role-second {
+    min-width: 150px;
+}
+.role-div > ul > li.role-second > span {
+    display: inline-block;
+    margin-right: 5px;
+    color: #8D9FB5;
+}
+.role-div > ul > li.role-second > div.role-user {
+    position: absolute;
+    right: 5px;
+    top: 2px;
+}
+.role-div > ul > li.role-second > div.role-user > p.edit-and-remove {
+    margin-top: 5px;
+    width: 100%;
+    background-color: #EAEFF4;
+    position: relative;
+    z-index: 888;
+    padding: 6px 12px; 
+}
+.role-div > ul > li.role-second > div.role-user > p.edit-and-remove > a {
+    color: #979B9F;
+    float: left;
+    font-size: .8em;
+}
+.role-div > ul > li.role-second > div.role-user > p.edit-and-remove > a:hover,
+.role-div > ul > li.role-second > div.role-user > p.edit-and-remove > a:focus {
+    color: #8394A6;
+}
+.role-div > ul > li.role-second > div.role-user > p.edit-and-remove > a:last-child {
+    float: right;
+}
+
+
+/* 模块配置 */
+.module-panel {
+    padding: 10px;
+}
+.module-panel.select {
+    border: 2px solid #7AC9F6;
+}
+.module-panel > ul {
+    height: 100px;
+}
+.module-panel > ul > li {
+    float: left;
+    height: 100%;
+}
+.module-panel > ul > li > img {
+    width: 100px;
+    height: 100%;
+}
+.module-panel > ul > li > dl {
+    margin-left: 20px;
+}
+.module-panel > ul > li > dl > dt, .module-panel > ul > li > dl > dd {
+    margin-bottom: 10px;
+}
+.module-panel > ul > li > dl > dd {
+    font-size: .8em;
+    color: #86898F;
+}
+.module-panel > ul > li > div {
+    width: 100px;
+    height: 100%;
+    text-align: center;
+    padding: 20px 0;
+}
+.module-panel > ul > li > div > span {
+    color: #FC9D75;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-left: 1px solid #F7F7F7;
+    text-align: center;
+    line-height: 60px;
+}
+.module-panel > ul > li > div > span.select {
+    color: #7AC9F6;
+}
+
+/* nw登录窗体透明 */
+.win-transparent {
+    background-color: rgba(0,0,0,0) !important;
+}
+
+/* 分页 */
+.page {
+    margin: 15px 0;
+    padding: 0;
+    float: right;
+}
+.page li {
+    list-style: none;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+}
+.page li input {
+    padding: 3px 5px;
+    height: 100%;
+    width: 50px;
+    border: none;
+    background-color: #EAEEF1;
+    text-align: center;
+    margin-right: 10px;
+}
+.page li span {
+    margin-right: 15px;
+}
+.page li a {
+    text-decoration: none;
+    outline: none;
+    margin-right: 15px;
+}
+
+
+/* div遮罩层 */
+.bgo-div-shade {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(72,76,80,0.8);
+    opacity: 80;
+    top: 0;
+    left: 0;
+}
+@media \0screen\,screen\9 {
+  .bgo-div-shade {
+    background-color:#484C50;
+    filter:Alpha(opacity=80);
+    position:static; 
+    *zoom:1; 
+  }
+  .bgo-div-shade > div, 
+  .bgo-div-shade > textarea, 
+  .bgo-div-shade > table, 
+  .bgo-div-shade > input, 
+  .bgo-div-shade > select, 
+  .bgo-div-shade > option, 
+  .bgo-div-shade > button, 
+  .bgo-div-shade > form,
+  .bgo-div-shade > ul, 
+  .bgo-div-shade > nav, 
+  .bgo-div-shade > span, 
+  .bgo-div-shade > img, 
+  .bgo-div-shade > a, 
+  .bgo-div-shade > i, 
+  .bgo-div-shade > p {
+    position: relative;
+  }  
+}
+
+/* div嵌入table */
+.inset-table table {
+    width: 100%;
+}
+
+/* 表单验证 */
+input.ng-valid {
+    border: 1px solid #27C24C;
+} 
+input.ng-invalid {
+    border: 1px solid #F05050;
+}
+input.ng-pristine {
+    border: 1px solid #DDDDDD;
+}
+
+/* 登录窗体的关闭按钮 */
+a.loginClose:hover {
+    background-color: red !important;
+}
+
+/* 图表 */
+.chart-row-title {
+    text-align: center;
+    font-size: 1.6em;
+    margin-top: 25px;
+} 
+.chart-title {
+    text-align: center;
+    padding: 10px;
+} 
+
+.chart-div { background-color: #fff; }
+
+/* datePicker */
+.datePicker {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+.datePicker li {
+    float: left;
+    list-style: none;
+    height: 30px;
+}
+.datePicker li input {
+    padding: 3px 12px;
+    max-width: 100px;
+    height: 100%;
+    border: none;
+    background-color: #EAEEF1;
+    border-top: 1px solid #EAEAEA;
+    border-bottom: 1px solid #EAEAEA;
+}
+.datePicker li button {
+    width: 30px;
+    height: 100%;
+    border-radius: 0;
+}
+.datePicker li button i {
+    color: #7895AF;
+}
