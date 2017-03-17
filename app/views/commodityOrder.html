@@ -47,11 +47,12 @@
             <thead>
                 <tr>
                     <th style="width:12%;">订单号</th>
-                    <th style="width:25%;">所购商品</th>
-                    <th style="width:8%;">订单金额</th>
-                    <th style="width:15%;">备注</th>
-                    <th style="width:15%;">下单时间</th>
-                    <th style="width:15%;position:relative">
+                    <th style="width:15%;">所购商品</th>
+                    <th style="width:7%;">金额</th>
+                    <th style="width:25%;">最新物流</th>
+                    <th style="width:14%;">备注</th>
+                    <th style="width:8%;">下单时间</th>
+                    <th style="width:10%;position:relative">
                         {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有'}}
                         <i class="fa fa-angle-down downListIco"></i>
                         <ul class="downList clearfix">
@@ -59,12 +60,12 @@
                             <li ng-click="downSValue(s.value, s.text)" name="{{s.value}}" ng-repeat="s in types" ng-bind="s.text"></li>
                         </ul>
                     </th>
-                    <th style="width:10%;">操作</th>
+                    <th style="width:9%;">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td ng-class="ONullType" colspan="7">暂无数据</td>
+                    <td ng-class="ONullType" colspan="8">暂无数据</td>
                 </tr>
                 <tr ng-repeat="o in commodityOrderData">
                     <td ng-bind="o.orderid"></td>
@@ -78,7 +79,14 @@
                         </div>
                     </td>
                     <td ng-bind="o.total_price+'元'"></td>
-                    <td ng-bind='o.express'></td>
+                    <td>
+                        <p ng-if="!o.expresson">暂无物流信息</p>
+                        <p ng-if="o.expresson" ng-bind="o.express + '：' + o.expresson"></p>
+                        <p ng-if="o.expresson" ng-repeat="p in o.order_logistics.Traces | limitTo: 1">
+                            <span ng-bind="p.AcceptTime + ' ' + p.AcceptStation"></span>
+                        </p>
+                    </td>
+                    <td ng-bind='o.message'></td>
                     <td ng-bind="payTime(o)"></td>
                     <td><div class="label status" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
                     <td>
@@ -100,7 +108,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="page-td" colspan="7">
+                    <td class="page-td" colspan="8">
                         <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" first-text="首页" last-text="尾页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
                     </td>
                 </tr>

@@ -78,7 +78,7 @@
     "translate": "sidebar.nav.FUNDSMNGT"
   },
   {
-    "text": "首页配置",
+    "text": "系统配置",
     "sref": "app.setUp",
     "icon": "fa fa-cogs",
     "translate": "sidebar.nav.SETUP"

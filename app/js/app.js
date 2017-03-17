@@ -4625,6 +4625,13 @@ App.controller('teacherMngtController', ['$scope', '$http', '$filter', '$state',
           sessionStorage.setItem('editType', editType);
       }
 
+      $scope.showLabel = function(t) {
+          if(t == '1') {
+              return '特约教师';
+          }else if(t == '2') {
+              return '专职教师';
+          }
+      }
       // noRefreshGetData(getUserData, getDataSpeed);
       
       // $scope.types = [
@@ -4710,6 +4717,10 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
       clearUploadCourseImgUrl();
       errorJump($state);
 
+      $scope.teacherLabel = [
+          {name: '特约教师', val: 1},
+          {name: '专职教师', val: 2},
+      ];
       var uploader = $scope.uploader = new FileUploader({
         url: ''+url+'/gd/upload'
       })
@@ -4722,6 +4733,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
       $scope.teacher = {};
       switch(sessionStorage.editType) {
           case '0': // 添加教师
+            
             $scope.isShowQuxiao = false;
             $scope.isShowShanchu = true;
             localStorage.removeItem('TUid');
@@ -4731,6 +4743,9 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                     token: sessionStorage.token,
                     tname: $scope.teacher.tname,
                     phone: $scope.teacher.phone,
+                    label: $scope.teacher.label,
+                    skill: $scope.teacher.skill,
+                    desc: $scope.teacher.desc,
                     password: $scope.teacher.password,
                     email: $scope.teacher.email,
                     header: sessionStorage.uploadTeacherImgUrl,
@@ -4760,6 +4775,7 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
           case '1': // 修改教师
               $scope.isShowQuxiao = true;
               $scope.isShowShanchu = false;
+              
               $http
                 .post(''+url+'/teacher/getteacher', {
                     token: sessionStorage.token,
@@ -4788,6 +4804,9 @@ App.controller('editTeacherController', ['$scope', '$http', '$filter', '$state',
                       userid: sessionStorage.TUid,
                       tname: $scope.teacher.tname,
                       phone: $scope.teacher.phone,
+                      label: $scope.teacher.label,
+                      skill: $scope.teacher.skill,
+                      desc: $scope.teacher.desc,
                       password: $scope.teacher.password == sessionStorage.teacherPassword ? '' : $scope.teacher.password,
                       email: $scope.teacher.email,
                       header: sessionStorage.uploadTeacherImgUrl ? sessionStorage.uploadTeacherImgUrl : sessionStorage.detailTeacherImg
@@ -9185,7 +9204,7 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
 
     $scope.param = {};
     $scope.param.token = sessionStorage.token;
-    $scope.param.title = '';
+    $scope.param.title = '默认标题';
     $scope.param.summary = '';
     $scope.param.val = '';
 
@@ -9194,30 +9213,29 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
     })
 
     uploader.onSuccessItem = function(response) {
-        sessionStorage.setItem('uploadCourseImgUrl', jQuery.parseJSON(response._xhr.response).url);
-        $scope.img = rootUrl + sessionStorage.uploadCourseImgUrl;
+        $scope.param.img = jQuery.parseJSON(response._xhr.response).url;
     };
 
     $scope.selectList = [
         {val: 1, name: 'http模块'},
         {val: 2, name: '课程列表模块'},
         {val: 3, name: '课程详情模块'},
-        {val: 4, name: '活动列表模块'},
-        {val: 5, name: '活动详情模块'},
+        {val: 4, name: '文章列表模块'},
+        {val: 5, name: '文章详情模块'},
         {val: 6, name: '教师列表模块'},
         {val: 7, name: '商品列表模块'},
         {val: 8, name: '商品详情模块'}
     ];
 
     $scope.posList = [
-        {pos: 1, name: '上'},
-        {pos: 2, name: '中'},
-        {pos: 3, name: '下'}
+        {pos: 1, name: '上部'},
+        {pos: 2, name: '中部'},
+        {pos: 3, name: '底部'}
     ];
 
     $scope.getSelect = function() {
         
-        $http.post(''+url+'setting/getappnavparamsselect', $scope.param)
+        $http.post(''+url+'/setting/getappnavparamsselect', $scope.param)
         .then(function(response) {
             $scope.remoteSel = response.data.data;
         }, function(x) { 
@@ -9233,7 +9251,7 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
     // 获取模块
     var getData = function() {
         listLoading.css({'display':'block'});
-        $http.post(''+url+'setting/getappnav', $scope.param)
+        $http.post(''+url+'/setting/getappnav', $scope.param)
         .then(function(response) {
             $scope.data = response.data;
             listLoading.css({'display':'none'});
@@ -9250,12 +9268,16 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
 
     // 设置模块
     $scope.addModules = function() {
-        $scope.param.img = '1';
         listLoading.css({'display':'block'});
-        $http.post(''+url+'setting/createappnav', $scope.param)
+        $http.post(''+url+'/setting/createappnav', $scope.param)
         .then(function(response) {
             listLoading.css({'display':'none'});
-            getData();
+            if ( response.data.code != 200 ) {
+                requestError(response, $state, ngDialog);
+            }else {
+                getData();
+            }
+            
         }, function(x) { 
             listLoading.css({'display':'none'});
             ngDialog.open({
@@ -9270,7 +9292,7 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
     $scope.removeModules = function(id) {
         $scope.param.nav_id = id; 
         listLoading.css({'display':'block'});
-        $http.post(''+url+'setting/delappnav', $scope.param)
+        $http.post(''+url+'/setting/delappnav', $scope.param)
         .then(function(response) {
             listLoading.css({'display':'none'});
             getData();

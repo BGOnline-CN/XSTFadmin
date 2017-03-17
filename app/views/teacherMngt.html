@@ -37,20 +37,20 @@
       <table id="table-ext-1" class="table table-bordered table-hover">
          <thead>
             <tr>
-               <th style="width:15%;">头像</th>
-               <!--<th style="width:6%;">性别</th>-->
-               <th style="width:15%;">姓名</th>
-               <th style="width:20%;">邮箱</th>
-               <!--<th style="width:6%;">类型</th>-->
-               <th style="width:15%;">手机号码</th>
-               <th style="width:20%;">所在分校</th>
+               <th style="width:10%;">头像</th>
+               <th style="width:10%;">姓名</th>
+               <th style="width:10%;">标签</th>
+               <th style="width:15%;">技能</th>
+               <th style="width:18%;">邮箱</th>
+               <th style="width:12%;">手机号码</th>
+               <th style="width:10%;">所在分校</th>
                <th style="width:15%;">最近登录时间</th>
                <!--<th style="width:8%;">锁定账户</th>-->
             </tr>
          </thead>
          <tbody>
             <tr>
-                <td ng-class="TNullType" colspan="6">暂无教师</td>
+                <td ng-class="TNullType" colspan="8">暂无教师</td>
             </tr>
             <tr ng-repeat="user in teacher">
                <td>
@@ -60,6 +60,10 @@
                </td>
                <!--<td>{{ showSex(user) }}</td>-->
                <td><a href="#" ng-click="JumpEditTeacher(user.userid, 1)">{{ user.tname }}</a></td>
+               <td>
+                   <span ng-repeat="t in user.label track by $index" ng-bind="showLabel(t)" style="margin-right: 5px;"></span>
+               </td>
+               <td>{{ user.skill }}</td>
                <td>{{ user.email }}</td>
                <!--<td>{{ showType(user) }}</td>-->
                <td>{{ user.phone }}</td>
@@ -73,7 +77,7 @@
                </td>-->
             </tr>
             <tr>
-                <td class="page-td" colspan="9">
+                <td class="page-td" colspan="8">
                     <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" first-text="首页" last-text="尾页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
                 </td>
             </tr>

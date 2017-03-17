@@ -21,7 +21,7 @@
                 <form name="form" class="bgo-form" novalidate style="background-color: #F5F5F5;">
                     <table>
                         <tbody>
-                            <tr ng-if="param.position == 1 || param.position == 3">
+                            <tr>
                                 <td class="form-title">标题：</td>
                                 <td>
                                     <input type="text" class="bgo-input" placeholder="请输入模块标题" ng-model="param.title">
@@ -36,6 +36,9 @@
                             <tr>
                                 <td class="form-title">图片：</td>
                                 <td>
+                                    <span ng-if="param.position == 1" style="color: orange;">最佳图片尺寸80*80</span>
+                                    <span ng-if="param.position == 2" style="color: orange;">最佳图片尺寸360*90</span>
+                                    <span ng-if="param.position == 3" style="color: orange;">最佳图片尺寸100*100</span>
                                     <input filestyle="" 
                                            type="file" 
                                            data-button-text="图片" 
@@ -64,7 +67,6 @@
                                             ng-model="param.type" 
                                             ng-change="getSelect()"
                                             ng-options="x.val as x.name for x in selectList">
-                                            <option value="">----- 请选择 -----</option>
                                     </select>
                                 </td>
                             </tr>
@@ -74,7 +76,7 @@
                                     <input type="url" class="bgo-input" placeholder="如：http://www.baidu.com" ng-model="param.val">
                                 </td>
                             </tr>
-                            <tr ng-if="param.type == 3 || param.type == 5 || param.type == 8">
+                            <tr ng-if="param.type == 2 || param.type == 3 || param.type == 4 || param.type == 5 || param.type == 8">
                                 <td class="form-title">跳转：</td>
                                 <td>
                                     <select class="bgo-select"
@@ -107,7 +109,7 @@
                     <div class="col-xs-3" ng-repeat="d in data.data.top">
                         <div style="height: 63px;padding: 5px;margin-bottom: 15px;position: relative;">
                             <img class="bgo-header-circle" ng-src="{{ d.img }}">
-                            <p style="color: #ccc;" ng-bind="d.title"></p>
+                            <p ng-bind="d.title"></p>
                             <a href="" ng-click="removeModules(d.nav_id)" class="fa fa-remove" style="color: #C60000;position: absolute;top: 0;right: 0;"></a>
                         </div>
                     </div>
@@ -138,12 +140,12 @@
                         </tbody>
                     </table>
                     <div class="col-xs-6" ng-repeat="d in data.data.bottom">
-                        <div style="height: 63px;padding: 5px;border: 1px solid #ccc;margin-bottom: 15px;position: relative;">
+                        <div style="height: 70px;padding: 5px;border: 1px solid #ccc;margin-bottom: 15px;position: relative;background-color: #fff;">
                             <div style="width: 60%;height:100%; display: inline-block;">
                                 <p style="font-size: 1.2em;color: #000;" ng-bind="d.title"></p>
                                 <p style="color: #ccc;" ng-bind="d.summary"></p>
                             </div>
-                            <img ng-src="{{ d.img }}" style="width: 35%; height:100%;display: inline-block;vertical-align: top;" alt="">
+                            <img ng-src="{{ d.img }}" style="width: 58px; height:100%;display: inline-block;vertical-align: top;" alt="">
                             <a href="" ng-click="removeModules(d.nav_id)" class="fa fa-remove" style="color: #C60000;position: absolute;top: 0;right: 0;"></a>
                         </div>
                     </div>
